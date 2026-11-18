@@ -248,3 +248,24 @@ async def create_speech(req: SpeechRequest):
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(status_code=500, detail=f"Lỗi tổng hợp giọng nói: {exc}") from exc
+
+
+@app.post("/v1/audio/transcribe")
+async def transcribe_audio(file: UploadFile = File(...)):
+    """Tự động nhận diện lời thoại tiếng Việt từ file audio (WAV, MP3, M4A...)."""
+    from .stt_engine import STTEngine
+
+    suffix = Path(file.filename or "sample.wav").suffix or ".wav"
+    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+        shutil.copyfileobj(file.file, tmp)
+        tmp_path = Path(tmp.name)
+
+    try:
+        stt = STTEngine.get_instance()
+        text = stt.transcribe(tmp_path)
+        return {"status": "ok", "text": text}
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Lỗi nhận diện âm thanh: {exc}") from exc
+    finally:
+        tmp_path.unlink(missing_ok=True)
+

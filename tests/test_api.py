@@ -156,6 +156,18 @@ def run_tests() -> None:
         assert r_del.status_code == 200, r_del.text
         print("[PASS] DELETE /v1/voices/test_ngoc_clone")
 
+        # 11. Test Speech-to-Text (STT) transcription endpoint
+        with SAMPLE_WAV.open("rb") as f:
+            r_stt = client.post(
+                "/v1/audio/transcribe",
+                files={"file": ("sample.wav", f, "audio/wav")},
+            )
+        assert r_stt.status_code == 200, r_stt.text
+        stt_data = r_stt.json()
+        assert stt_data["status"] == "ok"
+        assert len(stt_data["text"]) > 0
+        print("[PASS] POST /v1/audio/transcribe:", stt_data["text"])
+
 
 if __name__ == "__main__":
     run_tests()
