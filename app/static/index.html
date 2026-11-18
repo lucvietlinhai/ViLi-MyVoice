@@ -1,0 +1,2546 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Luậtu — Studio Chuyển Văn Bản Thành Giọng Nói AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    /* ════════════════════════════════════════════════════════════
+       LUXURY BLACK & CRIMSON RED THEME TOKENS (Obsidian & Ruby)
+    ════════════════════════════════════════════════════════════ */
+    :root {
+      /* Backgrounds: Obsidian & Deep Ruby Carbon */
+      --bg-base:        #080607;
+      --bg-surface:     #0e090b;
+      --bg-card:        #140d10;
+      --bg-card-hover:  #1b1216;
+      --bg-input:       #0a0708;
+      --bg-elevated:    #21151a;
+
+      /* Borders & Glass */
+      --border-subtle:  #25161b;
+      --border-strong:  #3b1f28;
+      --border-accent:  rgba(225, 29, 72, 0.35);
+      --border-gold:    rgba(212, 175, 55, 0.30);
+
+      /* Crimson & Velvet Red Accents */
+      --red-primary:    #e11d48;
+      --red-bright:     #f43f5e;
+      --red-deep:       #9f1239;
+      --red-glow:       rgba(225, 29, 72, 0.28);
+      --red-gradient:   linear-gradient(135deg, #e11d48 0%, #9f1239 100%);
+      --red-gradient-hover: linear-gradient(135deg, #f43f5e 0%, #be123c 100%);
+
+      /* Imperial & Champagne Gold Accents */
+      --gold-primary:   #d4af37;
+      --gold-bright:    #f59e0b;
+      --gold-subtle:    rgba(212, 175, 55, 0.12);
+      --gold-border:    rgba(212, 175, 55, 0.25);
+
+      /* Semantic Feedback */
+      --color-emerald:  #10b981;
+      --color-emerald-bg: rgba(16, 185, 129, 0.12);
+      --color-amber:    #f59e0b;
+      --color-rose:     #f43f5e;
+      --color-sapphire: #3b82f6;
+
+      /* Typography Hierarchy */
+      --text-white:     #fbf8f9;
+      --text-secondary: #bda6aa;
+      --text-muted:     #785d63;
+      --text-faint:     #423035;
+
+      /* Radii & Shadows */
+      --radius-xs:  4px;
+      --radius-sm:  8px;
+      --radius-md:  12px;
+      --radius-lg:  16px;
+      --radius-xl:  22px;
+      --radius-pill:9999px;
+
+      --shadow-sm:  0 2px 8px rgba(0, 0, 0, 0.4);
+      --shadow-md:  0 8px 24px rgba(0, 0, 0, 0.55);
+      --shadow-lg:  0 12px 36px rgba(0, 0, 0, 0.7);
+      --shadow-glow:0 0 20px var(--red-glow);
+
+      --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --sidebar-width: 230px;
+      --right-panel-width: 360px;
+    }
+
+    /* ── BASE RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { height: 100%; font-size: 14px; }
+
+    body {
+      font-family: var(--font-main);
+      background: var(--bg-base);
+      color: var(--text-white);
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      background-image:
+        radial-gradient(ellipse 60% 40% at 50% -10%, rgba(225, 29, 72, 0.08), transparent 70%),
+        radial-gradient(ellipse 40% 30% at 90% 90%, rgba(159, 18, 57, 0.05), transparent 70%);
+    }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--red-deep); }
+
+    /* ════════════════════════════════════════════════════════════
+       SIDEBAR NAVIGATION (Column 1)
+    ════════════════════════════════════════════════════════════ */
+    .sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    .sidebar-brand {
+      padding: 22px 20px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .brand-crest {
+      width: 38px;
+      height: 38px;
+      background: var(--red-gradient);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 16px var(--red-glow);
+      font-size: 19px;
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(110deg, #ffffff 40%, var(--gold-bright) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.1;
+    }
+
+    .brand-tag {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 2px;
+    }
+
+    /* Navigation list */
+    .nav-group {
+      flex: 1;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow-y: auto;
+    }
+
+    .nav-section-title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      padding: 10px 10px 6px;
+    }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: transparent;
+      transition: all 0.18s ease;
+      text-align: left;
+      width: 100%;
+      font-family: inherit;
+    }
+
+    .nav-btn:hover {
+      background: var(--bg-card);
+      color: var(--text-white);
+      border-color: var(--border-subtle);
+    }
+
+    .nav-btn.active {
+      background: linear-gradient(135deg, rgba(225, 29, 72, 0.18), rgba(159, 18, 57, 0.10));
+      border: 1px solid var(--border-accent);
+      color: var(--text-white);
+      font-weight: 600;
+      box-shadow: inset 0 0 12px rgba(225, 29, 72, 0.15);
+    }
+
+    .nav-btn .icon {
+      font-size: 16px;
+      width: 20px;
+      text-align: center;
+      color: var(--text-muted);
+      transition: color 0.18s;
+    }
+
+    .nav-btn:hover .icon,
+    .nav-btn.active .icon {
+      color: var(--red-bright);
+    }
+
+    /* Sidebar Footer Promo */
+    .sidebar-footer {
+      padding: 14px;
+      border-top: 1px solid var(--border-subtle);
+      background: rgba(14, 9, 11, 0.5);
+    }
+
+    .studio-box {
+      background: linear-gradient(145deg, #180e12, #211117);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .studio-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gold-bright);
+      background: var(--gold-subtle);
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--gold-border);
+      margin-bottom: 8px;
+    }
+
+    .studio-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 6px;
+    }
+
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .feature-item::before {
+      content: '✦';
+      color: var(--red-primary);
+      font-size: 9px;
+    }
+
+    .status-badge-wrap {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .health-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+    }
+
+    .health-pill.online {
+      color: var(--color-emerald);
+      border-color: rgba(16, 185, 129, 0.3);
+      background: var(--color-emerald-bg);
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      transition: background 0.2s;
+    }
+
+    .health-pill.online .pulse-dot {
+      background: var(--color-emerald);
+      box-shadow: 0 0 8px var(--color-emerald);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       MAIN WORKSPACE (Column 2)
+    ════════════════════════════════════════════════════════════ */
+    .workspace {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-right: 1px solid var(--border-subtle);
+    }
+
+    .workspace-topbar {
+      padding: 18px 28px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .workspace-title-box h1 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-white);
+    }
+
+    .workspace-title-box p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .header-badges {
+      display: flex;
+      gap: 8px;
+    }
+
+    .meta-tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .meta-tag.v3 {
+      background: rgba(225, 29, 72, 0.12);
+      color: var(--red-bright);
+      border: 1px solid var(--border-accent);
+    }
+
+    .meta-tag.v2 {
+      background: var(--gold-subtle);
+      color: var(--gold-bright);
+      border: 1px solid var(--gold-border);
+    }
+
+    /* Workspace Content (Scrollable) */
+    .workspace-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* ── Engine Switch Cards ── */
+    .engine-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .engine-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .engine-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-strong);
+    }
+
+    .engine-card.active {
+      background: linear-gradient(135deg, rgba(225, 29, 72, 0.14), rgba(159, 18, 57, 0.06));
+      border-color: var(--red-primary);
+      box-shadow: 0 0 16px rgba(225, 29, 72, 0.18);
+    }
+
+    .engine-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .engine-card-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-white);
+    }
+
+    .engine-card.active .engine-card-name {
+      color: var(--red-bright);
+    }
+
+    .engine-indicator {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .engine-card.active .engine-indicator {
+      border-color: var(--red-primary);
+      background: var(--red-primary);
+    }
+
+    .engine-indicator::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: white;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .engine-card.active .engine-indicator::after {
+      opacity: 1;
+    }
+
+    .engine-card-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    /* ── Text Input Studio Card ── */
+    .studio-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .panel-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .panel-heading {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .panel-heading .ico {
+      color: var(--red-bright);
+    }
+
+    .editor-container {
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .editor-container:focus-within {
+      border-color: var(--red-primary);
+      box-shadow: 0 0 0 3px var(--red-glow);
+    }
+
+    textarea#textInput {
+      width: 100%;
+      min-height: 160px;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-white);
+      font-family: inherit;
+      font-size: 14px;
+      line-height: 1.7;
+      padding: 16px;
+      resize: vertical;
+    }
+
+    textarea#textInput::placeholder {
+      color: var(--text-faint);
+    }
+
+    .editor-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-top: 1px solid var(--border-subtle);
+      background: rgba(14, 9, 11, 0.4);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .editor-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tool-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 11px;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+
+    .tool-btn:hover {
+      background: var(--bg-elevated);
+      color: var(--text-white);
+      border-color: var(--border-strong);
+    }
+
+    .tool-btn.highlight {
+      border-color: var(--border-accent);
+      color: var(--red-bright);
+      background: rgba(225, 29, 72, 0.08);
+    }
+
+    .counter-badge {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    /* Live Chunks Preview Card */
+    .chunks-inspector {
+      display: none;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-top: 10px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      max-height: 160px;
+      overflow-y: auto;
+    }
+
+    .chunks-inspector.active {
+      display: block;
+    }
+
+    .chunks-inspector ol {
+      padding-left: 20px;
+      margin-top: 6px;
+    }
+
+    .chunks-inspector li {
+      margin-bottom: 4px;
+    }
+
+    /* ── Audio Settings & Sliders ── */
+    .settings-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+    }
+
+    .preset-chips-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .preset-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+      color: var(--text-secondary);
+      transition: all 0.18s;
+    }
+
+    .preset-chip:hover {
+      border-color: var(--border-strong);
+      color: var(--text-white);
+    }
+
+    .preset-chip.active {
+      background: linear-gradient(135deg, rgba(225, 29, 72, 0.2), rgba(159, 18, 57, 0.1));
+      border-color: var(--red-primary);
+      color: var(--text-white);
+      box-shadow: 0 0 12px rgba(225, 29, 72, 0.2);
+    }
+
+    .slider-columns {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .slider-columns { grid-template-columns: 1fr; }
+    }
+
+    .slider-box {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .slider-box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 12px;
+    }
+
+    .slider-label {
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .slider-value-badge {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--red-bright);
+    }
+
+    input[type="range"].luxury-range {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 5px;
+      background: var(--border-strong);
+      border-radius: var(--radius-pill);
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"].luxury-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--red-bright);
+      border: 2px solid var(--bg-base);
+      box-shadow: 0 0 8px var(--red-glow);
+      cursor: grab;
+      transition: transform 0.15s;
+    }
+
+    input[type="range"].luxury-range::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    /* Advanced Section Dropdown */
+    .advanced-toggle-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-subtle);
+      transition: color 0.15s;
+    }
+
+    .advanced-toggle-btn:hover {
+      color: var(--text-white);
+    }
+
+    .advanced-toggle-btn .arrow {
+      transition: transform 0.2s;
+    }
+
+    .advanced-toggle-btn.open .arrow {
+      transform: rotate(180deg);
+    }
+
+    .advanced-params-drawer {
+      display: none;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 20px;
+      margin-top: 14px;
+    }
+
+    .advanced-params-drawer.open {
+      display: grid;
+    }
+
+    .adv-hint {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ── Main Generate Button ── */
+    .generate-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .btn-luxury-generate {
+      width: 100%;
+      padding: 16px 24px;
+      background: var(--red-gradient);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: var(--radius-lg);
+      color: white;
+      font-size: 15px;
+      font-weight: 800;
+      font-family: inherit;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      box-shadow: var(--shadow-glow), 0 6px 20px rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-luxury-generate:hover:not(:disabled) {
+      background: var(--red-gradient-hover);
+      box-shadow: 0 0 30px rgba(225, 29, 72, 0.45), 0 8px 24px rgba(0, 0, 0, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .btn-luxury-generate:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+
+    .btn-luxury-generate:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-luxury-generate.loading::after {
+      content: '';
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .generate-subtext {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Feedback Alert */
+    .status-toast {
+      display: none;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 500;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .status-toast.show { display: flex; align-items: center; gap: 10px; }
+    .status-toast.info { background: rgba(59, 130, 246, 0.12); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); }
+    .status-toast.ok   { background: rgba(16, 185, 129, 0.12); color: #86efac; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .status-toast.err  { background: rgba(225, 29, 72, 0.14); color: #fda4af; border: 1px solid rgba(225, 29, 72, 0.35); }
+
+    /* ── Audio Result Player Panel ── */
+    .player-showcase {
+      display: none;
+      background: linear-gradient(145deg, #140d10, #1c1016);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .player-showcase.active {
+      display: block;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .player-header {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .player-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-white);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .player-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-download-wav {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      background: var(--red-gradient);
+      color: white;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      transition: all 0.15s;
+    }
+
+    .btn-download-wav:hover {
+      box-shadow: 0 0 14px var(--red-glow);
+    }
+
+    audio#audioPlayer {
+      width: 100%;
+      padding: 12px 18px;
+      outline: none;
+      display: block;
+      background: rgba(10, 7, 8, 0.5);
+    }
+
+    .benchmark-strip {
+      padding: 10px 18px 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: rgba(10, 7, 8, 0.3);
+      border-top: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .benchmark-pill {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .benchmark-pill b {
+      color: var(--text-white);
+      font-family: var(--font-mono);
+    }
+
+    .benchmark-pill b.gold {
+      color: var(--gold-bright);
+    }
+
+    /* ── Generation History ── */
+    .history-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+    }
+
+    .history-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .history-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .clear-history-btn {
+      font-size: 11px;
+      color: var(--red-bright);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+    }
+
+    .clear-history-btn:hover {
+      text-decoration: underline;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      transition: border-color 0.15s;
+    }
+
+    .history-item:hover {
+      border-color: var(--border-strong);
+    }
+
+    .history-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .history-meta-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 3px;
+    }
+
+    .history-voice-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-white);
+    }
+
+    .history-time {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .history-excerpt {
+      font-size: 11px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .history-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .btn-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 11px;
+      transition: all 0.15s;
+    }
+
+    .btn-circle:hover {
+      background: var(--bg-elevated);
+      color: var(--text-white);
+      border-color: var(--border-strong);
+    }
+
+    .btn-circle.play {
+      background: var(--red-primary);
+      color: white;
+      border-color: var(--red-deep);
+    }
+
+    .btn-circle.play:hover {
+      background: var(--red-bright);
+      transform: scale(1.08);
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       RIGHT PANEL: VOICE SELECTION & UPLOAD (Column 3)
+    ════════════════════════════════════════════════════════════ */
+    .right-panel {
+      width: var(--right-panel-width);
+      flex-shrink: 0;
+      background: var(--bg-surface);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      flex-shrink: 0;
+    }
+
+    .panel-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-white);
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    /* Luxury Tabs */
+    .tabs-strip {
+      display: flex;
+      background: var(--bg-input);
+      border-radius: var(--radius-md);
+      padding: 3px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .tab-pill {
+      flex: 1;
+      text-align: center;
+      padding: 7px 4px;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .tab-pill.active {
+      background: var(--bg-card);
+      color: var(--text-white);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Search & Filter Bar */
+    .search-container {
+      position: relative;
+      margin-bottom: 8px;
+    }
+
+    .search-container input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 8px 12px 8px 34px;
+      font-size: 12px;
+      color: var(--text-white);
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .search-container input:focus {
+      border-color: var(--red-primary);
+    }
+
+    .search-container .ico {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 13px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .filter-select {
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 6px 8px;
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-family: inherit;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .filter-select:focus {
+      border-color: var(--red-primary);
+    }
+
+    /* Voice Roster List (Scrollable) */
+    .voice-roster {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .voice-entry {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      cursor: pointer;
+      transition: all 0.18s ease;
+      position: relative;
+    }
+
+    .voice-entry:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-strong);
+    }
+
+    .voice-entry.active-selected {
+      background: linear-gradient(135deg, rgba(225, 29, 72, 0.16), rgba(159, 18, 57, 0.08));
+      border-color: var(--red-primary);
+      box-shadow: 0 0 16px rgba(225, 29, 72, 0.2);
+    }
+
+    .voice-avatar-crest {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      color: white;
+      flex-shrink: 0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .voice-avatar-crest.custom { background: var(--red-gradient); }
+    .voice-avatar-crest.preset-female { background: linear-gradient(135deg, #be185d, #831843); }
+    .voice-avatar-crest.preset-male   { background: linear-gradient(135deg, #1d4ed8, #1e3a8a); }
+    .voice-avatar-crest.preset-special{ background: linear-gradient(135deg, #b45309, #78350f); }
+
+    .voice-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .voice-name-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .voice-card-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-white);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .voice-chips-line {
+      display: flex;
+      gap: 4px;
+      margin-top: 3px;
+      flex-wrap: wrap;
+    }
+
+    .badge-micro {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: var(--radius-pill);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .badge-micro.red   { background: rgba(225, 29, 72, 0.15); color: var(--red-bright); }
+    .badge-micro.gold  { background: var(--gold-subtle); color: var(--gold-bright); }
+    .badge-micro.green { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .badge-micro.gray  { background: rgba(255, 255, 255, 0.05); color: var(--text-muted); }
+
+    .voice-card-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .btn-action-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      background: transparent;
+      color: var(--text-muted);
+      transition: all 0.15s;
+    }
+
+    .btn-action-icon:hover {
+      background: var(--bg-elevated);
+      color: var(--text-white);
+    }
+
+    .btn-action-icon.favorite.loved {
+      color: var(--red-bright);
+    }
+
+    .btn-action-icon.play-preview {
+      background: var(--red-gradient);
+      color: white;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
+    .btn-action-icon.play-preview:hover {
+      transform: scale(1.12);
+      box-shadow: 0 0 10px var(--red-glow);
+    }
+
+    /* ── Upload Drawer in Right Panel ── */
+    .upload-drawer {
+      padding: 14px 18px 18px;
+      border-top: 1px solid var(--border-subtle);
+      background: rgba(14, 9, 11, 0.6);
+      flex-shrink: 0;
+    }
+
+    .upload-drawer-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .upload-form-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .input-compact {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 7px 10px;
+      font-size: 12px;
+      color: var(--text-white);
+      font-family: inherit;
+      outline: none;
+    }
+
+    .input-compact:focus {
+      border-color: var(--red-primary);
+    }
+
+    .dropzone-compact {
+      border: 1.5px dashed var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.15s;
+    }
+
+    .dropzone-compact:hover, .dropzone-compact.drag-active {
+      border-color: var(--red-primary);
+      background: rgba(225, 29, 72, 0.08);
+    }
+
+    .dropzone-compact input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .dropzone-text {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .dropzone-selected-name {
+      display: none;
+      font-size: 11px;
+      color: var(--red-bright);
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .checkbox-compact {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .checkbox-compact input { display: none; }
+
+    .checkbox-box {
+      width: 15px;
+      height: 15px;
+      border: 1.5px solid var(--border-strong);
+      border-radius: 4px;
+      background: var(--bg-input);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+
+    .checkbox-compact:has(input:checked) .checkbox-box {
+      background: var(--red-primary);
+      border-color: var(--red-primary);
+    }
+
+    .checkbox-box::after {
+      content: '✓';
+      font-size: 10px;
+      color: white;
+      opacity: 0;
+    }
+
+    .checkbox-compact:has(input:checked) .checkbox-box::after {
+      opacity: 1;
+    }
+
+    .btn-submit-clone {
+      width: 100%;
+      padding: 9px;
+      background: var(--red-gradient);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: var(--radius-md);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-submit-clone:hover {
+      box-shadow: 0 0 12px var(--red-glow);
+    }
+
+    .btn-submit-clone:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ── Responsive adjustments ── */
+    @media (max-width: 1100px) {
+      .right-panel { width: 310px; }
+      :root { --sidebar-width: 200px; }
+    }
+
+    @media (max-width: 850px) {
+      .sidebar { display: none; }
+      .right-panel { width: 280px; }
+    }
+
+    @media (max-width: 680px) {
+      body { flex-direction: column; }
+      .right-panel { width: 100%; height: 350px; border-top: 1px solid var(--border-subtle); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════
+     1. SIDEBAR (Obsidian Red Brand & Navigation)
+════════════════════════════════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-crest">🎙️</div>
+    <div>
+      <div class="brand-title">Luậtu</div>
+      <div class="brand-tag">Studio Voice Clone</div>
+    </div>
+  </div>
+
+  <nav class="nav-group">
+    <div class="nav-section-title">Không gian làm việc</div>
+    <button class="nav-btn active" id="navWorkspace">
+      <span class="icon">⚡</span> Tạo giọng nói
+    </button>
+    <button class="nav-btn" id="navLibrary">
+      <span class="icon">📚</span> Thư viện giọng
+    </button>
+    <button class="nav-btn" id="navHistory">
+      <span class="icon">🕐</span> Lịch sử tạo
+    </button>
+    <button class="nav-btn" id="navMyVoices">
+      <span class="icon">👑</span> Giọng clone của tôi
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="studio-box">
+      <div class="studio-badge">★ Phiên bản Local</div>
+      <div class="studio-name">Luậtu Voice AI</div>
+      <div class="feature-list">
+        <div class="feature-item">100% Miễn phí &amp; Offline</div>
+        <div class="feature-item">VieNeu v3 Turbo 48kHz</div>
+        <div class="feature-item">VieNeu v2 GGUF Q8 chuẩn Bắc</div>
+        <div class="feature-item">Bảo mật audio trên máy</div>
+      </div>
+    </div>
+
+    <div class="status-badge-wrap">
+      <div class="health-pill" id="healthPill">
+        <span class="pulse-dot"></span>
+        <span id="healthLabel">Đang kết nối...</span>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ════════════════════════════════════════════════════════════
+     2. WORKSPACE CENTER (Main Studio)
+════════════════════════════════════════════════════════════ -->
+<main class="workspace">
+  <header class="workspace-topbar">
+    <div class="workspace-title-box">
+      <h1>Chuyển văn bản thành giọng nói</h1>
+      <p>Hệ thống tổng hợp tiếng Việt chuẩn ngữ điệu vùng miền bằng AI</p>
+    </div>
+    <div class="header-badges">
+      <span class="meta-tag v3">⚡ v3 Turbo · 48kHz</span>
+      <span class="meta-tag v2">✦ v2 GGUF · 24kHz</span>
+    </div>
+  </header>
+
+  <div class="workspace-content" id="workspaceScroll">
+
+    <!-- Engine Toggle Cards -->
+    <div class="engine-grid">
+      <div class="engine-card active" data-engine="vieneu" id="engineV3Card">
+        <div class="engine-card-header">
+          <span class="engine-card-name">VieNeu v3 Turbo (48kHz)</span>
+          <span class="engine-indicator"></span>
+        </div>
+        <div class="engine-card-desc">
+          Siêu tốc độ (RTF ~0.7x), âm thanh 48kHz trong trẻo, không yêu cầu ref_text.
+        </div>
+      </div>
+
+      <div class="engine-card" data-engine="vieneu-v2" id="engineV2Card">
+        <div class="engine-card-header">
+          <span class="engine-card-name">VieNeu v2 GGUF Q8 (24kHz)</span>
+          <span class="engine-indicator"></span>
+        </div>
+        <div class="engine-card-desc">
+          Bám sát 100% ngữ điệu giọng Bắc/Trung/Nam thông qua lời thoại mẫu (ref_text).
+        </div>
+      </div>
+    </div>
+
+    <!-- Text Input Studio Card -->
+    <section class="studio-panel">
+      <div class="panel-header-row">
+        <div class="panel-heading">
+          <span class="ico">✍️</span> Nội dung văn bản tiếng Việt
+        </div>
+        <span class="counter-badge"><span id="wordCount">0</span> từ · <span id="charCount">0</span> / 1.500 ký tự</span>
+      </div>
+
+      <div class="editor-container">
+        <textarea id="textInput" placeholder="Nhập hoặc dán nội dung văn bản tiếng Việt cần đọc vào đây...&#10;Hỗ trợ chuẩn hóa ngày tháng, tỷ giá tiền tệ, số phần trăm và từ kỹ thuật tiếng Anh xen kẽ."></textarea>
+        <div class="editor-footer">
+          <div class="editor-actions">
+            <button class="tool-btn" id="btnPaste">📋 Dán</button>
+            <button class="tool-btn" id="btnClear">✕ Xóa</button>
+            <button class="tool-btn highlight" id="btnSample">📝 Câu mẫu chuẩn</button>
+            <button class="tool-btn" id="btnChunks">🔍 Kiểm tra tách đoạn</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="chunks-inspector" id="chunksInspector"></div>
+    </section>
+
+    <!-- Voice Settings & Sliders Card -->
+    <section class="settings-panel">
+      <div class="panel-header-row">
+        <div class="panel-heading">
+          <span class="ico">🎚</span> Tinh chỉnh giọng điệu &amp; Tốc độ
+        </div>
+      </div>
+
+      <!-- Quick Preset Chips -->
+      <div class="preset-chips-row">
+        <div class="preset-chip active" data-preset="strict">🔒 Khóa chuẩn ngữ điệu Bắc/Nam</div>
+        <div class="preset-chip" data-preset="balanced">⚖️ Tự nhiên cân bằng</div>
+        <div class="preset-chip" data-preset="expressive">🎭 Biểu cảm kể chuyện</div>
+      </div>
+
+      <!-- Main Sliders -->
+      <div class="slider-columns">
+        <div class="slider-box">
+          <div class="slider-box-header">
+            <span class="slider-label">Tốc độ đọc (speed)</span>
+            <span class="slider-value-badge" id="speedBadge">1.00x</span>
+          </div>
+          <input type="range" class="luxury-range" id="speedSlider" min="0.7" max="1.5" step="0.05" value="1.00"/>
+        </div>
+
+        <div class="slider-box">
+          <div class="slider-box-header">
+            <span class="slider-label">Âm lượng phát</span>
+            <span class="slider-value-badge" id="volBadge">100%</span>
+          </div>
+          <input type="range" class="luxury-range" id="volSlider" min="0" max="100" step="5" value="100"/>
+        </div>
+
+        <div class="slider-box">
+          <div class="slider-box-header">
+            <span class="slider-label">Biểu cảm (temperature)</span>
+            <span class="slider-value-badge" id="tempBadge">0.40</span>
+          </div>
+          <input type="range" class="luxury-range" id="tempSlider" min="0.15" max="1.20" step="0.05" value="0.40"/>
+        </div>
+      </div>
+
+      <!-- Collapsible Advanced Drawer -->
+      <div class="advanced-toggle-btn" id="advToggleBtn">
+        <span class="arrow">▾</span> Cài đặt tham số âm thanh nâng cao
+      </div>
+
+      <div class="advanced-params-drawer" id="advParamsDrawer">
+        <div class="slider-box">
+          <div class="slider-box-header">
+            <span class="slider-label">Độ tập trung âm (top_k)</span>
+            <span class="slider-value-badge" id="topKBadge">12</span>
+          </div>
+          <input type="range" class="luxury-range" id="topKSlider" min="5" max="50" step="1" value="12"/>
+          <div class="adv-hint">Giảm (5–15): giữ chắc chất giọng vùng miền. Tăng (25–50): nhả chữ đa dạng hơn.</div>
+        </div>
+
+        <div class="slider-box">
+          <div class="slider-box-header">
+            <span class="slider-label">Lọc đuôi xác suất (top_p)</span>
+            <span class="slider-value-badge" id="topPBadge">0.80</span>
+          </div>
+          <input type="range" class="luxury-range" id="topPSlider" min="0.50" max="1.00" step="0.05" value="0.80"/>
+          <div class="adv-hint">Giảm (0.70–0.85): loại bỏ âm lạ, giảm trôi giọng. Tăng: câu nói phóng khoáng hơn.</div>
+        </div>
+
+        <div class="slider-box">
+          <div class="slider-box-header">
+            <span class="slider-label">Chống lặp chữ (rep_penalty)</span>
+            <span class="slider-value-badge" id="repBadge">1.20</span>
+          </div>
+          <input type="range" class="luxury-range" id="repSlider" min="1.00" max="1.50" step="0.05" value="1.20"/>
+          <div class="adv-hint">Tăng (1.25–1.40): giảm kéo đuôi hoặc lặp từ cuối câu.</div>
+        </div>
+
+        <div class="slider-box" style="justify-content: flex-end; padding-bottom: 6px;">
+          <label class="checkbox-compact" for="refCodesCheckbox">
+            <input type="checkbox" id="refCodesCheckbox" checked/>
+            <div class="checkbox-box"></div>
+            <div>
+              <strong style="color: var(--text-white);">Khoá ngữ điệu mẫu (use_ref_codes)</strong>
+              <div class="adv-hint">Bật để sao chép nhịp ngắt và nhấn nhá câu của file audio gốc.</div>
+            </div>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Generate Action Button -->
+    <div class="generate-wrap">
+      <button class="btn-luxury-generate" id="btnGenerateSpeech">
+        <span class="icon">▶</span> TẠO GIỌNG NÓI NGAY (Ctrl + Enter)
+      </button>
+      <div class="generate-subtext" id="engineStatusHint">
+        Đang sẵn sàng · VieNeu v3 Turbo 48kHz (tổng hợp siêu tốc trên CPU)
+      </div>
+    </div>
+
+    <!-- Status Alert Toast -->
+    <div class="status-toast" id="statusToast"></div>
+
+    <!-- Audio Player Showcase -->
+    <section class="player-showcase" id="playerShowcase">
+      <div class="player-header">
+        <div class="player-title">
+          <span>🔊</span> Kết quả âm thanh đã tổng hợp
+        </div>
+        <div class="player-actions">
+          <a class="btn-download-wav" id="btnDownloadWav" download="luatu_voice.wav">
+            ⬇ Tải file WAV
+          </a>
+        </div>
+      </div>
+      <audio id="audioPlayer" controls></audio>
+      <div class="benchmark-strip" id="benchmarkStrip"></div>
+    </section>
+
+    <!-- Generation History Section -->
+    <section class="history-card" id="historyCardSection">
+      <div class="history-header">
+        <div class="history-title">
+          <span>🕐</span> Lịch sử các câu đã tạo trong phiên làm việc
+        </div>
+        <button class="clear-history-btn" id="btnClearHistory">Xóa lịch sử</button>
+      </div>
+      <div class="history-list" id="historyList">
+        <div style="font-size: 11px; color: var(--text-muted); padding: 12px 0;">
+          Chưa có lịch sử nào. Sau khi bạn tạo giọng nói, kết quả sẽ tự động lưu tại đây.
+        </div>
+      </div>
+    </section>
+
+  </div><!-- .workspace-content -->
+</main>
+
+<!-- ════════════════════════════════════════════════════════════
+     3. RIGHT PANEL (Voice Roster & Clone Studio)
+════════════════════════════════════════════════════════════ -->
+<aside class="right-panel">
+  <div class="panel-header">
+    <div class="panel-title">Chọn giọng đọc</div>
+
+    <!-- Tabs -->
+    <div class="tabs-strip">
+      <div class="tab-pill active" data-tab="all" id="tabAll">Tất cả (<span id="countAll">0</span>)</div>
+      <div class="tab-pill" data-tab="custom" id="tabCustom">Giọng clone (<span id="countCustom">0</span>)</div>
+      <div class="tab-pill" data-tab="fav" id="tabFav">Yêu thích (<span id="countFav">0</span>)</div>
+    </div>
+
+    <!-- Search input -->
+    <div class="search-container">
+      <span class="ico">🔍</span>
+      <input type="text" id="inputSearchVoice" placeholder="Tìm tên giọng, vùng miền..."/>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-grid">
+      <select class="filter-select" id="filterEngineSelect">
+        <option value="">Tất cả nguồn</option>
+        <option value="custom">Giọng clone của bạn</option>
+        <option value="preset">Giọng mặc định v3</option>
+      </select>
+      <select class="filter-select" id="filterRegionSelect">
+        <option value="">Tất cả vùng miền</option>
+        <option value="Bắc">Miền Bắc</option>
+        <option value="Nam">Miền Nam</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Voice Roster Scrollable List -->
+  <div class="voice-roster" id="voiceRosterContainer">
+    <!-- Populated by JavaScript -->
+  </div>
+
+  <!-- Quick Upload Section at Bottom of Panel -->
+  <div class="upload-drawer" id="uploadDrawerSection">
+    <div class="upload-drawer-title">
+      <span>➕</span> Tải lên giọng mẫu để clone
+    </div>
+
+    <form class="upload-form-wrap" id="uploadForm">
+      <input type="text" class="input-compact" id="uploadVoiceName" placeholder="Tên giọng (vd: giong_bac_thanh)" required/>
+      <input type="text" class="input-compact" id="uploadVoiceDesc" placeholder="Mô tả (vd: Giọng nữ Hà Nội truyền cảm)"/>
+
+      <div class="dropzone-compact" id="uploadDropzone">
+        <input type="file" id="uploadFileInput" accept="audio/*" required/>
+        <div class="dropzone-text">
+          📁 Kéo thả hoặc nhấn chọn file<br/>
+          <span style="color: var(--text-faint);">WAV / MP3 / M4A (Khuyến nghị 3–8 giây sạch)</span>
+        </div>
+        <div class="dropzone-selected-name" id="dropzoneFileName"></div>
+      </div>
+
+      <input type="text" class="input-compact" id="uploadRefText" placeholder="Lời thoại câu nói trong file (bắt buộc cho v2 GGUF)..."/>
+
+      <label class="checkbox-compact" for="uploadDenoiseCheckbox">
+        <input type="checkbox" id="uploadDenoiseCheckbox"/>
+        <div class="checkbox-box"></div>
+        <span>Khử nhiễu nền (khuyên tắt nếu file thu đã sạch)</span>
+      </label>
+
+      <label class="checkbox-compact" for="uploadConsentCheckbox">
+        <input type="checkbox" id="uploadConsentCheckbox" required/>
+        <div class="checkbox-box"></div>
+        <span>Tôi xác nhận có quyền sử dụng giọng này</span>
+      </label>
+
+      <button type="submit" class="btn-submit-clone" id="btnSubmitVoice">
+        Đăng ký giọng clone mới
+      </button>
+    </form>
+  </div>
+</aside>
+
+<!-- ════════════════════════════════════════════════════════════
+     4. JAVASCRIPT LOGIC & STATE ENGINE
+════════════════════════════════════════════════════════════ -->
+<script>
+(() => {
+  /* ── Element Selectors ── */
+  const $ = id => document.getElementById(id);
+
+  const textInput         = $('textInput');
+  const wordCount         = $('wordCount');
+  const charCount         = $('charCount');
+  const btnGenerateSpeech = $('btnGenerateSpeech');
+  const statusToast       = $('statusToast');
+  const playerShowcase    = $('playerShowcase');
+  const audioPlayer       = $('audioPlayer');
+  const btnDownloadWav    = $('btnDownloadWav');
+  const benchmarkStrip    = $('benchmarkStrip');
+  const chunksInspector   = $('chunksInspector');
+  const historyList       = $('historyList');
+  const voiceRosterContainer = $('voiceRosterContainer');
+
+  // Sliders
+  const speedSlider       = $('speedSlider');
+  const speedBadge        = $('speedBadge');
+  const volSlider         = $('volSlider');
+  const volBadge          = $('volBadge');
+  const tempSlider        = $('tempSlider');
+  const tempBadge         = $('tempBadge');
+  const topKSlider        = $('topKSlider');
+  const topKBadge         = $('topKBadge');
+  const topPSlider        = $('topPSlider');
+  const topPBadge         = $('topPBadge');
+  const repSlider         = $('repSlider');
+  const repBadge          = $('repBadge');
+  const refCodesCheckbox  = $('refCodesCheckbox');
+
+  // Upload elements
+  const uploadForm        = $('uploadForm');
+  const uploadVoiceName   = $('uploadVoiceName');
+  const uploadVoiceDesc   = $('uploadVoiceDesc');
+  const uploadFileInput   = $('uploadFileInput');
+  const uploadRefText     = $('uploadRefText');
+  const uploadDenoiseCheckbox = $('uploadDenoiseCheckbox');
+  const uploadConsentCheckbox = $('uploadConsentCheckbox');
+  const btnSubmitVoice    = $('btnSubmitVoice');
+  const uploadDropzone    = $('uploadDropzone');
+  const dropzoneFileName  = $('dropzoneFileName');
+
+  // State Variables
+  let currentEngine       = 'vieneu';
+  let selectedVoiceName   = null;
+  let voicesRegistry      = { custom_voices: [], preset_voices: [] };
+  let currentTab          = 'all';
+  let activeAudioBlobUrl  = null;
+  let favoritesList       = JSON.parse(localStorage.getItem('luatu_favs') || '[]');
+  let generationHistory   = JSON.parse(localStorage.getItem('luatu_history') || '[]');
+
+  /* ── Sample Texts Library ── */
+  const SAMPLE_SCRIPTS = [
+    {
+      title: "Tin tức & Ngày giờ",
+      text: "Hôm nay là ngày 17 tháng 11 năm 2026, lúc 9 giờ 45 phút. Đơn hàng trị giá 1.250.000 đồng, giảm 15% còn 1.062.500 đồng. Anh ấy sống tại TP. Hồ Chí Minh và mở file PDF qua Wi-Fi."
+    },
+    {
+      title: "Đủ 6 thanh điệu tiếng Việt",
+      text: "Má mua mạ ở chợ, mà mẹ mắng má mãi. Bảy mươi bảy bạn học viên đều đến đầy đủ. Quảng Ngãi có đặc sản kẹo gương rất nổi tiếng. Chiếc xuồng nhỏ lướt qua những rặng dừa nước ở Bến Tre."
+    },
+    {
+      title: "Đàm thoại tự nhiên CSKH",
+      text: "Dạ em chào anh chị ạ! Cảm ơn anh chị đã liên hệ với trung tâm hỗ trợ khách hàng. Mọi yêu cầu của anh chị đã được xử lý xong rồi, anh chị kiểm tra lại giúp em nhé."
+    },
+    {
+      title: "Đoạn văn dài kiểm tra tách câu",
+      text: "Hệ thống tổng hợp giọng nói VieNeu-TTS v3 Turbo hoạt động trên mô hình ONNX fp32 cho tốc độ suy luận nhanh hơn thời gian thực. Đối với các đoạn văn dài, hệ thống sẽ tự động phân tách câu thông minh và giữ nguyên độ mượt mà từ đầu đến cuối."
+    }
+  ];
+  let sampleIndex = 0;
+
+  /* ── Text Counter ── */
+  function updateTextCounter() {
+    const val = textInput.value;
+    charCount.textContent = val.length;
+    const words = val.trim() ? val.trim().split(/\s+/).length : 0;
+    wordCount.textContent = words;
+  }
+  textInput.addEventListener('input', updateTextCounter);
+
+  /* ── Editor Toolbar Actions ── */
+  $('btnClear').addEventListener('click', () => {
+    textInput.value = '';
+    updateTextCounter();
+    chunksInspector.classList.remove('active');
+  });
+
+  $('btnPaste').addEventListener('click', async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      textInput.value = text;
+      updateTextCounter();
+      showToast('ok', 'Đã dán văn bản từ clipboard thành công.');
+    } catch {
+      showToast('err', 'Không thể truy cập clipboard của trình duyệt.');
+    }
+  });
+
+  $('btnSample').addEventListener('click', () => {
+    const script = SAMPLE_SCRIPTS[sampleIndex % SAMPLE_SCRIPTS.length];
+    sampleIndex++;
+    textInput.value = script.text;
+    updateTextCounter();
+    showToast('info', `Đã nạp mẫu: "${script.title}"`);
+  });
+
+  $('btnChunks').addEventListener('click', async () => {
+    const text = textInput.value.trim();
+    if (!text) {
+      showToast('err', 'Vui lòng nhập văn bản trước khi xem tách đoạn.');
+      return;
+    }
+    try {
+      const res = await fetch('/v1/text/preview-chunks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ input: text }),
+      });
+      const data = await res.json();
+      chunksInspector.classList.add('active');
+      chunksInspector.innerHTML = `<strong>Phân tách thành ${data.count} câu ngắt tự nhiên:</strong><ol>` +
+        data.chunks.map(c => `<li>${c}</li>`).join('') + '</ol>';
+    } catch {
+      showToast('err', 'Lỗi kiểm tra tách đoạn.');
+    }
+  });
+
+  /* ── Slider Sync & Styling ── */
+  function syncSliderFill(slider) {
+    const min = parseFloat(slider.min);
+    const max = parseFloat(slider.max);
+    const val = parseFloat(slider.value);
+    const pct = ((val - min) / (max - min)) * 100;
+    slider.style.background = `linear-gradient(to right, var(--red-primary) ${pct}%, var(--border-strong) ${pct}%)`;
+  }
+
+  const sliderMap = [
+    [speedSlider, speedBadge, v => `${v.toFixed(2)}x`],
+    [volSlider,   volBadge,   v => `${Math.round(v)}%`],
+    [tempSlider,  tempBadge,  v => v.toFixed(2)],
+    [topKSlider,  topKBadge,  v => Math.round(v)],
+    [topPSlider,  topPBadge,  v => v.toFixed(2)],
+    [repSlider,   repBadge,   v => v.toFixed(2)],
+  ];
+
+  sliderMap.forEach(([slider, badge, fmt]) => {
+    const update = () => {
+      badge.textContent = fmt(parseFloat(slider.value));
+      syncSliderFill(slider);
+      if (slider === volSlider && audioPlayer) {
+        audioPlayer.volume = parseFloat(slider.value) / 100;
+      }
+    };
+    slider.addEventListener('input', update);
+    update();
+  });
+
+  /* ── Presets ── */
+  const PRESET_MAP = {
+    strict:     { temp: 0.40, topK: 12, topP: 0.80, rep: 1.20, refCodes: true },
+    balanced:   { temp: 0.55, topK: 18, topP: 0.88, rep: 1.20, refCodes: true },
+    expressive: { temp: 0.75, topK: 25, topP: 0.95, rep: 1.20, refCodes: true },
+  };
+
+  document.querySelectorAll('.preset-chip[data-preset]').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const p = PRESET_MAP[chip.dataset.preset];
+      if (!p) return;
+      tempSlider.value = p.temp;
+      topKSlider.value = p.topK;
+      topPSlider.value = p.topP;
+      repSlider.value  = p.rep;
+      refCodesCheckbox.checked = p.refCodes;
+      sliderMap.forEach(([s, b, fmt]) => {
+        b.textContent = fmt(parseFloat(s.value));
+        syncSliderFill(s);
+      });
+    });
+  });
+
+  /* ── Advanced Toggle Drawer ── */
+  $('advToggleBtn').addEventListener('click', () => {
+    $('advToggleBtn').classList.toggle('open');
+    $('advParamsDrawer').classList.toggle('open');
+  });
+
+  /* ── Engine Switching ── */
+  $('engineV3Card').addEventListener('click', () => setEngine('vieneu'));
+  $('engineV2Card').addEventListener('click', () => setEngine('vieneu-v2'));
+
+  function setEngine(engine) {
+    currentEngine = engine;
+    if (engine === 'vieneu') {
+      $('engineV3Card').classList.add('active');
+      $('engineV2Card').classList.remove('active');
+      $('engineStatusHint').textContent = 'Đang sẵn sàng · VieNeu v3 Turbo 48kHz (tổng hợp siêu tốc trên CPU)';
+    } else {
+      $('engineV2Card').classList.add('active');
+      $('engineV3Card').classList.remove('active');
+      $('engineStatusHint').textContent = 'Đang chọn v2 GGUF Q8 · 24kHz (khóa chặt ngữ điệu Bắc bằng câu mẫu ref_text)';
+    }
+  }
+
+  /* ── Health Polling ── */
+  async function checkHealth() {
+    try {
+      const res = await fetch('/health');
+      const data = await res.json();
+      $('healthPill').className = 'health-pill online';
+      const v2State = data.v2_loaded ? 'v2 sẵn sàng' : 'v2 chờ';
+      $('healthLabel').textContent = `v3 (${data.precision}) · ${v2State}`;
+    } catch {
+      $('healthPill').className = 'health-pill';
+      $('healthLabel').textContent = 'Chưa kết nối server';
+    }
+  }
+
+  /* ── Voice Roster & Rendering ── */
+  function getInitials(name) {
+    if (!name) return '?';
+    const clean = name.replace(/_/g, ' ').trim();
+    const parts = clean.split(' ');
+    if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    return clean.slice(0, 2).toUpperCase();
+  }
+
+  function getAvatarStyleClass(voice) {
+    if (voice.isCustom) return 'custom';
+    const desc = (voice.description || '').toLowerCase();
+    const name = voice.name.toLowerCase();
+    if (desc.includes('nữ') || name.includes('nữ') || name.includes('ngọc') || name.includes('huyền')) return 'preset-female';
+    if (desc.includes('nam') || name.includes('nam') || name.includes('minh') || name.includes('hùng')) return 'preset-male';
+    return 'preset-special';
+  }
+
+  function renderVoiceRoster() {
+    const q = $('inputSearchVoice').value.toLowerCase().trim();
+    const engFilter = $('filterEngineSelect').value;
+    const regFilter = $('filterRegionSelect').value;
+
+    let list = [];
+    voicesRegistry.custom_voices.forEach(v => list.push({ ...v, isCustom: true }));
+    voicesRegistry.preset_voices.forEach(v => list.push({ ...v, isCustom: false }));
+
+    // Filter by Tab
+    if (currentTab === 'custom') {
+      list = list.filter(v => v.isCustom);
+    } else if (currentTab === 'fav') {
+      list = list.filter(v => favoritesList.includes(v.name));
+    }
+
+    // Filter by query and dropdowns
+    list = list.filter(v => {
+      const name = v.name.toLowerCase();
+      const desc = (v.description || '').toLowerCase();
+      if (q && !name.includes(q) && !desc.includes(q)) return false;
+      if (engFilter === 'custom' && !v.isCustom) return false;
+      if (engFilter === 'preset' && v.isCustom) return false;
+      if (regFilter && !desc.includes(regFilter.toLowerCase())) return false;
+      return true;
+    });
+
+    // Counts update
+    $('countAll').textContent = voicesRegistry.custom_voices.length + voicesRegistry.preset_voices.length;
+    $('countCustom').textContent = voicesRegistry.custom_voices.length;
+    $('countFav').textContent = favoritesList.length;
+
+    voiceRosterContainer.innerHTML = '';
+
+    if (list.length === 0) {
+      voiceRosterContainer.innerHTML = `
+        <div style="text-align: center; padding: 36px 16px; color: var(--text-muted); font-size: 12px;">
+          Không tìm thấy giọng nào phù hợp với bộ lọc.
+        </div>`;
+      return;
+    }
+
+    list.forEach(voice => {
+      const entry = document.createElement('div');
+      entry.className = 'voice-entry' + (voice.name === selectedVoiceName ? ' active-selected' : '');
+      entry.dataset.voice = voice.name;
+
+      const initials = getInitials(voice.name);
+      const avatarClass = getAvatarStyleClass(voice);
+      const isLoved = favoritesList.includes(voice.name);
+
+      let chips = '';
+      if (voice.isCustom) {
+        chips += `<span class="badge-micro red">Clone (${voice.duration_sec}s)</span>`;
+        chips += voice.has_ref_text ? `<span class="badge-micro green">v2 Chuẩn</span>` : `<span class="badge-micro gray">v2 Thiếu</span>`;
+      } else {
+        chips += `<span class="badge-micro gray">VieNeu v3</span>`;
+        if (voice.description && voice.description.includes('Bắc')) chips += `<span class="badge-micro gold">Miền Bắc</span>`;
+        if (voice.description && voice.description.includes('Nam')) chips += `<span class="badge-micro red">Miền Nam</span>`;
+      }
+
+      const actions = voice.isCustom ? `
+        <button class="btn-action-icon" data-editref="${voice.name}" title="Sửa lời thoại mẫu (ref_text)">✎</button>
+        <button class="btn-action-icon" data-del="${voice.name}" title="Xóa giọng" style="color:#f87171;">✕</button>
+      ` : '';
+
+      entry.innerHTML = `
+        <div class="voice-avatar-crest ${avatarClass}">${initials}</div>
+        <div class="voice-details">
+          <div class="voice-name-row">
+            <span class="voice-card-name">${voice.name}</span>
+          </div>
+          <div class="voice-chips-line">${chips}</div>
+        </div>
+        <div class="voice-card-actions">
+          <button class="btn-action-icon favorite ${isLoved ? 'loved' : ''}" data-fav="${voice.name}" title="Yêu thích">
+            ${isLoved ? '♥' : '♡'}
+          </button>
+          ${actions}
+          <button class="btn-action-icon play-preview" data-preview="${voice.name}" title="Nghe mẫu">
+            ▶
+          </button>
+        </div>
+      `;
+
+      // Select Card
+      entry.addEventListener('click', e => {
+        if (e.target.closest('button')) return;
+        selectVoice(voice.name);
+      });
+
+      voiceRosterContainer.appendChild(entry);
+    });
+
+    // Bind Button Events
+    voiceRosterContainer.querySelectorAll('[data-fav]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        toggleFavorite(btn.dataset.fav);
+      });
+    });
+
+    voiceRosterContainer.querySelectorAll('[data-preview]').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        playVoicePreview(btn.dataset.preview);
+      });
+    });
+
+    voiceRosterContainer.querySelectorAll('[data-editref]').forEach(btn => {
+      btn.addEventListener('click', async e => {
+        e.stopPropagation();
+        editVoiceRefText(btn.dataset.editref);
+      });
+    });
+
+    voiceRosterContainer.querySelectorAll('[data-del]').forEach(btn => {
+      btn.addEventListener('click', async e => {
+        e.stopPropagation();
+        deleteVoice(btn.dataset.del);
+      });
+    });
+  }
+
+  function selectVoice(name) {
+    selectedVoiceName = name;
+    document.querySelectorAll('.voice-entry').forEach(el => {
+      el.classList.toggle('active-selected', el.dataset.voice === name);
+    });
+    showToast('info', `Đã chọn giọng đọc: "${name}"`);
+  }
+
+  function toggleFavorite(name) {
+    if (favoritesList.includes(name)) {
+      favoritesList = favoritesList.filter(x => x !== name);
+    } else {
+      favoritesList.push(name);
+    }
+    localStorage.setItem('luatu_favs', JSON.stringify(favoritesList));
+    renderVoiceRoster();
+  }
+
+  async function playVoicePreview(voiceName) {
+    selectVoice(voiceName);
+    const customVoice = voicesRegistry.custom_voices.find(v => v.name === voiceName);
+    if (customVoice) {
+      // Play raw reference audio directly from backend
+      try {
+        audioPlayer.src = `/v1/voices/${encodeURIComponent(voiceName)}/audio`;
+        playerShowcase.classList.add('active');
+        btnDownloadWav.href = audioPlayer.src;
+        audioPlayer.play().catch(() => {});
+        showToast('ok', `Đang phát âm thanh mẫu gốc của "${voiceName}".`);
+      } catch {
+        showToast('err', 'Không tải được file mẫu.');
+      }
+    } else {
+      // Speak quick preview phrase
+      textInput.value = `Xin chào! Tôi là giọng đọc ${voiceName}, rất hân hạnh được đồng hành cùng bạn.`;
+      updateTextCounter();
+      btnGenerateSpeech.click();
+    }
+  }
+
+  async function editVoiceRefText(voiceName) {
+    const cur = (voicesRegistry.custom_voices.find(x => x.name === voiceName) || {}).ref_text || '';
+    const updated = prompt(`Nhập lời thoại chính xác trong file mẫu của '${voiceName}' (dùng cho v2 GGUF Q8):`, cur);
+    if (updated === null || !updated.trim()) return;
+
+    try {
+      const res = await fetch(`/v1/voices/${encodeURIComponent(voiceName)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref_text: updated.trim() }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.detail || 'Cập nhật thất bại.');
+      }
+      showToast('ok', `Đã cập nhật ref_text cho giọng "${voiceName}".`);
+      await loadVoicesRegistry();
+    } catch (err) {
+      showToast('err', err.message);
+    }
+  }
+
+  async function deleteVoice(voiceName) {
+    if (!confirm(`Bạn có chắc muốn xóa giọng clone '${voiceName}'?`)) return;
+    try {
+      const res = await fetch(`/v1/voices/${encodeURIComponent(voiceName)}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Xóa giọng thất bại.');
+      showToast('ok', `Đã xóa giọng "${voiceName}".`);
+      if (selectedVoiceName === voiceName) selectedVoiceName = null;
+      await loadVoicesRegistry();
+    } catch (err) {
+      showToast('err', err.message);
+    }
+  }
+
+  async function loadVoicesRegistry() {
+    try {
+      const res = await fetch('/v1/voices');
+      voicesRegistry = await res.json();
+      if (!selectedVoiceName) {
+        if (voicesRegistry.custom_voices.length) selectedVoiceName = voicesRegistry.custom_voices[0].name;
+        else if (voicesRegistry.preset_voices.length) selectedVoiceName = voicesRegistry.preset_voices[0].name;
+      }
+      renderVoiceRoster();
+    } catch {
+      showToast('err', 'Không tải được danh mục giọng từ server.');
+    }
+  }
+
+  /* ── Tab Filtering in Right Panel ── */
+  $('tabAll').addEventListener('click', () => switchTab('all'));
+  $('tabCustom').addEventListener('click', () => switchTab('custom'));
+  $('tabFav').addEventListener('click', () => switchTab('fav'));
+
+  function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.tab-pill').forEach(el => el.classList.remove('active'));
+    $(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
+    renderVoiceRoster();
+  }
+
+  $('inputSearchVoice').addEventListener('input', renderVoiceRoster);
+  $('filterEngineSelect').addEventListener('change', renderVoiceRoster);
+  $('filterRegionSelect').addEventListener('change', renderVoiceRoster);
+
+  /* ── Upload New Voice Clone ── */
+  uploadFileInput.addEventListener('change', () => {
+    const file = uploadFileInput.files[0];
+    if (file) {
+      dropzoneFileName.textContent = `📎 ${file.name} (${(file.size / 1024).toFixed(0)} KB)`;
+      dropzoneFileName.style.display = 'block';
+    }
+  });
+
+  uploadDropzone.addEventListener('dragover', e => { e.preventDefault(); uploadDropzone.classList.add('drag-active'); });
+  uploadDropzone.addEventListener('dragleave', () => uploadDropzone.classList.remove('drag-active'));
+  uploadDropzone.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadDropzone.classList.remove('drag-active');
+    if (e.dataTransfer.files.length) {
+      uploadFileInput.files = e.dataTransfer.files;
+      uploadFileInput.dispatchEvent(new Event('change'));
+    }
+  });
+
+  uploadForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    btnSubmitVoice.disabled = true;
+    showToast('info', 'Đang phân tích và trích xuất đặc trưng âm thanh mẫu...');
+
+    try {
+      const fd = new FormData();
+      fd.append('name', uploadVoiceName.value.trim());
+      fd.append('description', uploadVoiceDesc.value.trim());
+      fd.append('ref_text', uploadRefText.value.trim());
+      fd.append('denoise', uploadDenoiseCheckbox.checked);
+      fd.append('consent_confirmed', uploadConsentCheckbox.checked);
+      fd.append('file', uploadFileInput.files[0]);
+
+      const res = await fetch('/v1/voices', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || 'Đăng ký giọng thất bại.');
+
+      showToast('ok', `Đã lưu thành công giọng clone "${data.voice.name}" (${data.voice.duration_sec}s).`);
+      uploadForm.reset();
+      dropzoneFileName.style.display = 'none';
+
+      await loadVoicesRegistry();
+      switchTab('custom');
+      selectVoice(data.voice.name);
+    } catch (err) {
+      showToast('err', err.message);
+    } finally {
+      btnSubmitVoice.disabled = false;
+    }
+  });
+
+  /* ── Generate Speech (TTS Core) ── */
+  async function generateSpeech() {
+    const text = textInput.value.trim();
+    if (!text) {
+      showToast('err', 'Vui lòng nhập văn bản tiếng Việt cần đọc.');
+      textInput.focus();
+      return;
+    }
+
+    btnGenerateSpeech.disabled = true;
+    btnGenerateSpeech.classList.add('loading');
+    btnGenerateSpeech.innerHTML = currentEngine === 'vieneu-v2'
+      ? 'ĐANG TỔNG HỢP VỚI v2 GGUF Q8 (VUI LÒNG ĐỢI)...'
+      : 'ĐANG TỔNG HỢP GIỌNG NÓI...';
+
+    showToast('info', currentEngine === 'vieneu-v2'
+      ? '⟳ Đang chạy mô hình VieNeu v2 GGUF Q8 (bám ngữ điệu Bắc bằng ref_text)...'
+      : '⟳ Đang tổng hợp siêu tốc bằng VieNeu v3 Turbo...');
+
+    try {
+      const payload = {
+        model: currentEngine,
+        voice: selectedVoiceName || 'default',
+        input: text,
+        speed: parseFloat(speedSlider.value),
+        temperature: parseFloat(tempSlider.value),
+        top_k: parseInt(topKSlider.value, 10),
+        top_p: parseFloat(topPSlider.value),
+        repetition_penalty: parseFloat(repSlider.value),
+        use_ref_codes: refCodesCheckbox.checked,
+        response_format: 'wav',
+      };
+
+      const res = await fetch('/v1/audio/speech', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.detail || 'Tổng hợp tiếng nói thất bại.');
+      }
+
+      const blob = await res.blob();
+      if (activeAudioBlobUrl) URL.revokeObjectURL(activeAudioBlobUrl);
+      activeAudioBlobUrl = URL.createObjectURL(blob);
+
+      audioPlayer.src = activeAudioBlobUrl;
+      btnDownloadWav.href = activeAudioBlobUrl;
+      btnDownloadWav.download = `luatu_${selectedVoiceName}_${Date.now()}.wav`;
+
+      playerShowcase.classList.add('active');
+      audioPlayer.play().catch(() => {});
+
+      // Stats
+      const dur    = res.headers.get('X-Audio-Duration-Sec') || '0';
+      const inf    = res.headers.get('X-Inference-Sec') || '0';
+      const rtf    = res.headers.get('X-RTF') || '0';
+      const cached = res.headers.get('X-Cached') || 'false';
+      const sr     = res.headers.get('X-Audio-Sample-Rate') || '48000';
+      const prec   = res.headers.get('X-TTS-Precision') || 'fp32';
+
+      benchmarkStrip.innerHTML = `
+        <div class="benchmark-pill">Mô hình: <b class="gold">${currentEngine} (${prec})</b></div>
+        <div class="benchmark-pill">Tần số: <b>${sr} Hz</b></div>
+        <div class="benchmark-pill">Độ dài audio: <b>${dur}s</b></div>
+        <div class="benchmark-pill">Thời gian sinh: <b>${inf}s</b></div>
+        <div class="benchmark-pill">Chỉ số RTF: <b class="gold">${rtf}</b></div>
+        <div class="benchmark-pill">Bộ nhớ đệm: <b>${cached === 'true' ? 'HIT' : 'MISS'}</b></div>
+      `;
+
+      showToast('ok', `✓ Hoàn tất tạo giọng! Thời lượng: ${dur}s · RTF: ${rtf}`);
+      saveToHistory({
+        text,
+        voice: selectedVoiceName || 'Mặc định',
+        engine: currentEngine,
+        duration: dur,
+        timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+        audioUrl: activeAudioBlobUrl,
+      });
+
+      checkHealth();
+    } catch (err) {
+      showToast('err', `✗ ${err.message}`);
+    } finally {
+      btnGenerateSpeech.disabled = false;
+      btnGenerateSpeech.classList.remove('loading');
+      btnGenerateSpeech.innerHTML = '<span class="icon">▶</span> TẠO GIỌNG NÓI NGAY (Ctrl + Enter)';
+    }
+  }
+
+  btnGenerateSpeech.addEventListener('click', generateSpeech);
+
+  // Keyboard shortcut Ctrl + Enter
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      generateSpeech();
+    }
+  });
+
+  /* ── History Persistence & Management ── */
+  function saveToHistory(item) {
+    generationHistory.unshift(item);
+    if (generationHistory.length > 20) generationHistory.pop();
+    localStorage.setItem('luatu_history', JSON.stringify(generationHistory.map(h => ({
+      ...h,
+      audioUrl: null // Blob URLs can't be saved in localStorage
+    }))));
+    renderHistory();
+  }
+
+  function renderHistory() {
+    if (generationHistory.length === 0) {
+      historyList.innerHTML = `<div style="font-size: 11px; color: var(--text-muted); padding: 12px 0;">Chưa có lịch sử nào.</div>`;
+      return;
+    }
+
+    historyList.innerHTML = '';
+    generationHistory.forEach((item, idx) => {
+      const el = document.createElement('div');
+      el.className = 'history-item';
+      el.innerHTML = `
+        <div class="history-info">
+          <div class="history-meta-line">
+            <span class="history-voice-name">${item.voice}</span>
+            <span class="badge-micro ${item.engine === 'vieneu-v2' ? 'gold' : 'red'}">${item.engine}</span>
+            <span class="history-time">${item.timestamp} · ${item.duration}s</span>
+          </div>
+          <div class="history-excerpt">${item.text}</div>
+        </div>
+        <div class="history-actions">
+          <button class="btn-circle" data-reuse="${idx}" title="Dùng lại đoạn văn này">⤾</button>
+          <button class="btn-circle play" data-speakagain="${idx}" title="Đọc lại câu này">▶</button>
+        </div>
+      `;
+      historyList.appendChild(el);
+    });
+
+    historyList.querySelectorAll('[data-reuse]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = generationHistory[parseInt(btn.dataset.reuse, 10)];
+        textInput.value = item.text;
+        updateTextCounter();
+        selectVoice(item.voice);
+        setEngine(item.engine);
+        showToast('info', 'Đã nạp lại văn bản từ lịch sử.');
+      });
+    });
+
+    historyList.querySelectorAll('[data-speakagain]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = generationHistory[parseInt(btn.dataset.speakagain, 10)];
+        textInput.value = item.text;
+        updateTextCounter();
+        selectVoice(item.voice);
+        setEngine(item.engine);
+        generateSpeech();
+      });
+    });
+  }
+
+  $('btnClearHistory').addEventListener('click', () => {
+    if (!confirm('Bạn có chắc muốn xóa sạch lịch sử đã tạo?')) return;
+    generationHistory = [];
+    localStorage.removeItem('luatu_history');
+    renderHistory();
+    showToast('info', 'Đã dọn dẹp lịch sử.');
+  });
+
+  /* ── Sidebar Navigation Link Events ── */
+  $('navWorkspace').addEventListener('click', () => {
+    setActiveNav('navWorkspace');
+    $('workspaceScroll').scrollTo({ top: 0, behavior: 'smooth' });
+    textInput.focus();
+  });
+
+  $('navLibrary').addEventListener('click', () => {
+    setActiveNav('navLibrary');
+    switchTab('all');
+    $('inputSearchVoice').focus();
+  });
+
+  $('navHistory').addEventListener('click', () => {
+    setActiveNav('navHistory');
+    $('historyCardSection').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  $('navMyVoices').addEventListener('click', () => {
+    setActiveNav('navMyVoices');
+    switchTab('custom');
+    $('uploadDrawerSection').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  function setActiveNav(id) {
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    $(id).classList.add('active');
+  }
+
+  /* ── Toast Feedback Helper ── */
+  let toastTimer = null;
+  function showToast(type, msg) {
+    clearTimeout(toastTimer);
+    statusToast.className = `status-toast show ${type}`;
+    const icons = { ok: '✓', err: '✗', info: 'ℹ' };
+    statusToast.innerHTML = `<span>${icons[type] || '•'}</span> <span>${msg}</span>`;
+    toastTimer = setTimeout(() => {
+      statusToast.classList.remove('show');
+    }, 4500);
+  }
+
+  /* ── Initialization ── */
+  checkHealth();
+  loadVoicesRegistry();
+  renderHistory();
+  setInterval(checkHealth, 30000);
+})();
+</script>
+</body>
+</html>
