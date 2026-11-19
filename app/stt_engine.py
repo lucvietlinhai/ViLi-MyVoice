@@ -53,7 +53,6 @@ class STTEngine:
         result = self._pipe(
             path_str,
             generate_kwargs={"language": "vietnamese", "task": "transcribe"},
-            clean_up_tokenization_spaces=False,
         )
         text = result.get("text", "").strip()
         return text

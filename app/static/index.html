@@ -70,7 +70,7 @@
       --font-mono: 'JetBrains Mono', monospace;
 
       --sidebar-width: 230px;
-      --right-panel-width: 360px;
+      --right-panel-width: 440px;
     }
 
     /* ── BASE RESET ── */
@@ -1081,7 +1081,7 @@
     }
 
     .panel-title {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 800;
       color: var(--text-white);
       margin-bottom: 12px;
@@ -1101,10 +1101,10 @@
     .tab-pill {
       flex: 1;
       text-align: center;
-      padding: 7px 4px;
+      padding: 8px 6px;
       border-radius: var(--radius-sm);
-      font-size: 11px;
-      font-weight: 600;
+      font-size: 12px;
+      font-weight: 700;
       cursor: pointer;
       color: var(--text-muted);
       transition: all 0.15s;
@@ -1128,8 +1128,8 @@
       background: var(--bg-input);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-md);
-      padding: 8px 12px 8px 34px;
-      font-size: 12px;
+      padding: 9px 12px 9px 36px;
+      font-size: 12.5px;
       color: var(--text-white);
       font-family: inherit;
       outline: none;
@@ -1142,10 +1142,10 @@
 
     .search-container .ico {
       position: absolute;
-      left: 11px;
+      left: 12px;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 13px;
+      font-size: 14px;
       color: var(--text-muted);
       pointer-events: none;
     }
@@ -1160,8 +1160,8 @@
       background: var(--bg-input);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-sm);
-      padding: 6px 8px;
-      font-size: 11px;
+      padding: 7px 10px;
+      font-size: 12px;
       color: var(--text-secondary);
       font-family: inherit;
       outline: none;
@@ -1179,14 +1179,14 @@
       padding: 12px 18px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 9px;
     }
 
     .voice-entry {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 10px 12px;
+      padding: 11px 14px;
       border-radius: var(--radius-md);
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
@@ -1207,17 +1207,17 @@
     }
 
     .voice-avatar-crest {
-      width: 38px;
-      height: 38px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 800;
       color: white;
       flex-shrink: 0;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
     .voice-avatar-crest.custom { background: var(--red-gradient); }
@@ -1237,7 +1237,7 @@
     }
 
     .voice-card-name {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--text-white);
       white-space: nowrap;
@@ -1247,24 +1247,24 @@
 
     .voice-chips-line {
       display: flex;
-      gap: 4px;
-      margin-top: 3px;
+      gap: 5px;
+      margin-top: 4px;
       flex-wrap: wrap;
     }
 
     .badge-micro {
-      font-size: 9px;
+      font-size: 10px;
       font-weight: 700;
-      padding: 1px 6px;
+      padding: 2px 7px;
       border-radius: var(--radius-pill);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
     }
 
-    .badge-micro.red   { background: rgba(225, 29, 72, 0.15); color: var(--red-bright); }
-    .badge-micro.gold  { background: var(--gold-subtle); color: var(--gold-bright); }
-    .badge-micro.green { background: rgba(16, 185, 129, 0.15); color: #34d399; }
-    .badge-micro.gray  { background: rgba(255, 255, 255, 0.05); color: var(--text-muted); }
+    .badge-micro.red   { background: rgba(225, 29, 72, 0.15); color: var(--red-bright); border: 1px solid rgba(225, 29, 72, 0.25); }
+    .badge-micro.gold  { background: var(--gold-subtle); color: var(--gold-bright); border: 1px solid var(--gold-border); }
+    .badge-micro.green { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-micro.gray  { background: rgba(255, 255, 255, 0.06); color: var(--text-secondary); border: 1px solid var(--border-subtle); }
 
     .voice-card-actions {
       display: flex;
@@ -1274,15 +1274,15 @@
     }
 
     .btn-action-icon {
-      width: 28px;
-      height: 28px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       border: none;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
+      font-size: 13px;
       background: transparent;
       color: var(--text-muted);
       transition: all 0.15s;
@@ -1298,6 +1298,8 @@
     }
 
     .btn-action-icon.play-preview {
+      width: 32px;
+      height: 32px;
       background: var(--red-gradient);
       color: white;
       border: 1px solid rgba(245, 158, 11, 0.25);
@@ -1310,28 +1312,28 @@
 
     /* ── Upload Drawer in Right Panel ── */
     .upload-drawer {
-      padding: 14px 18px 18px;
+      padding: 16px 20px 20px;
       border-top: 1px solid var(--border-subtle);
-      background: rgba(14, 9, 11, 0.6);
+      background: rgba(14, 9, 11, 0.7);
       flex-shrink: 0;
     }
 
     .upload-drawer-title {
-      font-size: 11px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      margin-bottom: 8px;
+      letter-spacing: 0.06em;
+      color: var(--text-white);
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
     }
 
     .upload-form-wrap {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 9px;
     }
 
     .input-compact {
@@ -1339,8 +1341,8 @@
       background: var(--bg-input);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-sm);
-      padding: 7px 10px;
-      font-size: 12px;
+      padding: 8px 12px;
+      font-size: 12.5px;
       color: var(--text-white);
       font-family: inherit;
       outline: none;
@@ -1353,7 +1355,7 @@
     .dropzone-compact {
       border: 1.5px dashed var(--border-strong);
       border-radius: var(--radius-md);
-      padding: 12px;
+      padding: 14px 12px;
       text-align: center;
       cursor: pointer;
       position: relative;
@@ -1375,24 +1377,25 @@
     }
 
     .dropzone-text {
-      font-size: 11px;
-      color: var(--text-muted);
-      line-height: 1.4;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      line-height: 1.5;
     }
 
     .dropzone-selected-name {
       display: none;
-      font-size: 11px;
+      font-size: 12px;
       color: var(--red-bright);
       font-weight: 700;
-      margin-top: 4px;
+      margin-top: 5px;
     }
 
     .checkbox-compact {
       display: flex;
       align-items: center;
-      gap: 7px;
-      font-size: 11px;
+      gap: 8px;
+      font-size: 12px;
       color: var(--text-secondary);
       cursor: pointer;
     }
@@ -1400,8 +1403,8 @@
     .checkbox-compact input { display: none; }
 
     .checkbox-box {
-      width: 15px;
-      height: 15px;
+      width: 16px;
+      height: 16px;
       border: 1.5px solid var(--border-strong);
       border-radius: 4px;
       background: var(--bg-input);
@@ -1419,7 +1422,7 @@
 
     .checkbox-box::after {
       content: '✓';
-      font-size: 10px;
+      font-size: 11px;
       color: white;
       opacity: 0;
     }
@@ -1430,25 +1433,29 @@
 
     .btn-submit-clone {
       width: 100%;
-      padding: 9px;
+      padding: 11px;
       background: var(--red-gradient);
-      border: 1px solid rgba(245, 158, 11, 0.25);
+      border: 1px solid rgba(245, 158, 11, 0.3);
       border-radius: var(--radius-md);
       color: white;
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 13.5px;
+      font-weight: 800;
       font-family: inherit;
       cursor: pointer;
+      box-shadow: 0 0 12px var(--red-glow);
       transition: all 0.15s;
     }
 
     .btn-submit-clone:hover {
-      box-shadow: 0 0 12px var(--red-glow);
+      box-shadow: 0 0 16px var(--red-bright);
+      transform: translateY(-1px);
     }
 
     .btn-submit-clone:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
     }
 
     /* ── Right Panel: Clean Audio File Summary Card ── */
@@ -1456,7 +1463,7 @@
       background: var(--bg-card);
       border: 1px solid var(--border-accent);
       border-radius: var(--radius-md);
-      padding: 10px 12px;
+      padding: 12px 14px;
       margin-top: 4px;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
       animation: fadeInCard 0.25s ease-out;
@@ -1470,11 +1477,11 @@
     .summary-card-row {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
     .summary-card-row .file-icon {
-      font-size: 18px;
+      font-size: 22px;
       flex-shrink: 0;
     }
 
@@ -1483,11 +1490,11 @@
       min-width: 0;
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 4px;
     }
 
     .summary-file-name {
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 700;
       color: var(--text-white);
       white-space: nowrap;
@@ -1498,18 +1505,20 @@
     .summary-meta-line {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
     }
 
     .summary-duration-badge {
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 700;
       font-family: var(--font-mono);
-      padding: 1px 6px;
+      padding: 2px 8px;
       border-radius: var(--radius-pill);
       background: rgba(16, 185, 129, 0.15);
       color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .summary-duration-badge.warn {
@@ -1519,25 +1528,36 @@
     }
 
     .summary-status-hint {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .btn-open-trimmer-pill {
-      padding: 5px 10px;
+      padding: 6px 14px;
       border-radius: var(--radius-pill);
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 700;
       font-family: inherit;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       background: var(--red-gradient);
       color: white;
       border: 1px solid rgba(245, 158, 11, 0.3);
       box-shadow: 0 0 10px var(--red-glow);
       transition: all 0.15s;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .btn-open-trimmer-pill:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 14px var(--red-bright);
+    }
       flex-shrink: 0;
     }
 
@@ -1873,59 +1893,55 @@
       border-color: var(--border-strong);
     }
 
-    /* Fine Tuning Group */
-    .fine-tuning-group {
+    /* Window Shift Controls for Locked 8.0s Cut */
+    .window-shift-group {
       display: flex;
       align-items: center;
-      gap: 12px;
-    }
-
-    .time-adjuster-box {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--bg-input);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-sm);
-      padding: 4px 8px;
+      gap: 7px;
     }
 
     .adjuster-label {
-      font-size: 11px;
-      color: var(--text-muted);
-      font-weight: 600;
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      font-weight: 700;
+      white-space: nowrap;
     }
 
     .btn-nudge {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: 4px;
-      color: var(--text-secondary);
-      font-size: 10px;
+      border-radius: var(--radius-sm);
+      color: var(--text-white);
+      font-size: 11px;
+      font-weight: 700;
       font-family: var(--font-mono);
-      padding: 2px 5px;
+      padding: 5px 8px;
       cursor: pointer;
-      transition: all 0.1s;
+      transition: all 0.15s;
+      white-space: nowrap;
     }
 
     .btn-nudge:hover {
       background: var(--bg-elevated);
-      color: var(--text-white);
-      border-color: #00e5ff;
-    }
-
-    .time-val-display {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 700;
       color: #00e5ff;
-      min-width: 50px;
-      text-align: center;
+      border-color: #00e5ff;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
     }
 
-    .time-adjuster-divider {
-      color: var(--text-muted);
-      font-weight: 700;
+    .window-range-display {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #00e5ff;
+      background: var(--bg-input);
+      border: 1px solid rgba(0, 229, 255, 0.35);
+      border-radius: var(--radius-sm);
+      padding: 5px 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6), 0 0 10px rgba(0, 229, 255, 0.15);
+      white-space: nowrap;
     }
 
     /* Duration Status Badge */
@@ -2105,19 +2121,24 @@
     }
 
     /* ── Responsive adjustments ── */
-    @media (max-width: 1100px) {
-      .right-panel { width: 310px; }
-      :root { --sidebar-width: 200px; }
+    @media (max-width: 1300px) {
+      .right-panel { width: 400px; }
+      :root { --sidebar-width: 210px; }
+    }
+
+    @media (max-width: 1050px) {
+      .right-panel { width: 360px; }
+      :root { --sidebar-width: 190px; }
     }
 
     @media (max-width: 850px) {
       .sidebar { display: none; }
-      .right-panel { width: 280px; }
+      .right-panel { width: 340px; }
     }
 
-    @media (max-width: 680px) {
+    @media (max-width: 720px) {
       body { flex-direction: column; }
-      .right-panel { width: 100%; height: 350px; border-top: 1px solid var(--border-subtle); }
+      .right-panel { width: 100%; height: 420px; border-top: 1px solid var(--border-subtle); }
     }
   </style>
 </head>
@@ -2414,7 +2435,7 @@
   <!-- Quick Upload Section at Bottom of Panel -->
   <div class="upload-drawer" id="uploadDrawerSection">
     <div class="upload-drawer-title">
-      <span>➕</span> Tải lên giọng mẫu để clone
+      <span>➕</span> TẢI LÊN GIỌNG MẪU ĐỂ CLONE (CHUẨN 8 GIÂY)
     </div>
 
     <form class="upload-form-wrap" id="uploadForm">
@@ -2424,8 +2445,8 @@
       <div class="dropzone-compact" id="uploadDropzone">
         <input type="file" id="uploadFileInput" accept="audio/*" required/>
         <div class="dropzone-text">
-          📁 Kéo thả hoặc nhấn chọn file<br/>
-          <span style="color: var(--text-faint);">WAV / MP3 / M4A (Khuyến nghị 3–8 giây sạch)</span>
+          📁 Kéo thả hoặc nhấn chọn tệp âm thanh<br/>
+          <span style="color: var(--text-muted); font-size: 11.5px;">WAV / MP3 / M4A · Cắt chuẩn cố định đúng 8.0 giây</span>
         </div>
         <div class="dropzone-selected-name" id="dropzoneFileName"></div>
       </div>
@@ -2437,12 +2458,12 @@
           <div class="summary-card-info">
             <div class="summary-file-name" id="summaryFileName">audio.wav</div>
             <div class="summary-meta-line">
-              <span class="summary-duration-badge" id="summaryDurationBadge">0.0s</span>
-              <span class="summary-status-hint" id="summaryStatusHint">Thời lượng chuẩn</span>
+              <span class="summary-duration-badge" id="summaryDurationBadge">8.0s (Chuẩn 8s ✓)</span>
+              <span class="summary-status-hint" id="summaryStatusHint">Khung cố định 8.0s</span>
             </div>
           </div>
           <button type="button" class="btn-open-trimmer-pill" id="btnOpenTrimmerModal" title="Mở bảng cắt sóng âm kiểu MP3Cut">
-            ✂ Cắt audio
+            ✂ Cắt audio (8s)
           </button>
         </div>
       </div>
@@ -2450,7 +2471,7 @@
       <!-- Ref Text Field with Auto-STT -->
       <div class="ref-text-field-wrap">
         <div class="ref-text-header">
-          <label for="uploadRefText">Lời thoại mẫu (ref_text cho v2):</label>
+          <label for="uploadRefText">Lời thoại câu nói trong file (ref_text cho v2):</label>
           <button type="button" class="btn-auto-stt" id="btnAutoSTT" title="AI tự động nhận diện lại từ âm thanh">
             ✨ Nhận diện chữ (AI)
           </button>
@@ -2474,7 +2495,7 @@
       </label>
 
       <button type="submit" class="btn-submit-clone" id="btnSubmitVoice">
-        Đăng ký giọng clone mới
+        Đăng ký giọng clone mới (8.0s)
       </button>
     </form>
   </div>
@@ -2489,7 +2510,7 @@
     <div class="modal-trimmer-header">
       <div class="modal-trimmer-title-group">
         <div class="modal-trimmer-title">
-          <span class="icon">✂</span> Cắt Audio Mẫu (MP3Cut Studio)
+          <span class="icon">✂</span> Cắt Audio Mẫu (MP3Cut Studio — Khung Cố Định 8 Giây)
         </div>
         <div class="modal-trimmer-subtitle" id="modalTrimmerSubtitle">
           Đang nạp file âm thanh...
@@ -2500,11 +2521,11 @@
 
     <!-- Recommendation Banner -->
     <div class="modal-trimmer-banner" id="modalTrimmerBanner">
-      <span>⚠️</span> <span id="modalBannerText">File dài hơn 8 giây. Kéo thả 2 thanh chặn viền xanh ngọc (cyan) để chọn đoạn 3–8 giây chất lượng tốt nhất để clone giọng:</span>
+      <span>🔒</span> <span id="modalBannerText">Khung cắt được cố định chuẩn đúng 8.0 giây (tiêu chuẩn tối ưu cho mô hình Clone giọng). Hãy kéo trượt khung màu xanh ngọc để chọn đúng 8 giây phát âm rõ nhất:</span>
     </div>
 
     <!-- Waveform Track Display Area (The MP3Cut Experience) -->
-    <div class="modal-waveform-track-wrap" id="modalWaveformTrack" title="Kéo 2 thanh chặn cyan hoặc kéo vùng chọn ở giữa">
+    <div class="modal-waveform-track-wrap" id="modalWaveformTrack" title="Kéo trượt khung cyan để chọn đúng 8 giây âm thanh">
       <canvas id="trimmerModalCanvas" width="920" height="150"></canvas>
 
       <!-- Dimmed Region Outside Left -->
@@ -2512,11 +2533,11 @@
       <!-- Dimmed Region Outside Right -->
       <div class="modal-mask-dim right" id="modalMaskRight" style="left: 100%; right: 0;"></div>
 
-      <!-- Selected Region Band (Draggable) -->
+      <!-- Selected Region Band (Draggable 8.0s Window) -->
       <div class="modal-selection-band" id="modalSelectionBand" style="left: 0%; width: 100%;">
         <div class="selection-badge-center" id="selectionBadgeCenter">
-          <span id="selectionCenterSec">05.0s</span>
-          <span class="sub">Vùng chọn clone</span>
+          <span id="selectionCenterSec">🔒 CỐ ĐỊNH 8.0s</span>
+          <span class="sub">Kéo trượt khung này</span>
         </div>
       </div>
 
@@ -2534,11 +2555,11 @@
 
       <!-- Right Cyan Handle -->
       <div class="modal-handle right" id="modalHandleRight" style="left: 100%;">
-        <div class="handle-time-tag top" id="handleRightTimeTop">00:05.0</div>
+        <div class="handle-time-tag top" id="handleRightTimeTop">00:08.0</div>
         <div class="handle-grip-dots">
           <span></span><span></span><span></span>
         </div>
-        <div class="handle-time-tag bottom" id="handleRightTimeBottom">00:05.0</div>
+        <div class="handle-time-tag bottom" id="handleRightTimeBottom">00:08.0</div>
       </div>
     </div>
 
@@ -2554,27 +2575,22 @@
         </button>
       </div>
 
-      <!-- Fine Tuning Inputs -->
-      <div class="fine-tuning-group">
-        <div class="time-adjuster-box">
-          <span class="adjuster-label">Bắt đầu:</span>
-          <button type="button" class="btn-nudge" id="btnNudgeStartMinus" title="Lùi 0.1s">-0.1s</button>
-          <span class="time-val-display" id="displayStartTime">00:00.0</span>
-          <button type="button" class="btn-nudge" id="btnNudgeStartPlus" title="Tiến 0.1s">+0.1s</button>
+      <!-- Window Shift Controls for Locked 8.0s Cut -->
+      <div class="window-shift-group">
+        <span class="adjuster-label">Dịch chuyển khung 8s:</span>
+        <button type="button" class="btn-nudge" id="btnShiftMinus1" title="Lùi 1.0 giây">⏪ -1.0s</button>
+        <button type="button" class="btn-nudge" id="btnShiftMinus01" title="Lùi 0.1 giây">◀ -0.1s</button>
+        <div class="window-range-display" id="windowRangeDisplay">
+          <span id="displayStartTime">00:00.0</span> → <span id="displayEndTime">00:08.0</span>
         </div>
-        <div class="time-adjuster-divider">→</div>
-        <div class="time-adjuster-box">
-          <span class="adjuster-label">Kết thúc:</span>
-          <button type="button" class="btn-nudge" id="btnNudgeEndMinus" title="Lùi 0.1s">-0.1s</button>
-          <span class="time-val-display" id="displayEndTime">00:05.0</span>
-          <button type="button" class="btn-nudge" id="btnNudgeEndPlus" title="Tiến 0.1s">+0.1s</button>
-        </div>
+        <button type="button" class="btn-nudge" id="btnShiftPlus01" title="Tiến 0.1 giây">+0.1s ▶</button>
+        <button type="button" class="btn-nudge" id="btnShiftPlus1" title="Tiến 1.0 giây">+1.0s ⏩</button>
       </div>
 
       <!-- Duration Status Badge -->
       <div class="duration-status-wrap">
         <div class="duration-badge-large" id="modalDurationBadge">
-          5.0s (Lý tưởng)
+          🔒 Cố định: 8.0s
         </div>
       </div>
     </div>
@@ -2582,14 +2598,14 @@
     <!-- Modal Footer Actions -->
     <div class="modal-trimmer-footer">
       <div class="modal-footer-tip">
-        💡 <b>Mẹo clone chuẩn:</b> Chọn phân đoạn phát âm rõ tiếng, không bị lẫn tạp âm hay tiếng thở giật. Phím tắt: <b>Space</b> để phát/dừng.
+        💡 <b>Mẹo clone chuẩn:</b> Khung cắt được khóa cố định 8.0 giây chuẩn nhất. Kéo trượt để chọn 8 giây phát âm liền mạch nhất. Phím tắt: <b>Space</b> phát/dừng.
       </div>
       <div class="modal-footer-btns">
         <button type="button" class="btn-modal-cancel" id="btnModalCancelTrim">
           Hủy bỏ
         </button>
         <button type="button" class="btn-modal-apply" id="btnModalApplyTrim">
-          ✂ Cắt &amp; Dùng đoạn này
+          ✂ Cắt đúng 8.0s &amp; Sử dụng
         </button>
       </div>
     </div>
@@ -2675,11 +2691,12 @@
   const btnModalPlayIcon        = $('btnModalPlayIcon');
   const btnModalPlayText        = $('btnModalPlayText');
   const btnModalRewindTrim      = $('btnModalRewindTrim');
-  const btnNudgeStartMinus      = $('btnNudgeStartMinus');
-  const btnNudgeStartPlus       = $('btnNudgeStartPlus');
+  const btnShiftMinus1          = $('btnShiftMinus1');
+  const btnShiftMinus01         = $('btnShiftMinus01');
+  const btnShiftPlus01          = $('btnShiftPlus01');
+  const btnShiftPlus1           = $('btnShiftPlus1');
+  const windowRangeDisplay      = $('windowRangeDisplay');
   const displayStartTime        = $('displayStartTime');
-  const btnNudgeEndMinus        = $('btnNudgeEndMinus');
-  const btnNudgeEndPlus         = $('btnNudgeEndPlus');
   const displayEndTime          = $('displayEndTime');
   const modalDurationBadge      = $('modalDurationBadge');
   const btnModalCancelTrim      = $('btnModalCancelTrim');
@@ -2957,8 +2974,10 @@
 
       let chips = '';
       if (voice.isCustom) {
-        chips += `<span class="badge-micro red">Clone (${voice.duration_sec}s)</span>`;
-        chips += voice.has_ref_text ? `<span class="badge-micro green">v2 Chuẩn</span>` : `<span class="badge-micro gray">v2 Thiếu</span>`;
+        chips += `<span class="badge-micro red">Mẫu Clone · ${voice.duration_sec}s</span>`;
+        chips += voice.has_ref_text
+          ? `<span class="badge-micro green">✓ Đủ lời thoại v2</span>`
+          : `<span class="badge-micro gray">⚠️ Thiếu lời thoại</span>`;
       } else {
         chips += `<span class="badge-micro gray">VieNeu v3</span>`;
         if (voice.description && voice.description.includes('Bắc')) chips += `<span class="badge-micro gold">Miền Bắc</span>`;
@@ -3277,16 +3296,25 @@
     }
   }
 
-  // 4. Update Trimmer Modal Elements & Positions
+  // 4. Update Trimmer Modal Elements & Positions (Locked 8.0s Window)
+  const FIXED_TRIM_DURATION = 8.0;
+
   function updateTrimmerModalUI() {
     if (!rawAudioBuffer) return;
     const dur = rawAudioBuffer.duration;
     if (dur <= 0) return;
 
-    // Clamp bounds
-    trimStartSec = Math.max(0, Math.min(trimStartSec, dur - 0.5));
-    trimEndSec = Math.max(trimStartSec + 0.5, Math.min(trimEndSec, dur));
-    const selDur = trimEndSec - trimStartSec;
+    const isLong = dur > FIXED_TRIM_DURATION;
+    const selDur = isLong ? FIXED_TRIM_DURATION : dur;
+
+    // Enforce locked 8.0s range: min = 8.0s, max = 8.0s
+    if (isLong) {
+      trimStartSec = Math.max(0, Math.min(trimStartSec, dur - FIXED_TRIM_DURATION));
+      trimEndSec = trimStartSec + FIXED_TRIM_DURATION;
+    } else {
+      trimStartSec = 0;
+      trimEndSec = dur;
+    }
 
     const startPct = (trimStartSec / dur) * 100;
     const endPct = (trimEndSec / dur) * 100;
@@ -3299,7 +3327,9 @@
     // Selection Band
     modalSelectionBand.style.left = `${startPct}%`;
     modalSelectionBand.style.width = `${endPct - startPct}%`;
-    selectionCenterSec.textContent = `${selDur.toFixed(1)}s`;
+    if (selectionCenterSec) {
+      selectionCenterSec.textContent = `🔒 CỐ ĐỊNH ${selDur.toFixed(1)}s`;
+    }
 
     // Handles
     modalHandleLeft.style.left = `${startPct}%`;
@@ -3314,40 +3344,34 @@
     handleRightTimeTop.textContent = endTimeFormatted;
     handleRightTimeBottom.textContent = endTimeFormatted;
 
-    displayStartTime.textContent = startTimeFormatted;
-    displayEndTime.textContent = endTimeFormatted;
+    if (displayStartTime) displayStartTime.textContent = startTimeFormatted;
+    if (displayEndTime) displayEndTime.textContent = endTimeFormatted;
 
     // Duration Status Badge & Banner
-    if (selDur > 8.0) {
-      modalDurationBadge.className = 'duration-badge-large warn';
-      modalDurationBadge.innerHTML = `⚠️ ${selDur.toFixed(1)}s (> 8s, hãy thu hẹp)`;
-      btnModalApplyTrim.disabled = false;
-      modalBannerText.innerHTML = `⚠️ Đoạn đã chọn dài <b>${selDur.toFixed(1)}s</b> (khuyến nghị $\\le$ 8s để bám ngữ điệu chuẩn nhất). Hãy thu hẹp lại.`;
-    } else if (selDur < 1.0) {
-      modalDurationBadge.className = 'duration-badge-large error';
-      modalDurationBadge.innerHTML = `⚠️ ${selDur.toFixed(1)}s (Quá ngắn, tối thiểu 1s)`;
-      btnModalApplyTrim.disabled = true;
-      modalBannerText.innerHTML = `⚠️ Đoạn đã chọn quá ngắn. Vui lòng chọn đoạn ít nhất 1.0s.`;
-    } else {
+    if (modalDurationBadge) {
       modalDurationBadge.className = 'duration-badge-large';
-      modalDurationBadge.innerHTML = `✓ ${selDur.toFixed(1)}s (Lý tưởng 3-8s)`;
+      modalDurationBadge.innerHTML = `🔒 Cố định: ${selDur.toFixed(1)}s (Chuẩn tối ưu)`;
+    }
+    if (btnModalApplyTrim) {
       btnModalApplyTrim.disabled = false;
-      modalBannerText.innerHTML = `✓ Đoạn đã chọn: <b>${selDur.toFixed(1)}s</b> (Thời lượng lý tưởng để clone giọng chuẩn). Bấm "Cắt & Dùng đoạn này":`;
+    }
+    if (modalBannerText) {
+      modalBannerText.innerHTML = `🔒 Khung cắt được <b>cố định đúng ${selDur.toFixed(1)}s</b> (chuẩn tối ưu cho clone giọng). Hãy kéo trượt khung chọn hoặc bấm nút dịch chuyển để lấy 8 giây nói chuẩn nhất.`;
     }
 
     drawModalWaveform();
   }
 
-  // 5. Interactive Dragging Handlers (Left Handle, Right Handle, Selection Band)
+  // 5. Interactive Dragging: Sliding the Locked 8.0s Window
   function handleTrackMouseDown(e, handleType) {
     e.preventDefault();
     e.stopPropagation();
-    isDragging = handleType; // 'left' | 'right' | 'band'
-    dragStartX = e.clientX || (e.touches && e.touches[0].clientX);
+    isDragging = true;
+    dragStartX = (e.clientX !== undefined) ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
     dragInitStartSec = trimStartSec;
-    dragInitEndSec = trimEndSec;
-    if (handleType === 'left') modalHandleLeft.classList.add('dragging');
-    if (handleType === 'right') modalHandleRight.classList.add('dragging');
+    modalSelectionBand.classList.add('dragging');
+    modalHandleLeft.classList.add('dragging');
+    modalHandleRight.classList.add('dragging');
   }
 
   modalHandleLeft.addEventListener('mousedown', e => handleTrackMouseDown(e, 'left'));
@@ -3359,110 +3383,86 @@
   modalSelectionBand.addEventListener('mousedown', e => handleTrackMouseDown(e, 'band'));
   modalSelectionBand.addEventListener('touchstart', e => handleTrackMouseDown(e, 'band'), { passive: false });
 
-  // Clicking on track outside handles to jump or move closest handle
+  // Clicking on track centers the locked 8.0s window around the click coordinate
   modalWaveformTrack.addEventListener('mousedown', e => {
     if (e.target === modalHandleLeft || e.target === modalHandleRight || modalSelectionBand.contains(e.target)) return;
+    if (!rawAudioBuffer) return;
+    const dur = rawAudioBuffer.duration;
+    if (dur <= FIXED_TRIM_DURATION) return;
+
     const rect = modalWaveformTrack.getBoundingClientRect();
     const clickX = (e.clientX - rect.left) / rect.width;
-    const clickSec = clickX * rawAudioBuffer.duration;
-    const distToStart = Math.abs(clickSec - trimStartSec);
-    const distToEnd = Math.abs(clickSec - trimEndSec);
+    const clickSec = clickX * dur;
 
-    if (distToStart < distToEnd) {
-      trimStartSec = Math.max(0, Math.min(clickSec, trimEndSec - 0.5));
-    } else {
-      trimEndSec = Math.min(rawAudioBuffer.duration, Math.max(clickSec, trimStartSec + 0.5));
-    }
+    // Center the 8.0s window around click position
+    let newStart = clickSec - (FIXED_TRIM_DURATION / 2);
+    newStart = Math.max(0, Math.min(newStart, dur - FIXED_TRIM_DURATION));
+    trimStartSec = newStart;
+    trimEndSec = newStart + FIXED_TRIM_DURATION;
     updateTrimmerModalUI();
+
+    if (isPlayingTrimPreview) {
+      startModalPlayTrim(trimStartSec);
+    }
   });
 
-  window.addEventListener('mousemove', e => {
+  function onPointerMove(clientX) {
     if (!isDragging || !rawAudioBuffer) return;
-    const rect = modalWaveformTrack.getBoundingClientRect();
-    const currentX = e.clientX;
-    const deltaX = currentX - dragStartX;
-    const deltaSec = (deltaX / rect.width) * rawAudioBuffer.duration;
     const dur = rawAudioBuffer.duration;
+    if (dur <= FIXED_TRIM_DURATION) return;
 
-    if (isDragging === 'left') {
-      trimStartSec = Math.max(0, Math.min(dragInitStartSec + deltaSec, trimEndSec - 0.5));
-    } else if (isDragging === 'right') {
-      trimEndSec = Math.min(dur, Math.max(dragInitEndSec + deltaSec, trimStartSec + 0.5));
-    } else if (isDragging === 'band') {
-      const bandLength = dragInitEndSec - dragInitStartSec;
-      let newStart = dragInitStartSec + deltaSec;
-      let newEnd = newStart + bandLength;
-      if (newStart < 0) {
-        newStart = 0;
-        newEnd = bandLength;
-      }
-      if (newEnd > dur) {
-        newEnd = dur;
-        newStart = dur - bandLength;
-      }
-      trimStartSec = Math.max(0, newStart);
-      trimEndSec = Math.min(dur, newEnd);
-    }
+    const rect = modalWaveformTrack.getBoundingClientRect();
+    const deltaX = clientX - dragStartX;
+    const deltaSec = (deltaX / rect.width) * dur;
+
+    let newStart = dragInitStartSec + deltaSec;
+    newStart = Math.max(0, Math.min(newStart, dur - FIXED_TRIM_DURATION));
+
+    trimStartSec = newStart;
+    trimEndSec = newStart + FIXED_TRIM_DURATION;
     updateTrimmerModalUI();
+  }
+
+  window.addEventListener('mousemove', e => {
+    if (isDragging) onPointerMove(e.clientX);
   });
 
   window.addEventListener('touchmove', e => {
-    if (!isDragging || !rawAudioBuffer) return;
-    const rect = modalWaveformTrack.getBoundingClientRect();
-    const currentX = e.touches[0].clientX;
-    const deltaX = currentX - dragStartX;
-    const deltaSec = (deltaX / rect.width) * rawAudioBuffer.duration;
-    const dur = rawAudioBuffer.duration;
-
-    if (isDragging === 'left') {
-      trimStartSec = Math.max(0, Math.min(dragInitStartSec + deltaSec, trimEndSec - 0.5));
-    } else if (isDragging === 'right') {
-      trimEndSec = Math.min(dur, Math.max(dragInitEndSec + deltaSec, trimStartSec + 0.5));
-    } else if (isDragging === 'band') {
-      const bandLength = dragInitEndSec - dragInitStartSec;
-      let newStart = dragInitStartSec + deltaSec;
-      let newEnd = newStart + bandLength;
-      if (newStart < 0) {
-        newStart = 0;
-        newEnd = bandLength;
-      }
-      if (newEnd > dur) {
-        newEnd = dur;
-        newStart = dur - bandLength;
-      }
-      trimStartSec = Math.max(0, newStart);
-      trimEndSec = Math.min(dur, newEnd);
+    if (isDragging && e.touches && e.touches[0]) {
+      onPointerMove(e.touches[0].clientX);
     }
-    updateTrimmerModalUI();
   }, { passive: false });
 
   function stopDragging() {
     if (isDragging) {
+      isDragging = false;
+      modalSelectionBand.classList.remove('dragging');
       modalHandleLeft.classList.remove('dragging');
       modalHandleRight.classList.remove('dragging');
-      isDragging = null;
     }
   }
   window.addEventListener('mouseup', stopDragging);
   window.addEventListener('touchend', stopDragging);
 
-  // 6. Fine Tuning Nudge Buttons (+/- 0.1s)
-  btnNudgeStartMinus.addEventListener('click', () => {
-    trimStartSec = Math.max(0, trimStartSec - 0.1);
+  // 6. Window Shift Buttons (-1.0s, -0.1s, +0.1s, +1.0s)
+  function shiftLockedWindow(delta) {
+    if (!rawAudioBuffer) return;
+    const dur = rawAudioBuffer.duration;
+    if (dur <= FIXED_TRIM_DURATION) return;
+
+    trimStartSec = Math.max(0, Math.min(trimStartSec + delta, dur - FIXED_TRIM_DURATION));
+    trimEndSec = trimStartSec + FIXED_TRIM_DURATION;
     updateTrimmerModalUI();
-  });
-  btnNudgeStartPlus.addEventListener('click', () => {
-    trimStartSec = Math.min(trimEndSec - 0.5, trimStartSec + 0.1);
-    updateTrimmerModalUI();
-  });
-  btnNudgeEndMinus.addEventListener('click', () => {
-    trimEndSec = Math.max(trimStartSec + 0.5, trimEndSec - 0.1);
-    updateTrimmerModalUI();
-  });
-  btnNudgeEndPlus.addEventListener('click', () => {
-    trimEndSec = Math.min(rawAudioBuffer.duration, trimEndSec + 0.1);
-    updateTrimmerModalUI();
-  });
+
+    if (isPlayingTrimPreview) {
+      startModalPlayTrim(trimStartSec);
+    }
+  }
+
+  if (btnShiftMinus1) btnShiftMinus1.addEventListener('click', () => shiftLockedWindow(-1.0));
+  if (btnShiftMinus01) btnShiftMinus01.addEventListener('click', () => shiftLockedWindow(-0.1));
+  if (btnShiftPlus01) btnShiftPlus01.addEventListener('click', () => shiftLockedWindow(0.1));
+  if (btnShiftPlus1) btnShiftPlus1.addEventListener('click', () => shiftLockedWindow(1.0));
 
   // 7. Preview Player with Animated Moving Playhead
   function stopModalPlayTrim() {
@@ -3575,31 +3575,31 @@
   // 9. Apply Trim: Slice AudioBuffer, Generate WAV Blob & Trigger Auto-STT
   btnModalApplyTrim.addEventListener('click', async () => {
     if (!rawAudioBuffer) return;
-    const selDur = trimEndSec - trimStartSec;
-    if (selDur < 0.8) {
-      showToast('err', 'Đoạn chọn quá ngắn (phải có ít nhất 1 giây phát âm).');
-      return;
-    }
+    const dur = rawAudioBuffer.duration;
+    const isLong = dur > FIXED_TRIM_DURATION;
+    const startSec = isLong ? trimStartSec : 0;
+    const endSec = isLong ? Math.min(dur, trimStartSec + FIXED_TRIM_DURATION) : dur;
+    const selDur = endSec - startSec;
 
     stopModalPlayTrim();
     closeTrimmerModal();
 
-    showToast('info', 'Đang cắt đoạn âm thanh chuẩn xác...');
-    const blob = audioBufferToWav(rawAudioBuffer, trimStartSec, trimEndSec);
+    showToast('info', `Đang cắt đoạn âm thanh chuẩn ${selDur.toFixed(1)}s...`);
+    const blob = audioBufferToWav(rawAudioBuffer, startSec, endSec);
     const origName = (currentFileObj ? currentFileObj.name : 'voice').replace(/\.[^/.]+$/, "");
-    activeAudioFile = new File([blob], `${origName}_trimmed.wav`, { type: 'audio/wav' });
+    activeAudioFile = new File([blob], `${origName}_cut_8s.wav`, { type: 'audio/wav' });
 
     // Update Sidebar Summary Card
     summaryFileName.textContent = activeAudioFile.name;
     summaryDurationBadge.className = 'summary-duration-badge';
-    summaryDurationBadge.textContent = `${selDur.toFixed(1)}s (Đã cắt ✓)`;
-    summaryStatusHint.textContent = `Đoạn ${trimStartSec.toFixed(1)}s - ${trimEndSec.toFixed(1)}s`;
+    summaryDurationBadge.textContent = `${selDur.toFixed(1)}s (Chuẩn 8s ✓)`;
+    summaryStatusHint.textContent = `Đoạn đã chọn: ${startSec.toFixed(1)}s - ${endSec.toFixed(1)}s`;
     audioFileSummaryCard.style.display = 'block';
 
     dropzoneFileName.textContent = `✂ ${activeAudioFile.name} (${(activeAudioFile.size / 1024).toFixed(0)} KB · ${selDur.toFixed(1)}s)`;
     dropzoneFileName.style.display = 'block';
 
-    showToast('ok', `✓ Đã cắt đoạn ${selDur.toFixed(1)}s thành công!`);
+    showToast('ok', `✓ Đã cắt đoạn chuẩn ${selDur.toFixed(1)}s thành công!`);
 
     // Auto-trigger Speech-to-Text transcription with the trimmed audio
     await triggerAutoSTT(activeAudioFile);
@@ -3678,25 +3678,26 @@
 
       // Update sidebar summary card
       summaryFileName.textContent = file.name;
-      summaryDurationBadge.textContent = `${dur.toFixed(1)}s`;
       audioFileSummaryCard.style.display = 'block';
 
-      if (dur > 8.0) {
-        // Exceeds 8.0s: Immediately popup the MP3Cut modal!
+      if (dur > FIXED_TRIM_DURATION) {
+        // Exceeds 8.0s: Immediately popup the MP3Cut modal with locked 8.0s window!
         summaryDurationBadge.className = 'summary-duration-badge warn';
-        summaryStatusHint.textContent = 'Cần cắt (vượt quá 8s)';
+        summaryDurationBadge.textContent = `${dur.toFixed(1)}s (Cần cắt 8s)`;
+        summaryStatusHint.textContent = `Vượt quá 8.0s (${dur.toFixed(1)}s) · Hãy cắt chuẩn 8s`;
 
-        // Initial default cut window: 0s to min(dur, 6.0s)
+        // Initial cut window: 0s to 8.0s
         trimStartSec = 0;
-        trimEndSec = Math.min(dur, 6.0);
+        trimEndSec = FIXED_TRIM_DURATION;
         activeAudioFile = null;
 
         openTrimmerModal();
-        showToast('info', `File dài ${dur.toFixed(1)}s (> 8s). Đã mở bảng cắt âm thanh MP3Cut.`);
+        showToast('info', `File dài ${dur.toFixed(1)}s (> 8s). Khung cắt đã khóa cố định đúng 8.0s, hãy kéo trượt để chọn đoạn cần lấy.`);
       } else {
         // <= 8.0s: Ideal length
         summaryDurationBadge.className = 'summary-duration-badge';
-        summaryStatusHint.textContent = 'Thời lượng lý tưởng';
+        summaryDurationBadge.textContent = `${dur.toFixed(1)}s (Chuẩn ≤ 8s ✓)`;
+        summaryStatusHint.textContent = 'Thời lượng chuẩn tối ưu để clone';
         trimStartSec = 0;
         trimEndSec = dur;
         activeAudioFile = file;
