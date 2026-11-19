@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Luậtu — Studio Chuyển Văn Bản Thành Giọng Nói AI</title>
+  <title>Voice Studio — Giọng đọc AI trên máy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
@@ -11,68 +11,84 @@
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <style>
     /* ════════════════════════════════════════════════════════════
-       LUXURY BLACK & CRIMSON RED THEME TOKENS (Obsidian & Ruby)
+       PLAYFUL STUDIO / WARM EDITORIAL THEME TOKENS
+       (Deep Plum, Warm Coral, Sunshine Yellow, Crisp White & Cream)
     ════════════════════════════════════════════════════════════ */
     :root {
-      /* Backgrounds: Obsidian & Deep Ruby Carbon */
-      --bg-base:        #080607;
-      --bg-surface:     #0e090b;
-      --bg-card:        #140d10;
-      --bg-card-hover:  #1b1216;
-      --bg-input:       #0a0708;
-      --bg-elevated:    #21151a;
+      /* Backgrounds */
+      --bg-base:        #F5EFE8;
+      --bg-surface:     #FFFFFF;
+      --bg-card:        #FAF8FA;
+      --bg-card-white:  #FFFFFF;
+      --bg-card-hover:  #FFF9EE;
+      --bg-input:       #FFFFFF;
+      --bg-elevated:    #FFFFFF;
 
-      /* Borders & Glass */
-      --border-subtle:  #25161b;
-      --border-strong:  #3b1f28;
-      --border-accent:  rgba(225, 29, 72, 0.35);
-      --border-gold:    rgba(212, 175, 55, 0.30);
+      /* Primary Brand: Deep Plum / Slate Aubergine */
+      --plum-dark:      #2A1D2B;
+      --plum-sidebar:   #3E2E3E;
+      --plum-hover:     #4E3B4E;
+      --plum-active:    #5A455A;
+      --plum-text:      #231A24;
+      --plum-muted:     #8A7E8C;
 
-      /* Crimson & Velvet Red Accents */
-      --red-primary:    #e11d48;
-      --red-bright:     #f43f5e;
-      --red-deep:       #9f1239;
-      --red-glow:       rgba(225, 29, 72, 0.28);
-      --red-gradient:   linear-gradient(135deg, #e11d48 0%, #9f1239 100%);
-      --red-gradient-hover: linear-gradient(135deg, #f43f5e 0%, #be123c 100%);
+      /* Accent 1: Sunshine Honey Yellow (Right Panel & Crest) */
+      --yellow-sun:     #FACB54;
+      --yellow-bright:  #F7C23B;
+      --yellow-dark:    #DF9F10;
+      --yellow-wave:    #E58E1A;
+      --yellow-subtle:  #FFF8E6;
+      --yellow-border:  rgba(223, 159, 16, 0.35);
 
-      /* Imperial & Champagne Gold Accents */
-      --gold-primary:   #d4af37;
-      --gold-bright:    #f59e0b;
-      --gold-subtle:    rgba(212, 175, 55, 0.12);
-      --gold-border:    rgba(212, 175, 55, 0.25);
+      /* Accent 2: Warm Coral / Terracotta (Hero Banner & Primary Actions) */
+      --coral-primary:  #EB6B63;
+      --coral-hover:    #DE5951;
+      --coral-dark:     #C9443C;
+      --coral-glow:     rgba(235, 107, 99, 0.28);
+      --coral-subtle:   #FDF1F0;
+      --coral-gradient: linear-gradient(135deg, #EB6B63 0%, #E3584F 100%);
+      --coral-gradient-hover: linear-gradient(135deg, #F07871 0%, #DE5249 100%);
+
+      /* Borders & Dividers */
+      --border-subtle:  #EFE9EF;
+      --border-strong:  #DFD6E0;
+      --border-card:    #ECE4EC;
+      --border-accent:  rgba(235, 107, 99, 0.35);
 
       /* Semantic Feedback */
-      --color-emerald:  #10b981;
-      --color-emerald-bg: rgba(16, 185, 129, 0.12);
-      --color-amber:    #f59e0b;
-      --color-rose:     #f43f5e;
-      --color-sapphire: #3b82f6;
+      --color-emerald:  #2E7D32;
+      --color-emerald-bg: #E8F5E9;
+      --color-amber:    #E65100;
+      --color-rose:     #C62828;
+      --color-sapphire: #1565C0;
 
-      /* Typography Hierarchy */
-      --text-white:     #fbf8f9;
-      --text-secondary: #bda6aa;
-      --text-muted:     #785d63;
-      --text-faint:     #423035;
+      /* Typography */
+      --text-main:      #231A24;
+      --text-secondary: #5C4E5E;
+      --text-muted:     #8A7E8C;
+      --text-faint:     #BFB3C1;
+      --text-white:     #FFFFFF;
 
-      /* Radii & Shadows */
-      --radius-xs:  4px;
-      --radius-sm:  8px;
-      --radius-md:  12px;
-      --radius-lg:  16px;
+      /* Radii */
+      --radius-xs:  6px;
+      --radius-sm:  10px;
+      --radius-md:  14px;
+      --radius-lg:  18px;
       --radius-xl:  22px;
+      --radius-2xl: 28px;
       --radius-pill:9999px;
 
-      --shadow-sm:  0 2px 8px rgba(0, 0, 0, 0.4);
-      --shadow-md:  0 8px 24px rgba(0, 0, 0, 0.55);
-      --shadow-lg:  0 12px 36px rgba(0, 0, 0, 0.7);
-      --shadow-glow:0 0 20px var(--red-glow);
+      /* Shadows */
+      --shadow-sm:  0 2px 8px rgba(42, 29, 43, 0.05);
+      --shadow-md:  0 8px 24px rgba(42, 29, 43, 0.08);
+      --shadow-lg:  0 16px 40px rgba(42, 29, 43, 0.12);
+      --shadow-glow:0 0 20px var(--coral-glow);
 
       --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
 
       --sidebar-width: 230px;
-      --right-panel-width: 440px;
+      --right-panel-width: 430px;
     }
 
     /* ── BASE RESET ── */
@@ -82,102 +98,112 @@
     body {
       font-family: var(--font-main);
       background: var(--bg-base);
-      color: var(--text-white);
+      color: var(--text-main);
       height: 100vh;
       display: flex;
       overflow: hidden;
       -webkit-font-smoothing: antialiased;
-      background-image:
-        radial-gradient(ellipse 60% 40% at 50% -10%, rgba(225, 29, 72, 0.08), transparent 70%),
-        radial-gradient(ellipse 40% 30% at 90% 90%, rgba(159, 18, 57, 0.05), transparent 70%);
     }
 
-    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--red-deep); }
+    ::-webkit-scrollbar-thumb { background: #E0D6DF; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #C5B8C4; }
+
+    /* Lucide inline SVG helper */
+    .ico-svg {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .ico-svg svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .ico-svg.sm svg { width: 13px; height: 13px; }
+    .ico-svg.md svg { width: 16px; height: 16px; }
+    .ico-svg.lg svg { width: 20px; height: 20px; }
+    .ico-svg.xl svg { width: 24px; height: 24px; }
 
     /* ════════════════════════════════════════════════════════════
-       SIDEBAR NAVIGATION (Column 1)
+       1. SIDEBAR NAVIGATION (Deep Plum #3E2E3E)
     ════════════════════════════════════════════════════════════ */
     .sidebar {
       width: var(--sidebar-width);
       flex-shrink: 0;
-      background: var(--bg-surface);
-      border-right: 1px solid var(--border-subtle);
+      background: var(--plum-sidebar);
       display: flex;
       flex-direction: column;
       user-select: none;
+      color: var(--text-white);
+      z-index: 10;
     }
 
     .sidebar-brand {
-      padding: 22px 20px 18px;
+      padding: 24px 20px 20px;
       display: flex;
       align-items: center;
-      gap: 12px;
-      border-bottom: 1px solid var(--border-subtle);
+      gap: 14px;
     }
 
     .brand-crest {
-      width: 38px;
-      height: 38px;
-      background: var(--red-gradient);
-      border: 1px solid var(--border-accent);
-      border-radius: var(--radius-md);
+      width: 44px;
+      height: 44px;
+      background: var(--yellow-sun);
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 16px var(--red-glow);
-      font-size: 19px;
+      box-shadow: 0 4px 14px rgba(250, 203, 84, 0.4);
       flex-shrink: 0;
+      color: var(--plum-dark);
+    }
+    .brand-crest svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--plum-dark);
+      stroke-width: 2.2;
     }
 
     .brand-title {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 800;
-      letter-spacing: -0.03em;
-      background: linear-gradient(110deg, #ffffff 40%, var(--gold-bright) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: #FFFFFF;
+      line-height: 1.15;
     }
 
     .brand-tag {
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-top: 2px;
+      font-size: 11px;
+      font-weight: 500;
+      color: #C0B0C1;
+      margin-top: 3px;
     }
 
     /* Navigation list */
     .nav-group {
       flex: 1;
-      padding: 16px 12px;
+      padding: 12px 14px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
       overflow-y: auto;
-    }
-
-    .nav-section-title {
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
-      padding: 10px 10px 6px;
     }
 
     .nav-btn {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 10px 14px;
+      padding: 11px 14px;
       border-radius: var(--radius-md);
-      color: var(--text-secondary);
-      font-size: 13px;
+      color: #D3C4D4;
+      font-size: 13.5px;
       font-weight: 500;
       cursor: pointer;
       border: 1px solid transparent;
@@ -189,136 +215,82 @@
     }
 
     .nav-btn:hover {
-      background: var(--bg-card);
-      color: var(--text-white);
-      border-color: var(--border-subtle);
+      background: rgba(255, 255, 255, 0.08);
+      color: #FFFFFF;
     }
 
     .nav-btn.active {
-      background: linear-gradient(135deg, rgba(225, 29, 72, 0.18), rgba(159, 18, 57, 0.10));
-      border: 1px solid var(--border-accent);
-      color: var(--text-white);
-      font-weight: 600;
-      box-shadow: inset 0 0 12px rgba(225, 29, 72, 0.15);
+      background: rgba(250, 203, 84, 0.16);
+      color: var(--yellow-sun);
+      font-weight: 700;
+      border: 1px solid rgba(250, 203, 84, 0.3);
     }
 
     .nav-btn .icon {
-      font-size: 15px;
+      font-size: 16px;
       width: 20px;
-      text-align: center;
-      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #B2A1B3;
       transition: color 0.18s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
     }
-
     .nav-btn .icon svg {
-      width: 15px;
-      height: 15px;
+      width: 17px;
+      height: 17px;
       stroke: currentColor;
       fill: none;
-      stroke-width: 2;
+      stroke-width: 2.2;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
 
-    .nav-btn:hover .icon,
     .nav-btn.active .icon {
-      color: var(--red-bright);
+      color: var(--yellow-sun);
     }
 
-    /* Icon helper - Lucide SVG */
-    .ico-svg {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+    .nav-btn:hover .icon {
+      color: #FFFFFF;
     }
 
-    .ico-svg svg {
-      width: 15px;
-      height: 15px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .ico-svg.sm svg { width: 13px; height: 13px; }
-    .ico-svg.md svg { width: 16px; height: 16px; }
-    .ico-svg.lg svg { width: 20px; height: 20px; }
-    .ico-svg.xl svg { width: 24px; height: 24px; }
-
-    /* Sidebar Footer – strip old studio box */
+    /* Sidebar Footer */
     .sidebar-footer-simple {
-      padding: 14px 16px;
-      border-top: 1px solid var(--border-subtle);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .sidebar-version-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .sidebar-version-row .version-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 2px 8px;
-      border-radius: var(--radius-pill);
-      background: rgba(212,175,55,0.1);
-      border: 1px solid var(--gold-border);
-      color: var(--gold-bright);
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-    }
-
-    .status-badge-wrap {
-      margin-top: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      padding: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
     }
 
     .health-pill {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
       font-size: 11px;
-      padding: 4px 10px;
+      padding: 6px 12px;
       border-radius: var(--radius-pill);
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-muted);
+      background: rgba(0, 0, 0, 0.28);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #C0B0C1;
+      width: 100%;
+      justify-content: center;
     }
 
     .health-pill.online {
-      color: var(--color-emerald);
-      border-color: rgba(16, 185, 129, 0.3);
-      background: var(--color-emerald-bg);
+      color: #81C784;
+      border-color: rgba(129, 199, 132, 0.35);
+      background: rgba(46, 125, 50, 0.18);
     }
 
     .pulse-dot {
       width: 7px;
       height: 7px;
       border-radius: 50%;
-      background: var(--text-muted);
+      background: #8A7E8C;
       transition: background 0.2s;
     }
 
     .health-pill.online .pulse-dot {
-      background: var(--color-emerald);
-      box-shadow: 0 0 8px var(--color-emerald);
+      background: #81C784;
+      box-shadow: 0 0 8px #81C784;
       animation: pulse 2s infinite;
     }
 
@@ -328,47 +300,50 @@
     }
 
     /* ════════════════════════════════════════════════════════════
-       MAIN WORKSPACE (Column 2)
+       2. MAIN WORKSPACE (Crisp White #FFFFFF)
     ════════════════════════════════════════════════════════════ */
     .workspace {
       flex: 1;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      border-right: 1px solid var(--border-subtle);
+      background: #FFFFFF;
+      border-right: 1px solid #ECE4EC;
     }
 
     .workspace-topbar {
-      padding: 18px 28px;
-      background: var(--bg-surface);
-      border-bottom: 1px solid var(--border-subtle);
+      padding: 24px 32px 18px;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       flex-shrink: 0;
+      background: #FFFFFF;
     }
 
-    .workspace-title-box h1 {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: var(--text-white);
+    .workspace-greeting-box h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      line-height: 1.1;
     }
 
-    .workspace-title-box p {
-      font-size: 12px;
+    .workspace-greeting-box p {
+      font-size: 13px;
       color: var(--text-muted);
-      margin-top: 2px;
+      margin-top: 5px;
+      font-weight: 500;
     }
 
     .header-badges {
       display: flex;
       gap: 8px;
+      align-items: center;
     }
 
     .meta-tag {
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
       padding: 4px 10px;
       border-radius: var(--radius-pill);
       display: inline-flex;
@@ -377,53 +352,146 @@
     }
 
     .meta-tag.v3 {
-      background: rgba(225, 29, 72, 0.12);
-      color: var(--red-bright);
-      border: 1px solid var(--border-accent);
+      background: var(--coral-subtle);
+      color: var(--coral-primary);
+      border: 1px solid rgba(235, 107, 99, 0.3);
     }
 
     .meta-tag.v2 {
-      background: var(--gold-subtle);
-      color: var(--gold-bright);
-      border: 1px solid var(--gold-border);
+      background: var(--yellow-subtle);
+      color: var(--yellow-dark);
+      border: 1px solid var(--yellow-border);
     }
 
-    /* Workspace Content (Scrollable) */
+    /* Scrollable Center Content */
     .workspace-content {
       flex: 1;
       overflow-y: auto;
-      padding: 24px 28px;
+      padding: 0 32px 32px;
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
 
-    /* ── Engine Switch Cards ── */
+    /* ── Hero Coral Banner (Exact match from screenshot!) ── */
+    .hero-coral-banner {
+      background: var(--coral-primary);
+      border-radius: var(--radius-xl);
+      padding: 22px 28px;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      box-shadow: 0 10px 24px rgba(235, 107, 99, 0.22);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-banner-content {
+      flex: 1;
+      max-width: 580px;
+    }
+
+    .hero-banner-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 7px;
+      line-height: 1.2;
+    }
+
+    .hero-banner-desc {
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.94);
+    }
+
+    .hero-banner-graphic {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 2px solid rgba(255, 255, 255, 0.28);
+    }
+    .hero-banner-graphic svg {
+      width: 36px;
+      height: 36px;
+      stroke: #FFFFFF;
+      stroke-width: 2;
+    }
+
+    /* ── 3 Quick Stats Cards (From screenshot!) ── */
+    .stats-metric-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .stat-metric-card {
+      background: #FAF8FA;
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+    .stat-metric-card:hover {
+      background: #FFFFFF;
+      border-color: #DFD5E0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stat-metric-val {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .stat-metric-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* ── Engine Selector Cards ── */
     .engine-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 14px;
     }
 
     .engine-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
+      background: #FAF8FA;
+      border: 1.5px solid var(--border-card);
       border-radius: var(--radius-md);
       padding: 14px 16px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.18s ease;
       position: relative;
     }
 
     .engine-card:hover {
-      background: var(--bg-card-hover);
-      border-color: var(--border-strong);
+      background: #FFFFFF;
+      border-color: #D6CBD7;
     }
 
     .engine-card.active {
-      background: linear-gradient(135deg, rgba(225, 29, 72, 0.14), rgba(159, 18, 57, 0.06));
-      border-color: var(--red-primary);
-      box-shadow: 0 0 16px rgba(225, 29, 72, 0.18);
+      background: #FFFFFF;
+      border-color: var(--coral-primary);
+      box-shadow: 0 4px 16px rgba(235, 107, 99, 0.14);
     }
 
     .engine-card-header {
@@ -434,234 +502,205 @@
     }
 
     .engine-card-name {
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 700;
-      color: var(--text-white);
-    }
-
-    .engine-card.active .engine-card-name {
-      color: var(--red-bright);
+      color: var(--text-main);
     }
 
     .engine-indicator {
-      width: 16px;
-      height: 16px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
-      border: 1.5px solid var(--border-strong);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
+      border: 2px solid #C8BAC8;
+      background: transparent;
+      transition: all 0.15s;
     }
 
     .engine-card.active .engine-indicator {
-      border-color: var(--red-primary);
-      background: var(--red-primary);
-    }
-
-    .engine-indicator::after {
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: white;
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .engine-card.active .engine-indicator::after {
-      opacity: 1;
+      background: var(--coral-primary);
+      border-color: var(--coral-primary);
+      box-shadow: 0 0 6px var(--coral-primary);
     }
 
     .engine-card-desc {
-      font-size: 11px;
+      font-size: 11.5px;
       color: var(--text-muted);
       line-height: 1.45;
     }
 
     /* ── Text Input Studio Card ── */
     .studio-panel {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
+      background: #FAF8FA;
+      border: 1px solid var(--border-card);
       border-radius: var(--radius-lg);
       padding: 18px 20px;
-      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .panel-header-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
     }
 
     .panel-heading {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 700;
-      color: var(--text-secondary);
+      color: var(--text-main);
       display: flex;
       align-items: center;
-      gap: 7px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      gap: 8px;
+    }
+    .panel-heading .ico-svg {
+      color: var(--coral-primary);
     }
 
-    /* panel heading icon */
-    .panel-heading .ico,
-    .panel-heading .ico-svg {
-      color: var(--red-bright);
+    .counter-badge {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      background: #FFFFFF;
+      border: 1px solid var(--border-card);
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
     }
 
     .editor-container {
-      background: var(--bg-input);
-      border: 1px solid var(--border-subtle);
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-card);
       border-radius: var(--radius-md);
       overflow: hidden;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.18s;
     }
 
     .editor-container:focus-within {
-      border-color: var(--red-primary);
-      box-shadow: 0 0 0 3px var(--red-glow);
+      border-color: var(--coral-primary);
+      box-shadow: 0 0 0 3px rgba(235, 107, 99, 0.12);
     }
 
-    textarea#textInput {
+    #textInput {
       width: 100%;
-      min-height: 160px;
+      min-height: 145px;
+      padding: 16px 18px;
       background: transparent;
       border: none;
       outline: none;
-      color: var(--text-white);
-      font-family: inherit;
-      font-size: 14px;
-      line-height: 1.7;
-      padding: 16px;
+      color: var(--text-main);
+      font-family: var(--font-main);
+      font-size: 14.5px;
+      line-height: 1.6;
       resize: vertical;
     }
-
-    textarea#textInput::placeholder {
-      color: var(--text-faint);
+    #textInput::placeholder {
+      color: #9E91A0;
+      font-size: 13.5px;
     }
 
     .editor-footer {
+      padding: 10px 14px;
+      background: #FAF8FA;
+      border-top: 1px solid var(--border-card);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 14px;
-      border-top: 1px solid var(--border-subtle);
-      background: rgba(14, 9, 11, 0.4);
-      flex-wrap: wrap;
-      gap: 8px;
     }
 
     .editor-actions {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       flex-wrap: wrap;
     }
 
     .tool-btn {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      padding: 5px 11px;
+      gap: 6px;
+      padding: 6px 12px;
       border-radius: var(--radius-pill);
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      border: 1px solid var(--border-subtle);
-      background: var(--bg-card);
+      border: 1px solid #DFD5DF;
+      background: #FFFFFF;
       color: var(--text-secondary);
-      transition: all 0.15s ease;
+      font-size: 12px;
+      font-weight: 600;
       font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s;
     }
-
     .tool-btn:hover {
-      background: var(--bg-elevated);
-      color: var(--text-white);
-      border-color: var(--border-strong);
+      background: #F3EEF3;
+      color: var(--text-main);
     }
-
     .tool-btn.highlight {
-      border-color: var(--border-accent);
-      color: var(--red-bright);
-      background: rgba(225, 29, 72, 0.08);
+      background: var(--yellow-subtle);
+      border-color: var(--yellow-border);
+      color: var(--yellow-dark);
     }
 
-    .counter-badge {
-      font-size: 11px;
+    .editor-subtext-hint {
+      font-size: 12px;
       color: var(--text-muted);
-      font-family: var(--font-mono);
+      margin-top: 2px;
+      font-style: italic;
     }
 
-    /* Live Chunks Preview Card */
     .chunks-inspector {
       display: none;
-      background: var(--bg-input);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 14px;
-      margin-top: 10px;
+      margin-top: 8px;
+      padding: 12px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-sm);
       font-size: 12px;
-      line-height: 1.6;
       color: var(--text-secondary);
       max-height: 160px;
       overflow-y: auto;
     }
 
-    .chunks-inspector.active {
-      display: block;
-    }
-
-    .chunks-inspector ol {
-      padding-left: 20px;
-      margin-top: 6px;
-    }
-
-    .chunks-inspector li {
-      margin-bottom: 4px;
-    }
-
-    /* ── Audio Settings & Sliders ── */
+    /* ── Voice Settings & Sliders Card ── */
     .settings-panel {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
+      background: #FAF8FA;
+      border: 1px solid var(--border-card);
       border-radius: var(--radius-lg);
       padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 
     .preset-chips-row {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
-      margin-bottom: 16px;
     }
 
     .preset-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
       padding: 6px 14px;
       border-radius: var(--radius-pill);
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
-      border: 1px solid var(--border-subtle);
-      background: var(--bg-surface);
+      border: 1px solid var(--border-card);
+      background: #FFFFFF;
       color: var(--text-secondary);
-      transition: all 0.18s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
     }
-
     .preset-chip:hover {
-      border-color: var(--border-strong);
-      color: var(--text-white);
+      background: #F5EFF5;
+      color: var(--text-main);
     }
-
     .preset-chip.active {
-      background: linear-gradient(135deg, rgba(225, 29, 72, 0.2), rgba(159, 18, 57, 0.1));
-      border-color: var(--red-primary);
-      color: var(--text-white);
-      box-shadow: 0 0 12px rgba(225, 29, 72, 0.2);
+      background: var(--coral-primary);
+      border-color: var(--coral-primary);
+      color: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(235, 107, 99, 0.25);
     }
 
     .slider-columns {
@@ -670,11 +709,11 @@
       gap: 16px;
     }
 
-    @media (max-width: 900px) {
-      .slider-columns { grid-template-columns: 1fr; }
-    }
-
     .slider-box {
+      background: #FFFFFF;
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -682,95 +721,81 @@
 
     .slider-box-header {
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: baseline;
-      font-size: 12px;
     }
 
     .slider-label {
+      font-size: 12px;
       font-weight: 600;
       color: var(--text-secondary);
     }
 
     .slider-value-badge {
-      font-family: var(--font-mono);
+      font-size: 11.5px;
       font-weight: 700;
-      color: var(--red-bright);
+      font-family: var(--font-mono);
+      color: var(--coral-primary);
+      background: var(--coral-subtle);
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
     }
 
-    input[type="range"].luxury-range {
+    /* Range slider styling */
+    .luxury-range {
       -webkit-appearance: none;
-      appearance: none;
       width: 100%;
-      height: 5px;
-      background: var(--border-strong);
-      border-radius: var(--radius-pill);
+      height: 6px;
+      border-radius: 4px;
+      background: #EAE2EA;
       outline: none;
       cursor: pointer;
     }
-
-    input[type="range"].luxury-range::-webkit-slider-thumb {
+    .luxury-range::-webkit-slider-thumb {
       -webkit-appearance: none;
       width: 16px;
       height: 16px;
       border-radius: 50%;
-      background: var(--red-bright);
-      border: 2px solid var(--bg-base);
-      box-shadow: 0 0 8px var(--red-glow);
-      cursor: grab;
+      background: var(--coral-primary);
+      box-shadow: 0 2px 6px rgba(235, 107, 99, 0.4);
+      cursor: pointer;
       transition: transform 0.15s;
     }
-
-    input[type="range"].luxury-range::-webkit-slider-thumb:hover {
-      transform: scale(1.2);
+    .luxury-range::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
     }
 
-    /* Advanced Section Dropdown */
     .advanced-toggle-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 600;
-      color: var(--text-muted);
+      color: var(--text-secondary);
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
       user-select: none;
-      margin-top: 14px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border-subtle);
-      transition: color 0.15s;
     }
-
     .advanced-toggle-btn:hover {
-      color: var(--text-white);
-    }
-
-    .advanced-toggle-btn .arrow {
-      transition: transform 0.2s;
-    }
-
-    .advanced-toggle-btn.open .arrow {
-      transform: rotate(180deg);
+      color: var(--coral-primary);
     }
 
     .advanced-params-drawer {
       display: none;
       grid-template-columns: 1fr 1fr;
-      gap: 14px 20px;
-      margin-top: 14px;
+      gap: 12px;
+      padding-top: 6px;
     }
-
     .advanced-params-drawer.open {
       display: grid;
     }
 
     .adv-hint {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--text-muted);
-      margin-top: 4px;
+      line-height: 1.35;
     }
 
-    /* ── Main Generate Button ── */
+    /* ── Generate Action Button ── */
     .generate-wrap {
       display: flex;
       flex-direction: column;
@@ -779,116 +804,95 @@
 
     .btn-luxury-generate {
       width: 100%;
-      padding: 16px 24px;
-      background: var(--red-gradient);
-      border: 1px solid rgba(245, 158, 11, 0.25);
+      padding: 15px 24px;
       border-radius: var(--radius-lg);
-      color: white;
+      background: var(--coral-gradient);
+      color: #FFFFFF;
       font-size: 15px;
       font-weight: 800;
       font-family: inherit;
       letter-spacing: 0.02em;
+      border: none;
       cursor: pointer;
-      box-shadow: var(--shadow-glow), 0 6px 20px rgba(0, 0, 0, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      transition: all 0.2s ease;
-      position: relative;
-      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(235, 107, 99, 0.32);
+      transition: all 0.18s ease;
     }
-
-    .btn-luxury-generate:hover:not(:disabled) {
-      background: var(--red-gradient-hover);
-      box-shadow: 0 0 30px rgba(225, 29, 72, 0.45), 0 8px 24px rgba(0, 0, 0, 0.5);
+    .btn-luxury-generate:hover {
+      background: var(--coral-gradient-hover);
+      box-shadow: 0 10px 28px rgba(235, 107, 99, 0.42);
       transform: translateY(-1px);
     }
-
-    .btn-luxury-generate:active:not(:disabled) {
-      transform: translateY(1px);
+    .btn-luxury-generate:active {
+      transform: translateY(0);
     }
-
-    .btn-luxury-generate:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
+    .btn-luxury-generate.loading {
+      opacity: 0.75;
+      cursor: wait;
     }
-
-    .btn-luxury-generate.loading::after {
-      content: '';
-      width: 18px;
-      height: 18px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
 
     .generate-subtext {
-      font-size: 11px;
+      font-size: 11.5px;
       color: var(--text-muted);
       text-align: center;
     }
 
-    /* Feedback Alert */
+    /* Status Alert Toast */
     .status-toast {
       display: none;
-      padding: 12px 16px;
+      padding: 10px 16px;
       border-radius: var(--radius-md);
-      font-size: 13px;
-      font-weight: 500;
-      animation: fadeIn 0.2s ease;
+      font-size: 12.5px;
+      font-weight: 600;
+      background: #FFFFFF;
+      border: 1px solid var(--border-card);
+      box-shadow: var(--shadow-md);
+      align-items: center;
+      gap: 8px;
+      animation: fadeInToast 0.2s ease-out;
     }
-
-    .status-toast.show { display: flex; align-items: center; gap: 10px; }
-    .status-toast.info { background: rgba(59, 130, 246, 0.12); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); }
-    .status-toast.ok   { background: rgba(16, 185, 129, 0.12); color: #86efac; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .status-toast.err  { background: rgba(225, 29, 72, 0.14); color: #fda4af; border: 1px solid rgba(225, 29, 72, 0.35); }
-
-    /* ── Audio Result Player Panel ── */
-    .player-showcase {
-      display: none;
-      background: linear-gradient(145deg, #140d10, #1c1016);
-      border: 1px solid var(--border-accent);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    .status-toast.show {
+      display: flex;
     }
+    .status-toast.ok   { color: var(--color-emerald); border-color: rgba(46, 125, 50, 0.3); background: #F1F8F2; }
+    .status-toast.err  { color: var(--color-rose);    border-color: rgba(198, 40, 40, 0.3);  background: #FDF2F2; }
+    .status-toast.info { color: var(--color-sapphire);border-color: rgba(21, 101, 192, 0.3); background: #F0F6FD; }
 
-    .player-showcase.active {
-      display: block;
-      animation: slideUp 0.3s ease;
-    }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(10px); }
+    @keyframes fadeInToast {
+      from { opacity: 0; transform: translateY(-6px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
+    /* Player Showcase Card in Center (Full audio output) */
+    .player-showcase {
+      display: none;
+      background: #FAF8FA;
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .player-showcase.active {
+      display: flex;
+    }
+
     .player-header {
-      padding: 14px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--border-subtle);
     }
 
     .player-title {
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 700;
-      color: var(--text-white);
+      color: var(--text-main);
       display: flex;
       align-items: center;
       gap: 7px;
-    }
-
-    .player-actions {
-      display: flex;
-      gap: 8px;
     }
 
     .btn-download-wav {
@@ -897,347 +901,221 @@
       gap: 6px;
       padding: 6px 14px;
       border-radius: var(--radius-pill);
-      background: var(--red-gradient);
-      color: white;
-      text-decoration: none;
+      background: var(--color-emerald-bg);
+      color: var(--color-emerald);
+      border: 1px solid rgba(46, 125, 50, 0.25);
       font-size: 12px;
       font-weight: 700;
-      border: 1px solid rgba(245, 158, 11, 0.3);
+      text-decoration: none;
       transition: all 0.15s;
     }
-
     .btn-download-wav:hover {
-      box-shadow: 0 0 14px var(--red-glow);
+      background: #D7ECD9;
     }
 
-    audio#audioPlayer {
+    #audioPlayer {
       width: 100%;
-      padding: 12px 18px;
-      outline: none;
-      display: block;
-      background: rgba(10, 7, 8, 0.5);
+      height: 38px;
+      border-radius: var(--radius-pill);
     }
 
     .benchmark-strip {
-      padding: 10px 18px 14px;
       display: flex;
+      gap: 8px;
       flex-wrap: wrap;
-      gap: 12px;
-      background: rgba(10, 7, 8, 0.3);
-      border-top: 1px solid rgba(255, 255, 255, 0.03);
     }
 
     .benchmark-pill {
       font-size: 11px;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .benchmark-pill b {
-      color: var(--text-white);
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      background: #FFFFFF;
+      border: 1px solid var(--border-card);
+      color: var(--text-secondary);
       font-family: var(--font-mono);
     }
-
     .benchmark-pill b.gold {
-      color: var(--gold-bright);
-    }
-
-    /* ── Generation History ── */
-    .history-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: 18px 20px;
-    }
-
-    .history-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-    }
-
-    .history-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-secondary);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .clear-history-btn {
-      font-size: 11px;
-      color: var(--red-bright);
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      font-family: inherit;
-      font-weight: 600;
-    }
-
-    .clear-history-btn:hover {
-      text-decoration: underline;
-    }
-
-    .history-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 220px;
-      overflow-y: auto;
-    }
-
-    .history-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 10px 14px;
-      border-radius: var(--radius-md);
-      background: var(--bg-input);
-      border: 1px solid var(--border-subtle);
-      transition: border-color 0.15s;
-    }
-
-    .history-item:hover {
-      border-color: var(--border-strong);
-    }
-
-    .history-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .history-meta-line {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 3px;
-    }
-
-    .history-voice-name {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--text-white);
-    }
-
-    .history-time {
-      font-size: 10px;
-      color: var(--text-muted);
-    }
-
-    .history-excerpt {
-      font-size: 11px;
-      color: var(--text-secondary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .history-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-
-    .btn-circle {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-secondary);
-      cursor: pointer;
-      font-size: 11px;
-      transition: all 0.15s;
-    }
-
-    .btn-circle:hover {
-      background: var(--bg-elevated);
-      color: var(--text-white);
-      border-color: var(--border-strong);
-    }
-
-    .btn-circle.play {
-      background: var(--red-primary);
-      color: white;
-      border-color: var(--red-deep);
-    }
-
-    .btn-circle.play:hover {
-      background: var(--red-bright);
-      transform: scale(1.08);
+      color: var(--yellow-dark);
     }
 
     /* ════════════════════════════════════════════════════════════
-       RIGHT PANEL: VOICE SELECTION & UPLOAD (Column 3)
+       3. RIGHT PANEL (Sunshine Honey Yellow #FACB54)
     ════════════════════════════════════════════════════════════ */
     .right-panel {
       width: var(--right-panel-width);
       flex-shrink: 0;
-      background: var(--bg-surface);
+      background: var(--yellow-sun);
       display: flex;
       flex-direction: column;
-      overflow: hidden;
+      overflow-y: auto;
+      color: var(--plum-dark);
+      padding: 24px 20px;
+      gap: 18px;
     }
 
-    .panel-header {
-      padding: 18px 20px 14px;
-      border-bottom: 1px solid var(--border-subtle);
-      flex-shrink: 0;
+    .right-panel-header {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
     }
 
-    .panel-title {
-      font-size: 16px;
+    .right-panel-title {
+      font-size: 24px;
       font-weight: 800;
-      color: var(--text-white);
-      margin-bottom: 12px;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.02em;
+      color: var(--plum-dark);
+      line-height: 1.1;
     }
 
-    /* Luxury Tabs */
+    .right-panel-subline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+
+    .subline-label {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--plum-dark);
+    }
+
+    .subline-hint {
+      font-size: 12px;
+      font-weight: 500;
+      color: #6C5420;
+    }
+
+    /* Tabs & Filters inside yellow panel */
     .tabs-strip {
       display: flex;
-      background: var(--bg-input);
-      border-radius: var(--radius-md);
-      padding: 3px;
-      margin-bottom: 12px;
-      border: 1px solid var(--border-subtle);
+      gap: 6px;
+      background: rgba(42, 29, 43, 0.08);
+      padding: 4px;
+      border-radius: var(--radius-pill);
     }
 
     .tab-pill {
       flex: 1;
       text-align: center;
-      padding: 8px 6px;
-      border-radius: var(--radius-sm);
+      padding: 6px 10px;
+      border-radius: var(--radius-pill);
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 600;
       cursor: pointer;
-      color: var(--text-muted);
+      color: var(--plum-dark);
       transition: all 0.15s;
-      white-space: nowrap;
     }
-
     .tab-pill.active {
-      background: var(--bg-card);
-      color: var(--text-white);
-      box-shadow: var(--shadow-sm);
+      background: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      font-weight: 700;
     }
 
-    /* Search & Filter Bar */
     .search-container {
       position: relative;
-      margin-bottom: 8px;
-    }
-
-    .search-container input {
       width: 100%;
-      background: var(--bg-input);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 9px 12px 9px 36px;
-      font-size: 12.5px;
-      color: var(--text-white);
-      font-family: inherit;
-      outline: none;
-      transition: border-color 0.15s;
     }
-
-    .search-container input:focus {
-      border-color: var(--red-primary);
-    }
-
-    .search-container .ico {
+    .search-container .ico-svg {
       position: absolute;
       left: 12px;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 14px;
-      color: var(--text-muted);
-      pointer-events: none;
+      color: #8C7540;
+    }
+    #inputSearchVoice {
+      width: 100%;
+      padding: 8px 12px 8px 34px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: #FFFFFF;
+      color: var(--plum-dark);
+      font-family: inherit;
+      font-size: 12.5px;
+      outline: none;
+    }
+    #inputSearchVoice::placeholder {
+      color: #9C8A60;
     }
 
     .filter-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 6px;
+      gap: 8px;
     }
 
     .filter-select {
-      background: var(--bg-input);
-      border: 1px solid var(--border-subtle);
+      width: 100%;
+      padding: 6px 10px;
       border-radius: var(--radius-sm);
-      padding: 7px 10px;
-      font-size: 12px;
-      color: var(--text-secondary);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: #FFFFFF;
+      color: var(--plum-dark);
       font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
       outline: none;
       cursor: pointer;
     }
 
-    .filter-select:focus {
-      border-color: var(--red-primary);
-    }
-
-    /* Voice Roster List (Scrollable) */
+    /* ── Voice Roster (White Cards with Radio Indicator) ── */
     .voice-roster {
-      flex: 1;
-      overflow-y: auto;
-      padding: 12px 18px;
       display: flex;
       flex-direction: column;
-      gap: 9px;
+      gap: 8px;
+      max-height: 280px;
+      overflow-y: auto;
+      padding-right: 2px;
     }
 
     .voice-entry {
+      background: #FFFFFF;
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 11px 14px;
-      border-radius: var(--radius-md);
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
+      gap: 10px;
       cursor: pointer;
-      transition: all 0.18s ease;
+      border: 1.5px solid transparent;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      transition: all 0.15s ease;
       position: relative;
     }
 
     .voice-entry:hover {
-      background: var(--bg-card-hover);
-      border-color: var(--border-strong);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     }
 
     .voice-entry.active-selected {
-      background: linear-gradient(135deg, rgba(225, 29, 72, 0.16), rgba(159, 18, 57, 0.08));
-      border-color: var(--red-primary);
-      box-shadow: 0 0 16px rgba(225, 29, 72, 0.2);
+      border-color: var(--plum-dark);
+      box-shadow: 0 4px 12px rgba(42, 29, 43, 0.15);
     }
 
-    .voice-avatar-crest {
-      width: 42px;
-      height: 42px;
+    /* Radio button indicator (like cuong-tt & chinh in image!) */
+    .voice-radio-dot {
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
+      border: 2px solid #C4B298;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
-      font-weight: 800;
-      color: white;
       flex-shrink: 0;
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: #FFFFFF;
+      transition: all 0.15s;
     }
 
-    .voice-avatar-crest.custom { background: var(--red-gradient); }
-    .voice-avatar-crest.preset-female { background: linear-gradient(135deg, #be185d, #831843); }
-    .voice-avatar-crest.preset-male   { background: linear-gradient(135deg, #1d4ed8, #1e3a8a); }
-    .voice-avatar-crest.preset-special{ background: linear-gradient(135deg, #b45309, #78350f); }
+    .voice-entry.active-selected .voice-radio-dot {
+      border-color: var(--plum-dark);
+    }
+    .voice-entry.active-selected .voice-radio-dot::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--plum-dark);
+    }
 
     .voice-details {
       flex: 1;
@@ -1251,9 +1129,9 @@
     }
 
     .voice-card-name {
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 700;
-      color: var(--text-white);
+      color: var(--plum-dark);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -1261,24 +1139,22 @@
 
     .voice-chips-line {
       display: flex;
-      gap: 5px;
-      margin-top: 4px;
+      gap: 4px;
+      margin-top: 3px;
       flex-wrap: wrap;
     }
 
     .badge-micro {
-      font-size: 10px;
+      font-size: 9.5px;
       font-weight: 700;
-      padding: 2px 7px;
+      padding: 1px 6px;
       border-radius: var(--radius-pill);
-      letter-spacing: 0.02em;
       white-space: nowrap;
     }
-
-    .badge-micro.red   { background: rgba(225, 29, 72, 0.15); color: var(--red-bright); border: 1px solid rgba(225, 29, 72, 0.25); }
-    .badge-micro.gold  { background: var(--gold-subtle); color: var(--gold-bright); border: 1px solid var(--gold-border); }
-    .badge-micro.green { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .badge-micro.gray  { background: rgba(255, 255, 255, 0.06); color: var(--text-secondary); border: 1px solid var(--border-subtle); }
+    .badge-micro.red   { background: #FDE8E7; color: var(--coral-dark); }
+    .badge-micro.gold  { background: #FFF4D9; color: #8A6405; }
+    .badge-micro.green { background: #E8F5E9; color: #2E7D32; }
+    .badge-micro.gray  { background: #F2EEF2; color: #6E5F70; }
 
     .voice-card-actions {
       display: flex;
@@ -1288,60 +1164,303 @@
     }
 
     .btn-action-icon {
-      width: 30px;
-      height: 30px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       border: none;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
-      background: transparent;
-      color: var(--text-muted);
+      background: #F4EFE6;
+      color: #6C5528;
       transition: all 0.15s;
     }
-
     .btn-action-icon:hover {
-      background: var(--bg-elevated);
-      color: var(--text-white);
+      background: #E8DCC8;
+      color: var(--plum-dark);
     }
-
-    .btn-action-icon.favorite.loved {
-      color: var(--red-bright);
-    }
-
     .btn-action-icon.play-preview {
-      width: 32px;
-      height: 32px;
-      background: var(--red-gradient);
-      color: white;
-      border: 1px solid rgba(245, 158, 11, 0.25);
+      background: var(--coral-primary);
+      color: #FFFFFF;
     }
-
     .btn-action-icon.play-preview:hover {
-      transform: scale(1.12);
-      box-shadow: 0 0 10px var(--red-glow);
+      background: var(--coral-hover);
+      transform: scale(1.1);
+    }
+    .btn-action-icon.favorite.loved {
+      color: var(--coral-primary);
     }
 
-    /* ── Upload Drawer in Right Panel ── */
-    .upload-drawer {
-      padding: 16px 20px 20px;
-      border-top: 1px solid var(--border-subtle);
-      background: rgba(14, 9, 11, 0.7);
+    /* ── Mini Waveform Player Bar (Directly from screenshot!) ── */
+    .mini-waveform-card {
+      background: rgba(255, 255, 255, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .mini-wave-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .mini-wave-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--plum-dark);
+    }
+
+    .mini-wave-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-mini-tool {
+      background: #FFFFFF;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 6px;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--plum-dark);
+      transition: all 0.15s;
+    }
+    .btn-mini-tool:hover {
+      background: #F8F0E0;
+    }
+
+    /* Wave bars canvas */
+    .wave-canvas-wrap {
+      width: 100%;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+    #miniWaveCanvas {
+      width: 100%;
+      height: 48px;
+      display: block;
+    }
+
+    .mini-wave-timestamps {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      color: #6C5528;
+    }
+
+    .mini-player-controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding-top: 2px;
+    }
+
+    .btn-mini-ctrl {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--plum-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s;
+    }
+    .btn-mini-ctrl:hover {
+      transform: scale(1.15);
+    }
+
+    .btn-mini-play {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--plum-dark);
+      color: #FFFFFF;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(42, 29, 43, 0.25);
+      transition: all 0.15s;
+    }
+    .btn-mini-play:hover {
+      background: var(--coral-primary);
+      transform: scale(1.08);
+    }
+
+    .speed-pill-btn {
+      font-size: 11px;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: var(--radius-pill);
+      padding: 3px 8px;
+      cursor: pointer;
+      color: var(--plum-dark);
+    }
+
+    /* ── Section "Gần đây" (Recent History from image!) ── */
+    .recent-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .recent-header-title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: var(--plum-dark);
+    }
+
+    .recent-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .recent-card {
+      background: #FFFFFF;
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: 0 3px 12px rgba(42, 29, 43, 0.05);
+      transition: transform 0.15s ease;
+    }
+    .recent-card:hover {
+      transform: translateY(-1px);
+    }
+
+    .recent-card-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .recent-card-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--plum-dark);
+    }
+
+    .recent-card-dur {
+      font-size: 12px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      color: #745823;
+    }
+
+    .recent-card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11.5px;
+      color: #8C7548;
+    }
+
+    .recent-dl-pill {
+      background: #E8F5E9;
+      color: #2E7D32;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.15s;
+    }
+    .recent-dl-pill:hover {
+      background: #D5EDD8;
+    }
+
+    /* Mini scrubber bar inside recent card */
+    .recent-player-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-top: 4px;
+      border-top: 1px solid #F5EFE8;
+    }
+
+    .recent-play-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--plum-dark);
+      color: #FFFFFF;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
       flex-shrink: 0;
     }
 
+    .recent-scrub-track {
+      flex: 1;
+      height: 5px;
+      border-radius: 3px;
+      background: #EFE4D2;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .recent-scrub-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--yellow-wave);
+      width: 35%;
+    }
+
+    .recent-time-tag {
+      font-size: 10.5px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: #8C7548;
+      white-space: nowrap;
+    }
+
+    /* ── Quick Upload Drawer at Bottom ── */
+    .upload-drawer-card {
+      background: #FFFFFF;
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 0 4px 16px rgba(42, 29, 43, 0.06);
+    }
+
     .upload-drawer-title {
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-white);
-      margin-bottom: 10px;
+      letter-spacing: 0.04em;
+      color: var(--plum-dark);
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
+    }
+    .upload-drawer-title .ico-svg {
+      color: var(--coral-primary);
     }
 
     .upload-form-wrap {
@@ -1352,35 +1471,34 @@
 
     .input-compact {
       width: 100%;
-      background: var(--bg-input);
-      border: 1px solid var(--border-subtle);
+      background: #FAF7F5;
+      border: 1px solid #E8DFD8;
       border-radius: var(--radius-sm);
       padding: 8px 12px;
       font-size: 12.5px;
-      color: var(--text-white);
+      color: var(--plum-dark);
       font-family: inherit;
       outline: none;
     }
-
     .input-compact:focus {
-      border-color: var(--red-primary);
+      border-color: var(--coral-primary);
+      background: #FFFFFF;
     }
 
     .dropzone-compact {
-      border: 1.5px dashed var(--border-strong);
+      border: 1.5px dashed #DCCEC0;
       border-radius: var(--radius-md);
-      padding: 14px 12px;
+      padding: 12px 10px;
       text-align: center;
       cursor: pointer;
       position: relative;
+      background: #FAF7F5;
       transition: all 0.15s;
     }
-
     .dropzone-compact:hover, .dropzone-compact.drag-active {
-      border-color: var(--red-primary);
-      background: rgba(225, 29, 72, 0.08);
+      border-color: var(--coral-primary);
+      background: var(--coral-subtle);
     }
-
     .dropzone-compact input {
       position: absolute;
       inset: 0;
@@ -1389,207 +1507,209 @@
       width: 100%;
       height: 100%;
     }
-
     .dropzone-text {
       font-size: 12px;
       font-weight: 600;
       color: var(--text-secondary);
-      line-height: 1.5;
+      line-height: 1.45;
     }
 
     .dropzone-selected-name {
       display: none;
-      font-size: 12px;
-      color: var(--red-bright);
+      font-size: 11.5px;
+      color: var(--coral-primary);
       font-weight: 700;
       margin-top: 5px;
+    }
+
+    .audio-file-summary-card {
+      background: #FDF9F5;
+      border: 1px solid #E8DDD0;
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      display: none;
+    }
+    .summary-card-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .summary-card-row .file-icon {
+      color: var(--coral-primary);
+      flex-shrink: 0;
+    }
+    .summary-card-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .summary-file-name {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--plum-dark);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .summary-meta-line {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .summary-duration-badge {
+      font-size: 10px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      padding: 1px 7px;
+      border-radius: var(--radius-pill);
+      background: #E8F5E9;
+      color: #2E7D32;
+    }
+    .summary-duration-badge.warn {
+      background: #FFF3E0;
+      color: #E65100;
+    }
+    .summary-status-hint {
+      font-size: 10.5px;
+      color: var(--text-muted);
+    }
+
+    .btn-open-trimmer-pill {
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      font-size: 11.5px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--coral-primary);
+      color: white;
+      border: none;
+      box-shadow: 0 2px 8px rgba(235, 107, 99, 0.3);
+      flex-shrink: 0;
+    }
+    .btn-open-trimmer-pill:hover {
+      background: var(--coral-hover);
+    }
+
+    .ref-text-field-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .ref-text-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ref-text-header label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .btn-auto-stt {
+      background: var(--yellow-subtle);
+      border: 1px solid var(--yellow-border);
+      color: var(--yellow-dark);
+      border-radius: var(--radius-pill);
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .textarea-ref {
+      min-height: 52px;
+      resize: vertical;
+    }
+
+    .stt-indicator {
+      display: none;
+      font-size: 11px;
+      color: var(--yellow-dark);
+      font-weight: 600;
+      align-items: center;
+      gap: 4px;
+    }
+    .stt-indicator.active {
+      display: flex;
     }
 
     .checkbox-compact {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 12px;
+      gap: 7px;
+      font-size: 11.5px;
       color: var(--text-secondary);
       cursor: pointer;
     }
-
     .checkbox-compact input { display: none; }
-
     .checkbox-box {
-      width: 16px;
-      height: 16px;
-      border: 1.5px solid var(--border-strong);
+      width: 15px;
+      height: 15px;
+      border: 1.5px solid #C8B8C8;
       border-radius: 4px;
-      background: var(--bg-input);
+      background: #FFFFFF;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.15s;
       flex-shrink: 0;
     }
-
     .checkbox-compact:has(input:checked) .checkbox-box {
-      background: var(--red-primary);
-      border-color: var(--red-primary);
+      background: var(--coral-primary);
+      border-color: var(--coral-primary);
     }
-
     .checkbox-box::after {
       content: '✓';
-      font-size: 11px;
+      font-size: 10px;
       color: white;
       opacity: 0;
     }
-
     .checkbox-compact:has(input:checked) .checkbox-box::after {
       opacity: 1;
     }
 
     .btn-submit-clone {
       width: 100%;
-      padding: 11px;
-      background: var(--red-gradient);
-      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 10px;
+      background: var(--coral-gradient);
+      border: none;
       border-radius: var(--radius-md);
       color: white;
-      font-size: 13.5px;
-      font-weight: 800;
-      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 0 12px var(--red-glow);
+      box-shadow: 0 4px 12px rgba(235, 107, 99, 0.25);
       transition: all 0.15s;
     }
-
     .btn-submit-clone:hover {
-      box-shadow: 0 0 16px var(--red-bright);
-      transform: translateY(-1px);
+      background: var(--coral-gradient-hover);
     }
-
     .btn-submit-clone:disabled {
       opacity: 0.5;
       cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    /* ── Right Panel: Clean Audio File Summary Card ── */
-    .audio-file-summary-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-accent);
-      border-radius: var(--radius-md);
-      padding: 12px 14px;
-      margin-top: 4px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
-      animation: fadeInCard 0.25s ease-out;
-    }
-
-    @keyframes fadeInCard {
-      from { opacity: 0; transform: translateY(-4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .summary-card-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .summary-card-row .file-icon {
-      font-size: 22px;
-      flex-shrink: 0;
-    }
-
-    .summary-card-info {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .summary-file-name {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-white);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .summary-meta-line {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .summary-duration-badge {
-      font-size: 11px;
-      font-weight: 700;
-      font-family: var(--font-mono);
-      padding: 2px 8px;
-      border-radius: var(--radius-pill);
-      background: rgba(16, 185, 129, 0.15);
-      color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.35);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .summary-duration-badge.warn {
-      background: rgba(245, 158, 11, 0.15);
-      color: var(--gold-bright);
-      border-color: var(--gold-border);
-    }
-
-    .summary-status-hint {
-      font-size: 11px;
-      color: var(--text-muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .btn-open-trimmer-pill {
-      padding: 6px 14px;
-      border-radius: var(--radius-pill);
-      font-size: 12px;
-      font-weight: 700;
-      font-family: inherit;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      background: var(--red-gradient);
-      color: white;
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      box-shadow: 0 0 10px var(--red-glow);
-      transition: all 0.15s;
-      flex-shrink: 0;
-      white-space: nowrap;
-    }
-
-    .btn-open-trimmer-pill:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 14px var(--red-bright);
     }
 
     /* ════════════════════════════════════════════════════════════
-       MP3CUT-STYLE AUDIO TRIMMER MODAL (Mẫu 2)
+       4. AUDIO TRIMMER MODAL (MP3Cut Studio — Light & Clean)
     ════════════════════════════════════════════════════════════ */
     .audio-trimmer-modal-overlay {
       position: fixed;
       inset: 0;
       z-index: 10000;
-      background: rgba(3, 1, 3, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(35, 26, 36, 0.65);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 24px;
       animation: fadeInModal 0.2s ease-out;
     }
-
     @keyframes fadeInModal {
       from { opacity: 0; transform: scale(0.97); }
       to   { opacity: 1; transform: scale(1); }
@@ -1598,585 +1718,346 @@
     .audio-trimmer-modal-card {
       width: 100%;
       max-width: 960px;
-      background: #0d080a;
-      border: 1px solid var(--border-accent);
-      border-radius: var(--radius-xl);
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9), 0 0 50px rgba(225, 29, 72, 0.18);
+      background: #FFFFFF;
+      border-radius: var(--radius-2xl);
+      box-shadow: 0 24px 64px rgba(35, 26, 36, 0.25);
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
-      user-select: none;
     }
 
-    /* Modal Header */
     .modal-trimmer-header {
-      padding: 16px 22px 14px;
+      padding: 18px 24px;
+      background: #FAF7FA;
+      border-bottom: 1px solid var(--border-card);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--border-subtle);
-      background: var(--bg-surface);
     }
-
-    .modal-trimmer-title-group {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
     .modal-trimmer-title {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 800;
-      color: var(--text-white);
+      color: var(--text-main);
       display: flex;
       align-items: center;
       gap: 8px;
     }
-
-    .modal-trimmer-title .icon {
-      color: #00e5ff;
-      filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.8));
-    }
-
     .modal-trimmer-subtitle {
-      font-size: 11px;
-      color: var(--text-secondary);
-      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
     }
-
     .btn-modal-close {
+      background: #EFE8EF;
+      border: none;
       width: 32px;
       height: 32px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-muted);
       cursor: pointer;
-      font-size: 14px;
+      color: var(--text-secondary);
       transition: all 0.15s;
     }
-
     .btn-modal-close:hover {
-      background: var(--red-deep);
-      color: white;
-      border-color: var(--red-bright);
+      background: #DFD5DF;
+      color: var(--text-main);
     }
 
-    /* Recommendation Banner */
     .modal-trimmer-banner {
-      padding: 10px 22px;
-      background: rgba(245, 158, 11, 0.08);
-      border-bottom: 1px solid rgba(245, 158, 11, 0.2);
-      font-size: 11.5px;
-      font-weight: 600;
-      color: var(--gold-bright);
-      line-height: 1.4;
+      padding: 10px 24px;
+      background: var(--yellow-subtle);
+      border-bottom: 1px solid var(--yellow-border);
+      color: #745823;
+      font-size: 12px;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    /* Waveform Track Container (The MP3Cut Experience) */
     .modal-waveform-track-wrap {
       position: relative;
-      width: 100%;
       height: 150px;
-      background: #060405;
+      background: #201524;
+      cursor: crosshair;
+      user-select: none;
       overflow: hidden;
-      cursor: pointer;
-      border-bottom: 1px solid var(--border-subtle);
     }
-
     #trimmerModalCanvas {
       width: 100%;
       height: 100%;
       display: block;
     }
 
-    /* Dimmed Masks */
     .modal-mask-dim {
       position: absolute;
       top: 0;
       bottom: 0;
-      background: rgba(3, 1, 3, 0.78);
+      background: rgba(10, 4, 12, 0.65);
       pointer-events: none;
-      z-index: 2;
+      transition: width 0.05s, left 0.05s, right 0.05s;
     }
-
     .modal-mask-dim.left { left: 0; }
     .modal-mask-dim.right { right: 0; }
 
-    /* Selection Band */
     .modal-selection-band {
       position: absolute;
       top: 0;
       bottom: 0;
-      background: rgba(0, 229, 255, 0.04);
+      background: rgba(0, 229, 255, 0.14);
       border-top: 2px solid #00e5ff;
       border-bottom: 2px solid #00e5ff;
       cursor: grab;
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 3;
     }
-
-    .modal-selection-band:active {
-      cursor: grabbing;
-      background: rgba(0, 229, 255, 0.09);
-    }
+    .modal-selection-band.dragging { cursor: grabbing; }
 
     .selection-badge-center {
-      background: rgba(0, 16, 26, 0.85);
-      border: 1px solid rgba(0, 229, 255, 0.5);
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      padding: 4px 12px;
       border-radius: var(--radius-pill);
-      padding: 4px 16px;
+      border: 1px solid #00e5ff;
+      color: #00e5ff;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: var(--font-mono);
       display: flex;
       flex-direction: column;
       align-items: center;
       pointer-events: none;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.8);
     }
-
-    .selection-badge-center span:first-child {
-      font-family: var(--font-mono);
-      font-weight: 800;
-      font-size: 14px;
-      color: #00e5ff;
-      text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
-    }
-
     .selection-badge-center .sub {
       font-size: 9px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
+      color: #FFFFFF;
+      font-weight: 500;
     }
 
-    /* Cyan Drag Handles (Like MP3Cut Image 2) */
+    .modal-playhead {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #FFFFFF;
+      box-shadow: 0 0 8px #FFFFFF;
+      pointer-events: none;
+      display: none;
+      z-index: 5;
+    }
+    .modal-playhead.active { display: block; }
+
     .modal-handle {
       position: absolute;
       top: 0;
       bottom: 0;
-      width: 10px;
+      width: 16px;
+      margin-left: -8px;
       background: #00e5ff;
-      box-shadow: 0 0 14px rgba(0, 229, 255, 0.85), 0 0 3px #ffffff;
       cursor: ew-resize;
       z-index: 10;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      transform: translateX(-50%);
-      border-radius: 3px;
-      transition: background 0.15s, box-shadow 0.15s;
+      box-shadow: 0 0 10px #00e5ff;
     }
-
-    .modal-handle:hover, .modal-handle.dragging {
-      background: #38ef7d;
-      box-shadow: 0 0 20px rgba(56, 239, 125, 0.95), 0 0 4px #ffffff;
-    }
-
     .handle-grip-dots {
       display: flex;
       flex-direction: column;
       gap: 3px;
-      pointer-events: none;
     }
-
     .handle-grip-dots span {
       width: 3px;
       height: 3px;
-      background: #060405;
+      background: #000000;
       border-radius: 50%;
     }
 
     .handle-time-tag {
       position: absolute;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      font-weight: 800;
+      background: #000000;
       color: #00e5ff;
-      background: rgba(0, 20, 32, 0.92);
-      border: 1px solid rgba(0, 229, 255, 0.5);
+      font-size: 10px;
+      font-family: var(--font-mono);
+      font-weight: 700;
       padding: 2px 6px;
-      border-radius: var(--radius-xs);
+      border-radius: 4px;
       white-space: nowrap;
       pointer-events: none;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
     }
+    .handle-time-tag.top { top: 6px; }
+    .handle-time-tag.bottom { bottom: 6px; }
 
-    .handle-time-tag.top {
-      top: 6px;
-    }
-
-    .handle-time-tag.bottom {
-      bottom: 6px;
-    }
-
-    /* Playhead Cursor Line */
-    .modal-playhead {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: #ffeb3b;
-      box-shadow: 0 0 10px #ffeb3b, 0 0 3px #fff;
-      z-index: 12;
-      pointer-events: none;
-      display: none;
-      transform: translateX(-50%);
-    }
-
-    .modal-playhead.active {
-      display: block;
-    }
-
-    /* Interactive Controls Bar */
     .modal-trimmer-controls-bar {
-      padding: 14px 22px;
+      padding: 12px 24px;
+      background: #FAF7FA;
+      border-top: 1px solid var(--border-card);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      background: var(--bg-surface);
-      border-bottom: 1px solid var(--border-subtle);
       flex-wrap: wrap;
     }
 
     .player-controls-group {
       display: flex;
-      align-items: center;
       gap: 8px;
     }
 
     .btn-trim-player {
-      padding: 8px 18px;
-      border-radius: var(--radius-pill);
-      background: var(--bg-card);
-      border: 1px solid var(--border-strong);
-      color: var(--text-white);
-      font-size: 12px;
-      font-weight: 700;
-      font-family: inherit;
-      cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      transition: all 0.15s;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      background: var(--plum-dark);
+      color: #FFFFFF;
+      border: none;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
     }
-
     .btn-trim-player:hover {
-      background: var(--bg-elevated);
-      border-color: #00e5ff;
-      box-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
-    }
-
-    .btn-trim-player.playing {
-      background: #00e5ff;
-      color: #060405;
-      border-color: #00e5ff;
-      box-shadow: 0 0 16px rgba(0, 229, 255, 0.6);
+      background: var(--coral-primary);
     }
 
     .btn-trim-rewind {
-      padding: 8px 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 14px;
       border-radius: var(--radius-pill);
-      background: var(--bg-input);
-      border: 1px solid var(--border-subtle);
+      background: #FFFFFF;
+      border: 1px solid var(--border-card);
       color: var(--text-secondary);
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
-      font-family: inherit;
       cursor: pointer;
-      transition: all 0.15s;
     }
 
-    .btn-trim-rewind:hover {
-      color: var(--text-white);
-      border-color: var(--border-strong);
-    }
-
-    /* Window Shift Controls for Locked 8.0s Cut */
     .window-shift-group {
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
     }
-
     .adjuster-label {
       font-size: 11.5px;
-      color: var(--text-secondary);
       font-weight: 700;
-      white-space: nowrap;
+      color: var(--text-muted);
     }
-
     .btn-nudge {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-sm);
-      color: var(--text-white);
-      font-size: 11px;
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+      background: #FFFFFF;
+      border: 1px solid var(--border-card);
+      font-size: 11.5px;
       font-weight: 700;
-      font-family: var(--font-mono);
-      padding: 5px 8px;
       cursor: pointer;
-      transition: all 0.15s;
-      white-space: nowrap;
+      color: var(--text-main);
     }
-
     .btn-nudge:hover {
-      background: var(--bg-elevated);
-      color: #00e5ff;
-      border-color: #00e5ff;
-      box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+      background: #F3EEF3;
     }
 
     .window-range-display {
       font-family: var(--font-mono);
-      font-size: 12.5px;
-      font-weight: 800;
-      color: #00e5ff;
-      background: var(--bg-input);
-      border: 1px solid rgba(0, 229, 255, 0.35);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--plum-dark);
+      background: #FFFFFF;
+      border: 1px solid var(--border-card);
+      padding: 4px 10px;
       border-radius: var(--radius-sm);
-      padding: 5px 12px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6), 0 0 10px rgba(0, 229, 255, 0.15);
-      white-space: nowrap;
-    }
-
-    /* Duration Status Badge */
-    .duration-status-wrap {
-      display: flex;
-      align-items: center;
     }
 
     .duration-badge-large {
-      padding: 6px 14px;
-      border-radius: var(--radius-pill);
-      font-size: 11px;
-      font-weight: 700;
       font-family: var(--font-mono);
-      background: rgba(16, 185, 129, 0.15);
-      color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.4);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--coral-primary);
+      background: var(--coral-subtle);
+      border: 1px solid rgba(235, 107, 99, 0.3);
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
     }
 
-    .duration-badge-large.warn {
-      background: rgba(245, 158, 11, 0.15);
-      color: var(--gold-bright);
-      border-color: var(--gold-border);
-    }
-
-    .duration-badge-large.error {
-      background: rgba(225, 29, 72, 0.18);
-      color: var(--red-bright);
-      border-color: var(--border-accent);
-    }
-
-    /* Modal Footer */
     .modal-trimmer-footer {
-      padding: 14px 22px;
-      background: #090507;
+      padding: 14px 24px;
+      background: #FFFFFF;
+      border-top: 1px solid var(--border-card);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
     }
-
     .modal-footer-tip {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--text-muted);
-      line-height: 1.4;
-      max-width: 550px;
+      max-width: 600px;
     }
-
-    .modal-footer-tip b {
-      color: var(--gold-bright);
-    }
-
     .modal-footer-btns {
       display: flex;
-      align-items: center;
       gap: 10px;
-      flex-shrink: 0;
     }
 
     .btn-modal-cancel {
-      padding: 8px 18px;
-      border-radius: var(--radius-md);
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
+      padding: 9px 18px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-card);
+      background: #FFFFFF;
       color: var(--text-secondary);
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 600;
-      font-family: inherit;
       cursor: pointer;
-      transition: all 0.15s;
     }
-
-    .btn-modal-cancel:hover {
-      background: var(--bg-elevated);
-      color: var(--text-white);
-    }
+    .btn-modal-cancel:hover { background: #F5EEF5; }
 
     .btn-modal-apply {
-      padding: 9px 22px;
-      border-radius: var(--radius-md);
-      background: var(--red-gradient);
-      border: 1px solid rgba(245, 158, 11, 0.35);
-      color: white;
-      font-size: 12.5px;
-      font-weight: 700;
-      font-family: inherit;
-      cursor: pointer;
-      box-shadow: 0 0 16px var(--red-glow);
-      transition: all 0.15s;
-    }
-
-    .btn-modal-apply:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 0 24px var(--red-bright);
-    }
-
-    .btn-modal-apply:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    /* Ref text field with Auto-STT header */
-    .ref-text-field-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .ref-text-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .ref-text-header label {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    .btn-auto-stt {
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 8px;
+      padding: 9px 20px;
       border-radius: var(--radius-pill);
-      background: var(--gold-subtle);
-      color: var(--gold-bright);
-      border: 1px solid var(--gold-border);
+      border: none;
+      background: var(--coral-gradient);
+      color: #FFFFFF;
+      font-size: 13px;
+      font-weight: 800;
       cursor: pointer;
-      font-family: inherit;
-      transition: all 0.15s;
+      box-shadow: 0 4px 14px rgba(235, 107, 99, 0.3);
       display: inline-flex;
       align-items: center;
-      gap: 3px;
+      gap: 6px;
     }
+    .btn-modal-apply:hover { background: var(--coral-gradient-hover); }
 
-    .btn-auto-stt:hover {
-      background: rgba(212, 175, 55, 0.25);
-      box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
-    }
-
-    .textarea-ref {
-      resize: vertical;
-      min-height: 52px;
-      line-height: 1.5;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .auto-filled-glow {
-      border-color: var(--gold-bright) !important;
-      box-shadow: 0 0 16px rgba(212, 175, 55, 0.4) !important;
-      animation: pulseGlow 2s ease;
-    }
-
-    @keyframes pulseGlow {
-      0%   { box-shadow: 0 0 20px rgba(212, 175, 55, 0.8); }
-      100% { box-shadow: 0 0 0px transparent; }
-    }
-
-    .stt-indicator {
-      font-size: 10px;
-      color: var(--gold-bright);
-      display: none;
-      align-items: center;
-      gap: 4px;
-      margin-top: 2px;
-    }
-
-    .stt-indicator.active {
-      display: flex;
-    }
-
-    /* ── Responsive adjustments ── */
-    @media (max-width: 1300px) {
-      .right-panel { width: 400px; }
-      :root { --sidebar-width: 210px; }
-    }
-
-    @media (max-width: 1050px) {
-      .right-panel { width: 360px; }
-      :root { --sidebar-width: 190px; }
-    }
-
-    @media (max-width: 850px) {
-      .sidebar { display: none; }
-      .right-panel { width: 340px; }
-    }
-
-    @media (max-width: 720px) {
-      body { flex-direction: column; }
-      .right-panel { width: 100%; height: 420px; border-top: 1px solid var(--border-subtle); }
-    }
   </style>
 </head>
 <body>
 
 <!-- ════════════════════════════════════════════════════════════
-     1. SIDEBAR (Obsidian Red Brand & Navigation)
+     1. SIDEBAR (Deep Aubergine Plum #3E2E3E)
 ════════════════════════════════════════════════════════════ -->
 <aside class="sidebar">
   <div class="sidebar-brand">
     <div class="brand-crest">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
         <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-        <line x1="12" y1="19" x2="12" y2="23"/>
-        <line x1="8" y1="23" x2="16" y2="23"/>
+        <line x1="12" x2="12" y1="19" y2="22"/>
       </svg>
     </div>
     <div>
-      <div class="brand-title">Luậtu</div>
-      <div class="brand-tag">Studio Voice Clone</div>
+      <div class="brand-title">Voice Studio</div>
+      <div class="brand-tag">Giọng đọc AI trên máy</div>
     </div>
   </div>
 
   <nav class="nav-group">
-    <div class="nav-section-title">Không gian làm việc</div>
     <button class="nav-btn active" id="navWorkspace">
       <span class="icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
       </span>
-      Tạo giọng nói
+      Tạo giọng
     </button>
     <button class="nav-btn" id="navLibrary">
       <span class="icon">
@@ -2188,7 +2069,7 @@
       <span class="icon">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg>
       </span>
-      Lịch sử tạo
+      Lịch sử
     </button>
     <button class="nav-btn" id="navMyVoices">
       <span class="icon">
@@ -2207,13 +2088,13 @@
 </aside>
 
 <!-- ════════════════════════════════════════════════════════════
-     2. WORKSPACE CENTER (Main Studio)
+     2. WORKSPACE CENTER (Crisp White Studio)
 ════════════════════════════════════════════════════════════ -->
 <main class="workspace">
   <header class="workspace-topbar">
-    <div class="workspace-title-box">
-      <h1>Chuyển văn bản thành giọng nói</h1>
-      <p>Hệ thống tổng hợp tiếng Việt chuẩn ngữ điệu vùng miền bằng AI</p>
+    <div class="workspace-greeting-box">
+      <h1 id="workspaceGreeting">Chào buổi sáng!</h1>
+      <p id="workspaceDate">Thứ Tư, 18 tháng 11, 2026</p>
     </div>
     <div class="header-badges">
       <span class="meta-tag v3">
@@ -2228,6 +2109,41 @@
   </header>
 
   <div class="workspace-content" id="workspaceScroll">
+
+    <!-- Hero Coral Banner (Signature Element from Reference Image!) -->
+    <div class="hero-coral-banner">
+      <div class="hero-banner-content">
+        <div class="hero-banner-title">Dán bao nhiêu cũng được!</div>
+        <div class="hero-banner-desc">
+          Văn bản dài được tự chia thành đoạn ngắn theo dấu câu và nhịp thở, đọc lần lượt từng đoạn rồi ghép lại – tốc độ đều, ngắt nghỉ rõ ràng.
+        </div>
+      </div>
+      <div class="hero-banner-graphic" title="Tự động chia tách câu & ghép nối thông minh">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" x2="12" y1="19" y2="22"/>
+          <path d="M5 7a10 10 0 0 0 0 10"/>
+          <path d="M19 7a10 10 0 0 1 0 10"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- 3 Stat Metric Cards (Directly from Reference Image!) -->
+    <div class="stats-metric-row">
+      <div class="stat-metric-card">
+        <div class="stat-metric-val" id="statCreatedCount">15</div>
+        <div class="stat-metric-label">Bản đã tạo</div>
+      </div>
+      <div class="stat-metric-card">
+        <div class="stat-metric-val" id="statTotalMinutes">14 phút</div>
+        <div class="stat-metric-label">Tổng thời lượng</div>
+      </div>
+      <div class="stat-metric-card">
+        <div class="stat-metric-val" id="statVoiceCount">27</div>
+        <div class="stat-metric-label">Giọng trong thư viện</div>
+      </div>
+    </div>
 
     <!-- Engine Toggle Cards -->
     <div class="engine-grid">
@@ -2265,7 +2181,7 @@
       </div>
 
       <div class="editor-container">
-        <textarea id="textInput" placeholder="Nhập hoặc dán nội dung văn bản tiếng Việt cần đọc vào đây...&#10;Hỗ trợ chuẩn hóa ngày tháng, tỷ giá tiền tệ, số phần trăm và từ kỹ thuật tiếng Anh xen kẽ."></textarea>
+        <textarea id="textInput" placeholder="Nhập hoặc dán lời cần đọc...&#10;Mẹo: viết đủ dấu chấm, dấu phẩy để ngắt nghỉ tự nhiên. Muốn nghỉ lâu hơn ở một chỗ, viết [nghỉ 1]."></textarea>
         <div class="editor-footer">
           <div class="editor-actions">
             <button class="tool-btn" id="btnPaste">
@@ -2287,7 +2203,7 @@
           </div>
         </div>
       </div>
-
+      <div class="editor-subtext-hint">Dán lời cần đọc – dài bao nhiêu cũng được, Studio tự chia thành đoạn ngắn.</div>
       <div class="chunks-inspector" id="chunksInspector"></div>
     </section>
 
@@ -2371,7 +2287,7 @@
             <input type="checkbox" id="refCodesCheckbox" checked/>
             <div class="checkbox-box"></div>
             <div>
-              <strong style="color: var(--text-white);">Khoá ngữ điệu mẫu (use_ref_codes)</strong>
+              <strong style="color: var(--text-main);">Khoá ngữ điệu mẫu (use_ref_codes)</strong>
               <div class="adv-hint">Bật để sao chép nhịp ngắt và nhấn nhá câu của file audio gốc.</div>
             </div>
           </label>
@@ -2385,7 +2301,7 @@
         <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></span> TẠO GIỌNG NÓI NGAY (Ctrl + Enter)
       </button>
       <div class="generate-subtext" id="engineStatusHint">
-        Đang sẵn sàng · VieNeu v3 Turbo 48kHz (tổng hợp siêu tốc trên CPU)
+        Đang sẵn sàng · VieNeu v3 Turbo 48kHz (tổng hợp siêu tốc trên máy)
       </div>
     </div>
 
@@ -2408,68 +2324,92 @@
       <div class="benchmark-strip" id="benchmarkStrip"></div>
     </section>
 
-    <!-- Generation History Section -->
-    <section class="history-card" id="historyCardSection">
-      <div class="history-header">
-        <div class="history-title">
-          <span class="ico-svg md"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg></span> Lịch sử các câu đã tạo trong phiên làm việc
-        </div>
-        <button class="clear-history-btn" id="btnClearHistory">Xóa lịch sử</button>
-      </div>
-      <div class="history-list" id="historyList">
-        <div style="font-size: 11px; color: var(--text-muted); padding: 12px 0;">
-          Chưa có lịch sử nào. Sau khi bạn tạo giọng nói, kết quả sẽ tự động lưu tại đây.
-        </div>
-      </div>
-    </section>
-
   </div><!-- .workspace-content -->
 </main>
 
 <!-- ════════════════════════════════════════════════════════════
-     3. RIGHT PANEL (Voice Roster & Clone Studio)
+     3. RIGHT PANEL (Sunshine Honey Yellow #FACB54)
 ════════════════════════════════════════════════════════════ -->
 <aside class="right-panel">
-  <div class="panel-header">
-    <div class="panel-title">Chọn giọng đọc</div>
-
-    <!-- Tabs -->
-    <div class="tabs-strip">
-      <div class="tab-pill active" data-tab="all" id="tabAll">Tất cả (<span id="countAll">0</span>)</div>
-      <div class="tab-pill" data-tab="custom" id="tabCustom">Giọng clone (<span id="countCustom">0</span>)</div>
-      <div class="tab-pill" data-tab="fav" id="tabFav">Yêu thích (<span id="countFav">0</span>)</div>
+  <div class="right-panel-header">
+    <div class="right-panel-title">Giọng đọc</div>
+    <div class="right-panel-subline">
+      <span class="subline-label">Chọn giọng</span>
+      <span class="subline-hint">bấm để nghe mẫu</span>
     </div>
+  </div>
 
-    <!-- Search input -->
-    <div class="search-container">
-      <span class="ico-svg sm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
-      <input type="text" id="inputSearchVoice" placeholder="Tìm tên giọng, vùng miền..."/>
-    </div>
+  <!-- Tabs -->
+  <div class="tabs-strip">
+    <div class="tab-pill active" data-tab="all" id="tabAll">Tất cả (<span id="countAll">0</span>)</div>
+    <div class="tab-pill" data-tab="custom" id="tabCustom">Giọng clone (<span id="countCustom">0</span>)</div>
+    <div class="tab-pill" data-tab="fav" id="tabFav">Yêu thích (<span id="countFav">0</span>)</div>
+  </div>
 
-    <!-- Filters -->
-    <div class="filter-grid">
-      <select class="filter-select" id="filterEngineSelect">
-        <option value="">Tất cả nguồn</option>
-        <option value="custom">Giọng clone của bạn</option>
-        <option value="preset">Giọng mặc định v3</option>
-      </select>
-      <select class="filter-select" id="filterRegionSelect">
-        <option value="">Tất cả vùng miền</option>
-        <option value="Bắc">Miền Bắc</option>
-        <option value="Nam">Miền Nam</option>
-      </select>
-    </div>
+  <!-- Search input -->
+  <div class="search-container">
+    <span class="ico-svg sm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+    <input type="text" id="inputSearchVoice" placeholder="Tìm tên giọng, vùng miền..."/>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-grid">
+    <select class="filter-select" id="filterEngineSelect">
+      <option value="">Tất cả nguồn</option>
+      <option value="custom">Giọng clone của bạn</option>
+      <option value="preset">Giọng mặc định v3</option>
+    </select>
+    <select class="filter-select" id="filterRegionSelect">
+      <option value="">Tất cả vùng miền</option>
+      <option value="Bắc">Miền Bắc</option>
+      <option value="Nam">Miền Nam</option>
+    </select>
   </div>
 
   <!-- Voice Roster Scrollable List -->
   <div class="voice-roster" id="voiceRosterContainer">
-    <!-- Populated by JavaScript -->
+    <!-- Populated by JavaScript with radio dots -->
+  </div>
+
+  <!-- Mini Waveform Player Bar (Directly from Screenshot!) -->
+  <div class="mini-waveform-card">
+    <div class="mini-wave-header">
+      <div class="mini-wave-title" id="miniWaveVoiceTitle">Âm thanh xem trước</div>
+      <div class="mini-wave-actions">
+        <button type="button" class="btn-mini-tool" id="miniWaveDownloadBtn" title="Tải file mẫu"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+      </div>
+    </div>
+    <div class="wave-canvas-wrap">
+      <canvas id="miniWaveCanvas" width="370" height="48"></canvas>
+    </div>
+    <div class="mini-wave-timestamps">
+      <span id="miniWaveTimeCur">0:00</span>
+      <span id="miniWaveTimeTotal">0:10</span>
+    </div>
+    <div class="mini-player-controls-row">
+      <button type="button" class="btn-mini-ctrl" id="miniWaveVolBtn" title="Âm lượng"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+      <button type="button" class="speed-pill-btn" id="miniWaveSpeedBtn">1x</button>
+      <button type="button" class="btn-mini-ctrl" id="miniWaveRewindBtn" title="Lùi 5s"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 19 2 12 11 5 11 19"/><polygon points="22 19 13 12 22 5 22 19"/></svg></button>
+      <button type="button" class="btn-mini-play" id="miniWavePlayBtn" title="Phát / Tạm dừng"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+      <button type="button" class="btn-mini-ctrl" id="miniWaveForwardBtn" title="Tiến 5s"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 19 22 12 13 5 13 19"/><polygon points="2 19 11 12 2 5 2 19"/></svg></button>
+    </div>
+  </div>
+
+  <!-- Section "Gần đây" (Recent History from Screenshot!) -->
+  <div class="recent-section" id="historyCardSection">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div class="recent-header-title">Gần đây</div>
+      <button type="button" id="btnClearHistory" style="background:transparent;border:none;color:#745823;font-size:11.5px;font-weight:700;cursor:pointer">Xóa</button>
+    </div>
+    <div class="recent-list" id="historyList">
+      <!-- Populated by JavaScript with recent cards matching image -->
+    </div>
   </div>
 
   <!-- Quick Upload Section at Bottom of Panel -->
-  <div class="upload-drawer" id="uploadDrawerSection">
+  <div class="upload-drawer-card" id="uploadDrawerSection">
     <div class="upload-drawer-title">
-      <span class="ico-svg md"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span> TẢI LÊN GIỌNG MẪU ĐỂ CLONE (CHUẨN 8 GIÂY)
+      <span class="ico-svg md"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span> TẢI LÊN GIỌNG MẪU (CHUẨN 8 GIÂY)
     </div>
 
     <form class="upload-form-wrap" id="uploadForm">
@@ -2479,15 +2419,15 @@
       <div class="dropzone-compact" id="uploadDropzone">
         <input type="file" id="uploadFileInput" accept="audio/*" required/>
         <div class="dropzone-text">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5;display:block;margin:0 auto 6px"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.6;display:block;margin:0 auto 4px"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
           Kéo thả hoặc nhấn chọn tệp âm thanh<br/>
-          <span style="color: var(--text-muted); font-size: 11.5px;">WAV / MP3 / M4A · Cắt chuẩn cố định đúng 8.0 giây</span>
+          <span style="color: var(--text-muted); font-size: 11px;">WAV / MP3 / M4A · Cắt chuẩn cố định đúng 8.0 giây</span>
         </div>
         <div class="dropzone-selected-name" id="dropzoneFileName"></div>
       </div>
 
       <!-- Clean File Summary Card in Upload Drawer -->
-      <div class="audio-file-summary-card" id="audioFileSummaryCard" style="display: none;">
+      <div class="audio-file-summary-card" id="audioFileSummaryCard">
         <div class="summary-card-row">
           <span class="file-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
           <div class="summary-card-info">
@@ -2498,7 +2438,7 @@
             </div>
           </div>
           <button type="button" class="btn-open-trimmer-pill" id="btnOpenTrimmerModal" title="Mở bảng cắt sóng âm kiểu MP3Cut">
-            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg> Cắt audio (8s)
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg> Cắt 8s
           </button>
         </div>
       </div>
@@ -2506,9 +2446,9 @@
       <!-- Ref Text Field with Auto-STT -->
       <div class="ref-text-field-wrap">
         <div class="ref-text-header">
-          <label for="uploadRefText">Lời thoại câu nói trong file (ref_text cho v2):</label>
+          <label for="uploadRefText">Lời thoại câu nói trong file (v2):</label>
           <button type="button" class="btn-auto-stt" id="btnAutoSTT" title="AI tự động nhận diện lại từ âm thanh">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg> Nhận diện chữ (AI)
+            ✨ Nhận diện chữ
           </button>
         </div>
         <textarea class="input-compact textarea-ref" id="uploadRefText" placeholder="AI sẽ tự động nhận diện chữ từ file audio và điền vào đây (bạn có thể sửa lại)..."></textarea>
@@ -2537,7 +2477,7 @@
 </aside>
 
 <!-- ════════════════════════════════════════════════════════════
-     MP3CUT-STYLE AUDIO TRIMMER MODAL (Mẫu 2)
+     4. MP3CUT-STYLE AUDIO TRIMMER MODAL (Mẫu 2)
 ════════════════════════════════════════════════════════════ -->
 <div class="audio-trimmer-modal-overlay" id="audioTrimmerModal" style="display: none;">
   <div class="audio-trimmer-modal-card" id="audioTrimmerCard">
@@ -2633,7 +2573,7 @@
     <!-- Modal Footer Actions -->
     <div class="modal-trimmer-footer">
       <div class="modal-footer-tip">
-        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;color:var(--gold-bright)"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/></svg> <b>Mẹo clone chuẩn:</b> Khung cắt được khóa cố định 8.0 giây chuẩn nhất. Kéo trượt để chọn 8 giây phát âm liền mạch nhất. Phím tắt: <b>Space</b> phát/dừng.
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;color:var(--yellow-dark)"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/></svg> <b>Mẹo clone chuẩn:</b> Khung cắt được khóa cố định 8.0 giây chuẩn nhất. Kéo trượt để chọn 8 giây phát âm liền mạch nhất. Phím tắt: <b>Space</b> phát/dừng.
       </div>
       <div class="modal-footer-btns">
         <button type="button" class="btn-modal-cancel" id="btnModalCancelTrim">
@@ -2648,7 +2588,7 @@
 </div>
 
 <!-- ════════════════════════════════════════════════════════════
-     4. JAVASCRIPT LOGIC & STATE ENGINE
+     5. JAVASCRIPT LOGIC & STATE ENGINE
 ════════════════════════════════════════════════════════════ -->
 <script>
 (() => {
@@ -2667,6 +2607,13 @@
   const chunksInspector   = $('chunksInspector');
   const historyList       = $('historyList');
   const voiceRosterContainer = $('voiceRosterContainer');
+
+  // Greeting & Stats
+  const workspaceGreeting = $('workspaceGreeting');
+  const workspaceDate     = $('workspaceDate');
+  const statCreatedCount  = $('statCreatedCount');
+  const statTotalMinutes  = $('statTotalMinutes');
+  const statVoiceCount    = $('statVoiceCount');
 
   // Sliders
   const speedSlider       = $('speedSlider');
@@ -2694,122 +2641,155 @@
   const btnSubmitVoice    = $('btnSubmitVoice');
   const uploadDropzone    = $('uploadDropzone');
   const dropzoneFileName  = $('dropzoneFileName');
+  const btnAutoSTT        = $('btnAutoSTT');
+  const sttIndicator      = $('sttIndicator');
+  const sttIndicatorText  = $('sttIndicatorText');
 
-  // File Summary Card in Upload Drawer
-  const audioFileSummaryCard    = $('audioFileSummaryCard');
-  const summaryFileName         = $('summaryFileName');
-  const summaryDurationBadge    = $('summaryDurationBadge');
-  const summaryStatusHint       = $('summaryStatusHint');
-  const btnOpenTrimmerModal     = $('btnOpenTrimmerModal');
+  // Trimmer elements
+  const audioFileSummaryCard   = $('audioFileSummaryCard');
+  const summaryFileName        = $('summaryFileName');
+  const summaryDurationBadge   = $('summaryDurationBadge');
+  const summaryStatusHint      = $('summaryStatusHint');
+  const btnOpenTrimmerModal    = $('btnOpenTrimmerModal');
 
-  // MP3Cut Modal Elements
-  const audioTrimmerModal       = $('audioTrimmerModal');
-  const btnModalCloseTrim       = $('btnModalCloseTrim');
-  const modalTrimmerSubtitle    = $('modalTrimmerSubtitle');
-  const modalTrimmerBanner      = $('modalTrimmerBanner');
-  const modalBannerText         = $('modalBannerText');
-  const modalWaveformTrack      = $('modalWaveformTrack');
-  const trimmerModalCanvas      = $('trimmerModalCanvas');
-  const modalMaskLeft           = $('modalMaskLeft');
-  const modalMaskRight          = $('modalMaskRight');
-  const modalSelectionBand      = $('modalSelectionBand');
-  const selectionBadgeCenter    = $('selectionBadgeCenter');
-  const selectionCenterSec      = $('selectionCenterSec');
-  const modalPlayhead           = $('modalPlayhead');
-  const modalHandleLeft         = $('modalHandleLeft');
-  const handleLeftTimeTop       = $('handleLeftTimeTop');
-  const handleLeftTimeBottom    = $('handleLeftTimeBottom');
-  const modalHandleRight        = $('modalHandleRight');
-  const handleRightTimeTop      = $('handleRightTimeTop');
-  const handleRightTimeBottom   = $('handleRightTimeBottom');
-  const btnModalPlayTrim        = $('btnModalPlayTrim');
-  const btnModalPlayIcon        = $('btnModalPlayIcon');
-  const btnModalPlayText        = $('btnModalPlayText');
-  const btnModalRewindTrim      = $('btnModalRewindTrim');
-  const btnShiftMinus1          = $('btnShiftMinus1');
-  const btnShiftMinus01         = $('btnShiftMinus01');
-  const btnShiftPlus01          = $('btnShiftPlus01');
-  const btnShiftPlus1           = $('btnShiftPlus1');
-  const windowRangeDisplay      = $('windowRangeDisplay');
-  const displayStartTime        = $('displayStartTime');
-  const displayEndTime          = $('displayEndTime');
-  const modalDurationBadge      = $('modalDurationBadge');
-  const btnModalCancelTrim      = $('btnModalCancelTrim');
-  const btnModalApplyTrim       = $('btnModalApplyTrim');
-  const btnAutoSTT              = $('btnAutoSTT');
-  const sttIndicator            = $('sttIndicator');
-  const sttIndicatorText        = $('sttIndicatorText');
+  const audioTrimmerModal      = $('audioTrimmerModal');
+  const trimmerModalCanvas     = $('trimmerModalCanvas');
+  const modalWaveformTrack     = $('modalWaveformTrack');
+  const modalMaskLeft          = $('modalMaskLeft');
+  const modalMaskRight         = $('modalMaskRight');
+  const modalSelectionBand     = $('modalSelectionBand');
+  const selectionCenterSec     = $('selectionCenterSec');
+  const modalPlayhead          = $('modalPlayhead');
+  const modalHandleLeft        = $('modalHandleLeft');
+  const modalHandleRight       = $('modalHandleRight');
+  const handleLeftTimeTop      = $('handleLeftTimeTop');
+  const handleLeftTimeBottom   = $('handleLeftTimeBottom');
+  const handleRightTimeTop     = $('handleRightTimeTop');
+  const handleRightTimeBottom  = $('handleRightTimeBottom');
+  const modalTrimmerSubtitle   = $('modalTrimmerSubtitle');
+  const modalBannerText        = $('modalBannerText');
+  const modalDurationBadge     = $('modalDurationBadge');
+  const windowRangeDisplay     = $('windowRangeDisplay');
+  const displayStartTime       = $('displayStartTime');
+  const displayEndTime         = $('displayEndTime');
+  const btnModalPlayTrim       = $('btnModalPlayTrim');
+  const btnModalPlayIcon       = $('btnModalPlayIcon');
+  const btnModalPlayText       = $('btnModalPlayText');
+  const btnModalRewindTrim     = $('btnModalRewindTrim');
+  const btnShiftMinus1         = $('btnShiftMinus1');
+  const btnShiftMinus01        = $('btnShiftMinus01');
+  const btnShiftPlus01         = $('btnShiftPlus01');
+  const btnShiftPlus1          = $('btnShiftPlus1');
+  const btnModalCloseTrim      = $('btnModalCloseTrim');
+  const btnModalCancelTrim     = $('btnModalCancelTrim');
+  const btnModalApplyTrim      = $('btnModalApplyTrim');
 
-  // Audio Inspector & STT State Variables
-  let audioCtx              = null;
-  let rawAudioBuffer        = null;
-  let currentFileObj        = null;
-  let activeAudioFile       = null;
-  let previewSourceNode     = null;
-  let isPlayingTrimPreview  = false;
-  let isProcessingSTT       = false;
-  let animPlayheadId        = null;
-  let playbackStartTime     = 0;
+  // Mini Waveform Player in Right Panel
+  const miniWaveCanvas         = $('miniWaveCanvas');
+  const miniWaveVoiceTitle     = $('miniWaveVoiceTitle');
+  const miniWaveDownloadBtn    = $('miniWaveDownloadBtn');
+  const miniWaveTimeCur        = $('miniWaveTimeCur');
+  const miniWaveTimeTotal      = $('miniWaveTimeTotal');
+  const miniWavePlayBtn        = $('miniWavePlayBtn');
+  const miniWaveRewindBtn      = $('miniWaveRewindBtn');
+  const miniWaveForwardBtn     = $('miniWaveForwardBtn');
+  const miniWaveSpeedBtn       = $('miniWaveSpeedBtn');
+  const miniWaveVolBtn         = $('miniWaveVolBtn');
+
+  /* ── State ── */
+  let currentEngine = 'vieneu'; // 'vieneu' (v3 turbo) or 'vieneu-v2' (v2 gguf)
+  let selectedVoiceName = 'default';
+  let currentTab = 'all'; // 'all', 'custom', 'fav'
+  let voicesRegistry = { custom_voices: [], preset_voices: [] };
+  let favoritesList = JSON.parse(localStorage.getItem('luatu_favs') || '[]');
+  let generationHistory = JSON.parse(localStorage.getItem('luatu_history') || '[]');
+  let activeAudioBlobUrl = null;
+
+  // Trimmer State
+  let audioCtx = null;
+  let rawAudioBuffer = null;
+  let currentFileObj = null;
+  let activeAudioFile = null;
+  let trimStartSec = 0;
+  let trimEndSec = 8.0;
+  let isDragging = false;
+  let dragStartX = 0;
+  let dragInitStartSec = 0;
+  let previewSourceNode = null;
+  let isPlayingTrimPreview = false;
+  let animPlayheadId = null;
+  let playbackStartTime = 0;
   let playbackStartAudioSec = 0;
+  let isProcessingSTT = false;
 
-  // Trimmer Selection State (in seconds)
-  let trimStartSec          = 0;
-  let trimEndSec            = 5.0;
-  let isDragging            = null; // 'left' | 'right' | 'band' | null
-  let dragStartX            = 0;
-  let dragInitStartSec      = 0;
-  let dragInitEndSec        = 0;
+  /* ── Dynamic Greeting & Date ── */
+  function updateGreetingAndDate() {
+    const now = new Date();
+    const hour = now.getHours();
+    let greeting = 'Chào buổi sáng!';
+    if (hour >= 11 && hour < 14) greeting = 'Chào buổi trưa!';
+    else if (hour >= 14 && hour < 18) greeting = 'Chào buổi chiều!';
+    else if (hour >= 18 || hour < 5) greeting = 'Chào buổi tối!';
 
-  // State Variables
-  let currentEngine       = 'vieneu';
-  let selectedVoiceName   = null;
-  let voicesRegistry      = { custom_voices: [], preset_voices: [] };
-  let currentTab          = 'all';
-  let activeAudioBlobUrl  = null;
-  let favoritesList       = JSON.parse(localStorage.getItem('luatu_favs') || '[]');
-  let generationHistory   = JSON.parse(localStorage.getItem('luatu_history') || '[]');
+    if (workspaceGreeting) workspaceGreeting.textContent = greeting;
 
-  /* ── Sample Texts Library ── */
-  const SAMPLE_SCRIPTS = [
-    {
-      title: "Tin tức & Ngày giờ",
-      text: "Hôm nay là ngày 17 tháng 11 năm 2026, lúc 9 giờ 45 phút. Đơn hàng trị giá 1.250.000 đồng, giảm 15% còn 1.062.500 đồng. Anh ấy sống tại TP. Hồ Chí Minh và mở file PDF qua Wi-Fi."
-    },
-    {
-      title: "Đủ 6 thanh điệu tiếng Việt",
-      text: "Má mua mạ ở chợ, mà mẹ mắng má mãi. Bảy mươi bảy bạn học viên đều đến đầy đủ. Quảng Ngãi có đặc sản kẹo gương rất nổi tiếng. Chiếc xuồng nhỏ lướt qua những rặng dừa nước ở Bến Tre."
-    },
-    {
-      title: "Đàm thoại tự nhiên CSKH",
-      text: "Dạ em chào anh chị ạ! Cảm ơn anh chị đã liên hệ với trung tâm hỗ trợ khách hàng. Mọi yêu cầu của anh chị đã được xử lý xong rồi, anh chị kiểm tra lại giúp em nhé."
-    },
-    {
-      title: "Đoạn văn dài kiểm tra tách câu",
-      text: "Hệ thống tổng hợp giọng nói VieNeu-TTS v3 Turbo hoạt động trên mô hình ONNX fp32 cho tốc độ suy luận nhanh hơn thời gian thực. Đối với các đoạn văn dài, hệ thống sẽ tự động phân tách câu thông minh và giữ nguyên độ mượt mà từ đầu đến cuối."
-    }
-  ];
-  let sampleIndex = 0;
-
-  /* ── Text Counter ── */
-  function updateTextCounter() {
-    const val = textInput.value;
-    charCount.textContent = val.length;
-    const words = val.trim() ? val.trim().split(/\s+/).length : 0;
-    wordCount.textContent = words;
+    const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+    const dayName = days[now.getDay()];
+    const dateStr = `${dayName}, ${now.getDate()} tháng ${now.getMonth() + 1}, ${now.getFullYear()}`;
+    if (workspaceDate) workspaceDate.textContent = dateStr;
   }
-  textInput.addEventListener('input', updateTextCounter);
 
-  /* ── Editor Toolbar Actions ── */
-  $('btnClear').addEventListener('click', () => {
-    textInput.value = '';
-    updateTextCounter();
-    chunksInspector.classList.remove('active');
-  });
+  /* ── Dynamic Stats Bar ── */
+  function updateStats() {
+    if (statCreatedCount) {
+      statCreatedCount.textContent = generationHistory.length;
+    }
+    if (statTotalMinutes) {
+      let totalSec = generationHistory.reduce((acc, item) => acc + (parseFloat(item.duration) || 0), 0);
+      if (totalSec >= 60) {
+        statTotalMinutes.textContent = Math.round(totalSec / 60) + ' phút';
+      } else {
+        statTotalMinutes.textContent = (totalSec > 0 ? totalSec.toFixed(0) : '0') + ' giây';
+      }
+    }
+    if (statVoiceCount) {
+      const totalVoices = (voicesRegistry.custom_voices ? voicesRegistry.custom_voices.length : 0) +
+                          (voicesRegistry.preset_voices ? voicesRegistry.preset_voices.length : 0);
+      statVoiceCount.textContent = totalVoices || 27;
+    }
+  }
+
+  /* ── Engine Switching ── */
+  function setEngine(engine) {
+    currentEngine = engine;
+    $('engineV3Card').classList.toggle('active', engine === 'vieneu');
+    $('engineV2Card').classList.toggle('active', engine === 'vieneu-v2');
+    const hint = $('engineStatusHint');
+    if (engine === 'vieneu-v2') {
+      hint.textContent = 'Đang kích hoạt · VieNeu v2 GGUF Q8 24kHz (yêu cầu ref_text để sao chép chuẩn giọng)';
+    } else {
+      hint.textContent = 'Đang sẵn sàng · VieNeu v3 Turbo 48kHz (tổng hợp siêu tốc trên máy)';
+    }
+  }
+
+  $('engineV3Card').addEventListener('click', () => setEngine('vieneu'));
+  $('engineV2Card').addEventListener('click', () => setEngine('vieneu-v2'));
+
+  /* ── Text Input Counter & Helpers ── */
+  function updateTextCounter() {
+    const text = textInput.value || '';
+    const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+    const chars = text.length;
+    wordCount.textContent = words.toLocaleString('vi-VN');
+    charCount.textContent = chars.toLocaleString('vi-VN');
+  }
+
+  textInput.addEventListener('input', updateTextCounter);
 
   $('btnPaste').addEventListener('click', async () => {
     try {
-      const text = await navigator.clipboard.readText();
-      textInput.value = text;
+      const clipText = await navigator.clipboard.readText();
+      textInput.value = clipText;
       updateTextCounter();
       showToast('ok', 'Đã dán văn bản từ clipboard thành công.');
     } catch {
@@ -2817,9 +2797,31 @@
     }
   });
 
+  $('btnClear').addEventListener('click', () => {
+    textInput.value = '';
+    updateTextCounter();
+    textInput.focus();
+  });
+
+  const SAMPLE_SCRIPTS = [
+    {
+      title: 'Hội nghị AI Việt Nam',
+      text: 'Chào mừng quý vị đến với hội nghị Trí tuệ Nhân tạo Việt Nam 2026. Hôm nay, chúng ta cùng thảo luận về công nghệ giọng nói tổng hợp tiếng Việt chuẩn ngữ điệu ba miền Bắc, Trung, Nam.'
+    },
+    {
+      title: 'Kinh doanh & Tỷ giá',
+      text: 'Đơn hàng mã số 8492 trị giá 1.250.000 VNĐ đã được thanh toán thành công lúc 14:30. Khách hàng được chiết khấu 15% tương đương 187.500 đồng theo chương trình ưu đãi mùa hè.'
+    },
+    {
+      title: 'Kể chuyện truyền cảm',
+      text: 'Đêm đã về khuya, thành phố dần chìm vào giấc ngủ yên bình sau một ngày dài hối hả. Những ngọn đèn đường vàng vọt soi bóng hàng cây lay nhẹ trong gió sớm.'
+    }
+  ];
+
+  let sampleIdx = 0;
   $('btnSample').addEventListener('click', () => {
-    const script = SAMPLE_SCRIPTS[sampleIndex % SAMPLE_SCRIPTS.length];
-    sampleIndex++;
+    const script = SAMPLE_SCRIPTS[sampleIdx % SAMPLE_SCRIPTS.length];
+    sampleIdx++;
     textInput.value = script.text;
     updateTextCounter();
     showToast('info', `Đã nạp mẫu: "${script.title}"`);
@@ -2835,127 +2837,148 @@
       const res = await fetch('/v1/text/preview-chunks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ input: text }),
+        body: JSON.stringify({ text }),
       });
       const data = await res.json();
-      chunksInspector.classList.add('active');
-      chunksInspector.innerHTML = `<strong>Phân tách thành ${data.count} câu ngắt tự nhiên:</strong><ol>` +
-        data.chunks.map(c => `<li>${c}</li>`).join('') + '</ol>';
+      if (Array.isArray(data.chunks)) {
+        chunksInspector.style.display = 'block';
+        chunksInspector.innerHTML = `<b style="color:var(--coral-primary);">Chia thành ${data.chunks.length} đoạn chuẩn:</b><ol style="margin-left:18px;margin-top:6px;">` +
+          data.chunks.map(c => `<li style="margin:4px 0;">${c}</li>`).join('') + `</ol>`;
+      }
     } catch {
       showToast('err', 'Lỗi kiểm tra tách đoạn.');
     }
   });
 
-  /* ── Slider Sync & Styling ── */
-  function syncSliderFill(slider) {
-    const min = parseFloat(slider.min);
-    const max = parseFloat(slider.max);
-    const val = parseFloat(slider.value);
-    const pct = ((val - min) / (max - min)) * 100;
-    slider.style.background = `linear-gradient(to right, var(--red-primary) ${pct}%, var(--border-strong) ${pct}%)`;
-  }
-
-  const sliderMap = [
-    [speedSlider, speedBadge, v => `${v.toFixed(2)}x`],
-    [volSlider,   volBadge,   v => `${Math.round(v)}%`],
-    [tempSlider,  tempBadge,  v => v.toFixed(2)],
-    [topKSlider,  topKBadge,  v => Math.round(v)],
-    [topPSlider,  topPBadge,  v => v.toFixed(2)],
-    [repSlider,   repBadge,   v => v.toFixed(2)],
-  ];
-
-  sliderMap.forEach(([slider, badge, fmt]) => {
-    const update = () => {
-      badge.textContent = fmt(parseFloat(slider.value));
-      syncSliderFill(slider);
-      if (slider === volSlider && audioPlayer) {
-        audioPlayer.volume = parseFloat(slider.value) / 100;
-      }
-    };
-    slider.addEventListener('input', update);
-    update();
-  });
-
-  /* ── Presets ── */
-  const PRESET_MAP = {
-    strict:     { temp: 0.40, topK: 12, topP: 0.80, rep: 1.20, refCodes: true },
-    balanced:   { temp: 0.55, topK: 18, topP: 0.88, rep: 1.20, refCodes: true },
-    expressive: { temp: 0.75, topK: 25, topP: 0.95, rep: 1.20, refCodes: true },
+  /* ── Quick Preset Chips ── */
+  const PRESET_CONFIGS = {
+    strict:     { speed: 1.00, temp: 0.35, top_k: 10, top_p: 0.75, rep: 1.25 },
+    balanced:   { speed: 1.00, temp: 0.40, top_k: 12, top_p: 0.80, rep: 1.20 },
+    expressive: { speed: 0.95, temp: 0.55, top_k: 20, top_p: 0.90, rep: 1.15 },
   };
 
-  document.querySelectorAll('.preset-chip[data-preset]').forEach(chip => {
+  document.querySelectorAll('.preset-chip').forEach(chip => {
     chip.addEventListener('click', () => {
       document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
       chip.classList.add('active');
-      const p = PRESET_MAP[chip.dataset.preset];
-      if (!p) return;
-      tempSlider.value = p.temp;
-      topKSlider.value = p.topK;
-      topPSlider.value = p.topP;
-      repSlider.value  = p.rep;
-      refCodesCheckbox.checked = p.refCodes;
-      sliderMap.forEach(([s, b, fmt]) => {
-        b.textContent = fmt(parseFloat(s.value));
-        syncSliderFill(s);
-      });
+      const conf = PRESET_CONFIGS[chip.dataset.preset];
+      if (conf) {
+        speedSlider.value = conf.speed; speedBadge.textContent = conf.speed.toFixed(2) + 'x';
+        tempSlider.value = conf.temp; tempBadge.textContent = conf.temp.toFixed(2);
+        topKSlider.value = conf.top_k; topKBadge.textContent = conf.top_k;
+        topPSlider.value = conf.top_p; topPBadge.textContent = conf.top_p.toFixed(2);
+        repSlider.value = conf.rep; repBadge.textContent = conf.rep.toFixed(2);
+        showToast('info', `Đã áp dụng cấu hình: ${chip.textContent.trim()}`);
+      }
     });
   });
 
-  /* ── Advanced Toggle Drawer ── */
+  /* ── Sliders Sync ── */
+  speedSlider.addEventListener('input', () => { speedBadge.textContent = parseFloat(speedSlider.value).toFixed(2) + 'x'; });
+  volSlider.addEventListener('input', () => {
+    volBadge.textContent = volSlider.value + '%';
+    audioPlayer.volume = parseInt(volSlider.value, 10) / 100;
+  });
+  tempSlider.addEventListener('input', () => { tempBadge.textContent = parseFloat(tempSlider.value).toFixed(2); });
+  topKSlider.addEventListener('input', () => { topKBadge.textContent = topKSlider.value; });
+  topPSlider.addEventListener('input', () => { topPBadge.textContent = parseFloat(topPSlider.value).toFixed(2); });
+  repSlider.addEventListener('input', () => { repBadge.textContent = parseFloat(repSlider.value).toFixed(2); });
+
   $('advToggleBtn').addEventListener('click', () => {
-    $('advToggleBtn').classList.toggle('open');
     $('advParamsDrawer').classList.toggle('open');
   });
 
-  /* ── Engine Switching ── */
-  $('engineV3Card').addEventListener('click', () => setEngine('vieneu'));
-  $('engineV2Card').addEventListener('click', () => setEngine('vieneu-v2'));
+  /* ── Draw Mini Waveform in Right Panel ── */
+  function drawMiniWaveform(bars = null) {
+    if (!miniWaveCanvas) return;
+    const ctx = miniWaveCanvas.getContext('2d');
+    const width = miniWaveCanvas.width = miniWaveCanvas.clientWidth || 370;
+    const height = miniWaveCanvas.height = miniWaveCanvas.clientHeight || 48;
+    ctx.clearRect(0, 0, width, height);
 
-  function setEngine(engine) {
-    currentEngine = engine;
-    if (engine === 'vieneu') {
-      $('engineV3Card').classList.add('active');
-      $('engineV2Card').classList.remove('active');
-      $('engineStatusHint').textContent = 'Đang sẵn sàng · VieNeu v3 Turbo 48kHz (tổng hợp siêu tốc trên CPU)';
+    const barCount = 48;
+    const barW = (width / barCount) - 2;
+
+    for (let i = 0; i < barCount; i++) {
+      let h;
+      if (bars && bars[i] !== undefined) {
+        h = bars[i] * (height - 8);
+      } else {
+        // Natural waveform simulation
+        const phase = (i / barCount) * Math.PI * 4;
+        const norm = (Math.sin(phase) * 0.4 + Math.sin(phase * 2.3) * 0.3 + 0.6) * (0.3 + 0.7 * Math.sin((i / barCount) * Math.PI));
+        h = Math.max(4, norm * (height - 10));
+      }
+
+      const x = i * (barW + 2) + 1;
+      const y = (height - h) / 2;
+
+      // Warm orange bar
+      ctx.fillStyle = '#E58E1A';
+      if (ctx.roundRect) {
+        ctx.beginPath();
+        ctx.roundRect(x, y, barW, h, 2);
+        ctx.fill();
+      } else {
+        ctx.fillRect(x, y, barW, h);
+      }
+    }
+  }
+
+  // Mini player controls bindings
+  let miniSpeedIdx = 0;
+  const MINI_SPEEDS = [1.0, 1.25, 1.5, 0.75];
+  miniWaveSpeedBtn.addEventListener('click', () => {
+    miniSpeedIdx = (miniSpeedIdx + 1) % MINI_SPEEDS.length;
+    const spd = MINI_SPEEDS[miniSpeedIdx];
+    miniWaveSpeedBtn.textContent = spd + 'x';
+    audioPlayer.playbackRate = spd;
+  });
+
+  miniWaveRewindBtn.addEventListener('click', () => {
+    audioPlayer.currentTime = Math.max(0, audioPlayer.currentTime - 5);
+  });
+  miniWaveForwardBtn.addEventListener('click', () => {
+    audioPlayer.currentTime = Math.min(audioPlayer.duration || 0, audioPlayer.currentTime + 5);
+  });
+  miniWaveVolBtn.addEventListener('click', () => {
+    audioPlayer.muted = !audioPlayer.muted;
+    miniWaveVolBtn.style.opacity = audioPlayer.muted ? '0.4' : '1';
+  });
+
+  miniWavePlayBtn.addEventListener('click', () => {
+    if (!audioPlayer.src) {
+      showToast('info', 'Chưa có bản đọc nào. Hãy nhấn "Tạo giọng nói ngay" trước.');
+      return;
+    }
+    if (audioPlayer.paused) {
+      audioPlayer.play().catch(() => {});
     } else {
-      $('engineV2Card').classList.add('active');
-      $('engineV3Card').classList.remove('active');
-      $('engineStatusHint').textContent = 'Đang chọn v2 GGUF Q8 · 24kHz (khóa chặt ngữ điệu Bắc bằng câu mẫu ref_text)';
+      audioPlayer.pause();
     }
+  });
+
+  audioPlayer.addEventListener('play', () => {
+    miniWavePlayBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="4" width="4" height="16"/><rect x="15" y="4" width="4" height="16"/></svg>';
+  });
+  audioPlayer.addEventListener('pause', () => {
+    miniWavePlayBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+  });
+  audioPlayer.addEventListener('timeupdate', () => {
+    const cur = audioPlayer.currentTime || 0;
+    const dur = audioPlayer.duration || 0;
+    miniWaveTimeCur.textContent = formatTimeShort(cur);
+    if (dur > 0) miniWaveTimeTotal.textContent = formatTimeShort(dur);
+  });
+
+  function formatTimeShort(sec) {
+    if (isNaN(sec) || sec < 0) sec = 0;
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60);
+    return `${m}:${s.toString().padStart(2, '0')}`;
   }
 
-  /* ── Health Polling ── */
-  async function checkHealth() {
-    try {
-      const res = await fetch('/health');
-      const data = await res.json();
-      $('healthPill').className = 'health-pill online';
-      const v2State = data.v2_loaded ? 'v2 sẵn sàng' : 'v2 chờ';
-      $('healthLabel').textContent = `v3 (${data.precision}) · ${v2State}`;
-    } catch {
-      $('healthPill').className = 'health-pill';
-      $('healthLabel').textContent = 'Chưa kết nối server';
-    }
-  }
-
-  /* ── Voice Roster & Rendering ── */
-  function getInitials(name) {
-    if (!name) return '?';
-    const clean = name.replace(/_/g, ' ').trim();
-    const parts = clean.split(' ');
-    if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-    return clean.slice(0, 2).toUpperCase();
-  }
-
-  function getAvatarStyleClass(voice) {
-    if (voice.isCustom) return 'custom';
-    const desc = (voice.description || '').toLowerCase();
-    const name = voice.name.toLowerCase();
-    if (desc.includes('nữ') || name.includes('nữ') || name.includes('ngọc') || name.includes('huyền')) return 'preset-female';
-    if (desc.includes('nam') || name.includes('nam') || name.includes('minh') || name.includes('hùng')) return 'preset-male';
-    return 'preset-special';
-  }
-
+  /* ── Right Panel: Voice Roster ── */
   function renderVoiceRoster() {
     const q = $('inputSearchVoice').value.toLowerCase().trim();
     const engFilter = $('filterEngineSelect').value;
@@ -2965,14 +2988,12 @@
     voicesRegistry.custom_voices.forEach(v => list.push({ ...v, isCustom: true }));
     voicesRegistry.preset_voices.forEach(v => list.push({ ...v, isCustom: false }));
 
-    // Filter by Tab
     if (currentTab === 'custom') {
       list = list.filter(v => v.isCustom);
     } else if (currentTab === 'fav') {
       list = list.filter(v => favoritesList.includes(v.name));
     }
 
-    // Filter by query and dropdowns
     list = list.filter(v => {
       const name = v.name.toLowerCase();
       const desc = (v.description || '').toLowerCase();
@@ -2983,7 +3004,6 @@
       return true;
     });
 
-    // Counts update
     $('countAll').textContent = voicesRegistry.custom_voices.length + voicesRegistry.preset_voices.length;
     $('countCustom').textContent = voicesRegistry.custom_voices.length;
     $('countFav').textContent = favoritesList.length;
@@ -2992,27 +3012,26 @@
 
     if (list.length === 0) {
       voiceRosterContainer.innerHTML = `
-        <div style="text-align: center; padding: 36px 16px; color: var(--text-muted); font-size: 12px;">
-          Không tìm thấy giọng nào phù hợp với bộ lọc.
+        <div style="text-align: center; padding: 28px 12px; color: #7A6635; font-size: 12px; font-weight: 500;">
+          Không tìm thấy giọng đọc nào phù hợp.
         </div>`;
       return;
     }
 
     list.forEach(voice => {
+      const isSelected = (voice.name === selectedVoiceName);
       const entry = document.createElement('div');
-      entry.className = 'voice-entry' + (voice.name === selectedVoiceName ? ' active-selected' : '');
+      entry.className = 'voice-entry' + (isSelected ? ' active-selected' : '');
       entry.dataset.voice = voice.name;
 
-      const initials = getInitials(voice.name);
-      const avatarClass = getAvatarStyleClass(voice);
       const isLoved = favoritesList.includes(voice.name);
 
       let chips = '';
       if (voice.isCustom) {
         chips += `<span class="badge-micro red">Mẫu Clone · ${voice.duration_sec}s</span>`;
         chips += voice.has_ref_text
-          ? `<span class="badge-micro green"><svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:2px"><polyline points="20 6 9 17 4 12"/></svg>Đủ lời thoại v2</span>`
-          : `<span class="badge-micro gray"><svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:2px"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Thiếu lời thoại</span>`;
+          ? `<span class="badge-micro green">✓ v2 chuẩn</span>`
+          : `<span class="badge-micro gray">Thiếu ref_text</span>`;
       } else {
         chips += `<span class="badge-micro gray">VieNeu v3</span>`;
         if (voice.description && voice.description.includes('Bắc')) chips += `<span class="badge-micro gold">Miền Bắc</span>`;
@@ -3020,16 +3039,16 @@
       }
 
       const actions = voice.isCustom ? `
-        <button class="btn-action-icon" data-editref="${voice.name}" title="Sửa lời thoại mẫu (ref_text)"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></button>
-        <button class="btn-action-icon" data-del="${voice.name}" title="Xóa giọng" style="color:#f87171;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <button class="btn-action-icon" data-editref="${voice.name}" title="Sửa lời thoại mẫu (ref_text)"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></button>
+        <button class="btn-action-icon" data-del="${voice.name}" title="Xóa giọng" style="color:#C62828;"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       ` : '';
 
       const loveIcon = isLoved
-        ? `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#e11d48" stroke="#e11d48" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`
+        ? `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#EB6B63" stroke="#EB6B63" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`
         : `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
 
       entry.innerHTML = `
-        <div class="voice-avatar-crest ${avatarClass}">${initials}</div>
+        <div class="voice-radio-dot"></div>
         <div class="voice-details">
           <div class="voice-name-row">
             <span class="voice-card-name">${voice.name}</span>
@@ -3042,12 +3061,11 @@
           </button>
           ${actions}
           <button class="btn-action-icon play-preview" data-preview="${voice.name}" title="Nghe mẫu">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           </button>
         </div>
       `;
 
-      // Select Card
       entry.addEventListener('click', e => {
         if (e.target.closest('button')) return;
         selectVoice(voice.name);
@@ -3056,7 +3074,6 @@
       voiceRosterContainer.appendChild(entry);
     });
 
-    // Bind Button Events
     voiceRosterContainer.querySelectorAll('[data-fav]').forEach(btn => {
       btn.addEventListener('click', e => {
         e.stopPropagation();
@@ -3091,12 +3108,13 @@
     document.querySelectorAll('.voice-entry').forEach(el => {
       el.classList.toggle('active-selected', el.dataset.voice === name);
     });
-    showToast('info', `Đã chọn giọng đọc: "${name}"`);
+    if (miniWaveVoiceTitle) miniWaveVoiceTitle.textContent = name;
+    showToast('info', `Đã chọn giọng: "${name}"`);
   }
 
   function toggleFavorite(name) {
     if (favoritesList.includes(name)) {
-      favoritesList = favoritesList.filter(x => x !== name);
+      favoritesList = favoritesList.filter(n => n !== name);
     } else {
       favoritesList.push(name);
     }
@@ -3105,42 +3123,29 @@
   }
 
   async function playVoicePreview(voiceName) {
-    selectVoice(voiceName);
-    const customVoice = voicesRegistry.custom_voices.find(v => v.name === voiceName);
-    if (customVoice) {
-      // Play raw reference audio directly from backend
-      try {
-        audioPlayer.src = `/v1/voices/${encodeURIComponent(voiceName)}/audio`;
-        playerShowcase.classList.add('active');
-        btnDownloadWav.href = audioPlayer.src;
-        audioPlayer.play().catch(() => {});
-        showToast('ok', `Đang phát âm thanh mẫu gốc của "${voiceName}".`);
-      } catch {
-        showToast('err', 'Không tải được file mẫu.');
-      }
-    } else {
-      // Speak quick preview phrase
-      textInput.value = `Xin chào! Tôi là giọng đọc ${voiceName}, rất hân hạnh được đồng hành cùng bạn.`;
-      updateTextCounter();
-      btnGenerateSpeech.click();
+    const isCustom = voicesRegistry.custom_voices.some(v => v.name === voiceName);
+    const url = isCustom ? `/v1/voices/${voiceName}/audio` : `/v1/voices/${voiceName}/sample`;
+    try {
+      if (miniWaveVoiceTitle) miniWaveVoiceTitle.textContent = voiceName;
+      audioPlayer.src = url;
+      await audioPlayer.play();
+      showToast('ok', `Đang phát âm thanh mẫu của "${voiceName}".`);
+    } catch {
+      showToast('err', 'Không tải được file âm thanh mẫu.');
     }
   }
 
   async function editVoiceRefText(voiceName) {
-    const cur = (voicesRegistry.custom_voices.find(x => x.name === voiceName) || {}).ref_text || '';
-    const updated = prompt(`Nhập lời thoại chính xác trong file mẫu của '${voiceName}' (dùng cho v2 GGUF Q8):`, cur);
-    if (updated === null || !updated.trim()) return;
-
+    const current = prompt(`Nhập nội dung câu nói mẫu (ref_text) cho giọng "${voiceName}":`);
+    if (current === null) return;
     try {
-      const res = await fetch(`/v1/voices/${encodeURIComponent(voiceName)}`, {
+      const res = await fetch(`/v1/voices/${voiceName}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ref_text: updated.trim() }),
+        body: JSON.stringify({ ref_text: current.trim() }),
       });
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.detail || 'Cập nhật thất bại.');
-      }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || 'Cập nhật thất bại.');
       showToast('ok', `Đã cập nhật ref_text cho giọng "${voiceName}".`);
       await loadVoicesRegistry();
     } catch (err) {
@@ -3149,12 +3154,13 @@
   }
 
   async function deleteVoice(voiceName) {
-    if (!confirm(`Bạn có chắc muốn xóa giọng clone '${voiceName}'?`)) return;
+    if (!confirm(`Bạn có chắc muốn xóa giọng clone "${voiceName}"?`)) return;
     try {
-      const res = await fetch(`/v1/voices/${encodeURIComponent(voiceName)}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Xóa giọng thất bại.');
+      const res = await fetch(`/v1/voices/${voiceName}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || 'Xóa thất bại.');
       showToast('ok', `Đã xóa giọng "${voiceName}".`);
-      if (selectedVoiceName === voiceName) selectedVoiceName = null;
+      if (selectedVoiceName === voiceName) selectedVoiceName = 'default';
       await loadVoicesRegistry();
     } catch (err) {
       showToast('err', err.message);
@@ -3164,38 +3170,33 @@
   async function loadVoicesRegistry() {
     try {
       const res = await fetch('/v1/voices');
-      voicesRegistry = await res.json();
-      if (!selectedVoiceName) {
-        if (voicesRegistry.custom_voices.length) selectedVoiceName = voicesRegistry.custom_voices[0].name;
-        else if (voicesRegistry.preset_voices.length) selectedVoiceName = voicesRegistry.preset_voices[0].name;
-      }
+      const data = await res.json();
+      voicesRegistry.custom_voices = data.custom_voices || [];
+      voicesRegistry.preset_voices = data.preset_voices || [];
       renderVoiceRoster();
+      updateStats();
     } catch {
       showToast('err', 'Không tải được danh mục giọng từ server.');
     }
   }
 
-  /* ── Tab Filtering in Right Panel ── */
+  function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.tab-pill').forEach(el => {
+      el.classList.toggle('active', el.dataset.tab === tab);
+    });
+    renderVoiceRoster();
+  }
+
   $('tabAll').addEventListener('click', () => switchTab('all'));
   $('tabCustom').addEventListener('click', () => switchTab('custom'));
   $('tabFav').addEventListener('click', () => switchTab('fav'));
-
-  function switchTab(tab) {
-    currentTab = tab;
-    document.querySelectorAll('.tab-pill').forEach(el => el.classList.remove('active'));
-    $(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
-    renderVoiceRoster();
-  }
 
   $('inputSearchVoice').addEventListener('input', renderVoiceRoster);
   $('filterEngineSelect').addEventListener('change', renderVoiceRoster);
   $('filterRegionSelect').addEventListener('change', renderVoiceRoster);
 
-  /* ════════════════════════════════════════════════════════════
-     MP3CUT-STYLE AUDIO TRIMMER MODAL & AUTO-STT PIPELINE
-  ════════════════════════════════════════════════════════════ */
-
-  // 1. Timecode Formatter mm:ss.s (e.g. 00:04.5 or 01:26.9)
+  /* ── Timecode Formatter mm:ss.s ── */
   function formatTimeCode(sec) {
     if (isNaN(sec) || sec < 0) sec = 0;
     const m = Math.floor(sec / 60);
@@ -3204,15 +3205,15 @@
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}.${ds}`;
   }
 
-  // 2. Convert AudioBuffer segment to standard 16-bit PCM Mono WAV Blob
+  /* ── Convert AudioBuffer segment to standard 16-bit PCM Mono WAV Blob ── */
   function audioBufferToWav(buffer, startSec, endSec) {
     const sampleRate = buffer.sampleRate;
     const startSample = Math.max(0, Math.floor(startSec * sampleRate));
     const endSample = Math.min(buffer.length, Math.floor(endSec * sampleRate));
     const numSamples = Math.max(0, endSample - startSample);
-    const numChannels = 1; // Mono for optimal VieNeu/Whisper processing
+    const numChannels = 1;
 
-    const bytesPerSample = 2; // 16-bit PCM
+    const bytesPerSample = 2;
     const blockAlign = numChannels * bytesPerSample;
     const byteRate = sampleRate * blockAlign;
     const dataSize = numSamples * blockAlign;
@@ -3228,26 +3229,22 @@
       }
     }
 
-    // RIFF chunk descriptor
     writeString(0, 'RIFF');
     view.setUint32(4, 36 + dataSize, true);
     writeString(8, 'WAVE');
 
-    // "fmt " sub-chunk
     writeString(12, 'fmt ');
     view.setUint32(16, 16, true);
-    view.setUint16(20, 1, true);  // PCM format
+    view.setUint16(20, 1, true);
     view.setUint16(22, numChannels, true);
     view.setUint32(24, sampleRate, true);
     view.setUint32(28, byteRate, true);
     view.setUint16(32, blockAlign, true);
-    view.setUint16(34, 16, true); // 16-bit
+    view.setUint16(34, 16, true);
 
-    // "data" sub-chunk
     writeString(36, 'data');
     view.setUint32(40, dataSize, true);
 
-    // Downmix to mono and write 16-bit PCM samples
     const channel0 = buffer.getChannelData(0);
     const channel1 = buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : null;
     let offset = 44;
@@ -3266,7 +3263,7 @@
     return new Blob([arrayBuffer], { type: 'audio/wav' });
   }
 
-  // 3. Render High-Resolution Waveform (Vivid Cyan & Neon Green inside, Muted Navy outside)
+  /* ── Render Trimmer Modal Waveform ── */
   function drawModalWaveform() {
     if (!trimmerModalCanvas || !rawAudioBuffer) return;
     const ctx = trimmerModalCanvas.getContext('2d');
@@ -3276,12 +3273,10 @@
 
     ctx.clearRect(0, 0, width, height);
 
-    // Sleek dark obsidian backdrop
-    ctx.fillStyle = '#060405';
+    ctx.fillStyle = '#1D1220';
     ctx.fillRect(0, 0, width, height);
 
-    // Subtle center axis
-    ctx.strokeStyle = 'rgba(0, 229, 255, 0.12)';
+    ctx.strokeStyle = 'rgba(0, 229, 255, 0.15)';
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(0, height / 2);
@@ -3290,7 +3285,7 @@
 
     const channelData = rawAudioBuffer.getChannelData(0);
     const totalSamples = channelData.length;
-    const barCount = Math.floor(width / 4); // 3px bar + 1px spacing
+    const barCount = Math.floor(width / 4);
     const step = Math.floor(totalSamples / barCount);
 
     const startPct = Math.max(0, trimStartSec / totalDuration);
@@ -3315,14 +3310,13 @@
       const y = (height - barH) / 2;
 
       if (isSelected) {
-        // MP3Cut vibrant neon cyan/green gradient
         const grad = ctx.createLinearGradient(0, y, 0, y + barH);
         grad.addColorStop(0, '#00e5ff');
         grad.addColorStop(0.5, '#38ef7d');
         grad.addColorStop(1, '#00e5ff');
         ctx.fillStyle = grad;
       } else {
-        ctx.fillStyle = '#102228';
+        ctx.fillStyle = '#2C1B30';
       }
 
       ctx.beginPath();
@@ -3335,7 +3329,7 @@
     }
   }
 
-  // 4. Update Trimmer Modal Elements & Positions (Locked 8.0s Window)
+  /* ── Update Trimmer Modal Elements (Locked 8.0s Window) ── */
   const FIXED_TRIM_DURATION = 8.0;
 
   function updateTrimmerModalUI() {
@@ -3346,7 +3340,6 @@
     const isLong = dur > FIXED_TRIM_DURATION;
     const selDur = isLong ? FIXED_TRIM_DURATION : dur;
 
-    // Enforce locked 8.0s range: min = 8.0s, max = 8.0s
     if (isLong) {
       trimStartSec = Math.max(0, Math.min(trimStartSec, dur - FIXED_TRIM_DURATION));
       trimEndSec = trimStartSec + FIXED_TRIM_DURATION;
@@ -3358,23 +3351,19 @@
     const startPct = (trimStartSec / dur) * 100;
     const endPct = (trimEndSec / dur) * 100;
 
-    // Masks
     modalMaskLeft.style.width = `${startPct}%`;
     modalMaskRight.style.left = `${endPct}%`;
     modalMaskRight.style.right = '0%';
 
-    // Selection Band
     modalSelectionBand.style.left = `${startPct}%`;
     modalSelectionBand.style.width = `${endPct - startPct}%`;
     if (selectionCenterSec) {
       selectionCenterSec.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>CỐ ĐỊNH ${selDur.toFixed(1)}s`;
     }
 
-    // Handles
     modalHandleLeft.style.left = `${startPct}%`;
     modalHandleRight.style.left = `${endPct}%`;
 
-    // Formatted time labels
     const startTimeFormatted = formatTimeCode(trimStartSec);
     const endTimeFormatted = formatTimeCode(trimEndSec);
 
@@ -3386,7 +3375,6 @@
     if (displayStartTime) displayStartTime.textContent = startTimeFormatted;
     if (displayEndTime) displayEndTime.textContent = endTimeFormatted;
 
-    // Duration Status Badge & Banner
     if (modalDurationBadge) {
       modalDurationBadge.className = 'duration-badge-large';
       modalDurationBadge.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:4px"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Cố định: ${selDur.toFixed(1)}s (Chuẩn tối ưu)`;
@@ -3401,7 +3389,6 @@
     drawModalWaveform();
   }
 
-  // 5. Interactive Dragging: Sliding the Locked 8.0s Window
   function handleTrackMouseDown(e, handleType) {
     e.preventDefault();
     e.stopPropagation();
@@ -3422,7 +3409,6 @@
   modalSelectionBand.addEventListener('mousedown', e => handleTrackMouseDown(e, 'band'));
   modalSelectionBand.addEventListener('touchstart', e => handleTrackMouseDown(e, 'band'), { passive: false });
 
-  // Clicking on track centers the locked 8.0s window around the click coordinate
   modalWaveformTrack.addEventListener('mousedown', e => {
     if (e.target === modalHandleLeft || e.target === modalHandleRight || modalSelectionBand.contains(e.target)) return;
     if (!rawAudioBuffer) return;
@@ -3433,7 +3419,6 @@
     const clickX = (e.clientX - rect.left) / rect.width;
     const clickSec = clickX * dur;
 
-    // Center the 8.0s window around click position
     let newStart = clickSec - (FIXED_TRIM_DURATION / 2);
     newStart = Math.max(0, Math.min(newStart, dur - FIXED_TRIM_DURATION));
     trimStartSec = newStart;
@@ -3465,11 +3450,8 @@
   window.addEventListener('mousemove', e => {
     if (isDragging) onPointerMove(e.clientX);
   });
-
   window.addEventListener('touchmove', e => {
-    if (isDragging && e.touches && e.touches[0]) {
-      onPointerMove(e.touches[0].clientX);
-    }
+    if (isDragging && e.touches && e.touches[0]) onPointerMove(e.touches[0].clientX);
   }, { passive: false });
 
   function stopDragging() {
@@ -3483,7 +3465,6 @@
   window.addEventListener('mouseup', stopDragging);
   window.addEventListener('touchend', stopDragging);
 
-  // 6. Window Shift Buttons (-1.0s, -0.1s, +0.1s, +1.0s)
   function shiftLockedWindow(delta) {
     if (!rawAudioBuffer) return;
     const dur = rawAudioBuffer.duration;
@@ -3503,7 +3484,6 @@
   if (btnShiftPlus01) btnShiftPlus01.addEventListener('click', () => shiftLockedWindow(0.1));
   if (btnShiftPlus1) btnShiftPlus1.addEventListener('click', () => shiftLockedWindow(1.0));
 
-  // 7. Preview Player with Animated Moving Playhead
   function stopModalPlayTrim() {
     if (previewSourceNode) {
       try { previewSourceNode.stop(); } catch {}
@@ -3548,7 +3528,6 @@
     btnModalPlayIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>';
     btnModalPlayText.textContent = 'Tạm dừng';
 
-    // Animate playhead across the waveform
     function updatePlayhead() {
       if (!isPlayingTrimPreview) return;
       const elapsed = audioCtx.currentTime - playbackStartTime;
@@ -3565,18 +3544,14 @@
   }
 
   btnModalPlayTrim.addEventListener('click', () => {
-    if (isPlayingTrimPreview) {
-      stopModalPlayTrim();
-    } else {
-      startModalPlayTrim();
-    }
+    if (isPlayingTrimPreview) stopModalPlayTrim();
+    else startModalPlayTrim();
   });
 
   btnModalRewindTrim.addEventListener('click', () => {
     startModalPlayTrim(trimStartSec);
   });
 
-  // 8. Open / Close Modal & Shortcuts
   function openTrimmerModal() {
     if (!rawAudioBuffer) return;
     modalTrimmerSubtitle.textContent = `${currentFileObj ? currentFileObj.name : 'audio'} · Tổng thời lượng: ${rawAudioBuffer.duration.toFixed(1)}s`;
@@ -3598,7 +3573,6 @@
   });
   btnOpenTrimmerModal.addEventListener('click', openTrimmerModal);
 
-  // Keyboard shortcut: Space (play/pause) & Esc (close)
   document.addEventListener('keydown', e => {
     if (audioTrimmerModal.style.display === 'flex') {
       if (e.key === 'Escape') {
@@ -3611,7 +3585,6 @@
     }
   });
 
-  // 9. Apply Trim: Slice AudioBuffer, Generate WAV Blob & Trigger Auto-STT
   btnModalApplyTrim.addEventListener('click', async () => {
     if (!rawAudioBuffer) return;
     const dur = rawAudioBuffer.duration;
@@ -3628,7 +3601,6 @@
     const origName = (currentFileObj ? currentFileObj.name : 'voice').replace(/\.[^/.]+$/, "");
     activeAudioFile = new File([blob], `${origName}_cut_8s.wav`, { type: 'audio/wav' });
 
-    // Update Sidebar Summary Card
     summaryFileName.textContent = activeAudioFile.name;
     summaryDurationBadge.className = 'summary-duration-badge';
     summaryDurationBadge.textContent = `${selDur.toFixed(1)}s (Chuẩn 8.0s)`;
@@ -3640,11 +3612,10 @@
 
     showToast('ok', `Đã cắt đoạn chuẩn ${selDur.toFixed(1)}s thành công!`);
 
-    // Auto-trigger Speech-to-Text transcription with the trimmed audio
     await triggerAutoSTT(activeAudioFile);
   });
 
-  // 10. Auto Speech-to-Text (STT) via Whisper Pipeline
+  /* ── Auto Speech-to-Text (STT) via Whisper Pipeline ── */
   async function triggerAutoSTT(fileToTranscribe) {
     const file = fileToTranscribe || activeAudioFile || (uploadFileInput.files ? uploadFileInput.files[0] : null);
     if (!file) {
@@ -3675,7 +3646,7 @@
       if (data.text) {
         uploadRefText.value = data.text;
         uploadRefText.classList.remove('auto-filled-glow');
-        void uploadRefText.offsetWidth; // re-trigger glow animation
+        void uploadRefText.offsetWidth;
         uploadRefText.classList.add('auto-filled-glow');
         sttIndicatorText.textContent = `Đã nhận diện xong: "${data.text.slice(0, 32)}..."`;
         showToast('ok', 'AI đã tự động điền lời thoại câu nói trong file!');
@@ -3700,7 +3671,7 @@
     triggerAutoSTT(activeAudioFile || (uploadFileInput.files ? uploadFileInput.files[0] : null));
   });
 
-  // 11. Process Selected Audio File
+  /* ── Process Selected Audio File ── */
   async function processSelectedAudioFile(file) {
     if (!file) return;
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -3715,17 +3686,14 @@
       rawAudioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
       const dur = rawAudioBuffer.duration;
 
-      // Update sidebar summary card
       summaryFileName.textContent = file.name;
       audioFileSummaryCard.style.display = 'block';
 
       if (dur > FIXED_TRIM_DURATION) {
-        // Exceeds 8.0s: Immediately popup the MP3Cut modal with locked 8.0s window!
         summaryDurationBadge.className = 'summary-duration-badge warn';
         summaryDurationBadge.textContent = `${dur.toFixed(1)}s (Cần cắt 8s)`;
         summaryStatusHint.textContent = `Vượt quá 8.0s (${dur.toFixed(1)}s) · Hãy cắt chuẩn 8s`;
 
-        // Initial cut window: 0s to 8.0s
         trimStartSec = 0;
         trimEndSec = FIXED_TRIM_DURATION;
         activeAudioFile = null;
@@ -3733,7 +3701,6 @@
         openTrimmerModal();
         showToast('info', `File dài ${dur.toFixed(1)}s (> 8s). Khung cắt đã khóa cố định đúng 8.0s, hãy kéo trượt để chọn đoạn cần lấy.`);
       } else {
-        // <= 8.0s: Ideal length
         summaryDurationBadge.className = 'summary-duration-badge';
         summaryDurationBadge.textContent = `${dur.toFixed(1)}s (Chuẩn ≤ 8s)`;
         summaryStatusHint.textContent = 'Thời lượng chuẩn tối ưu để clone';
@@ -3749,7 +3716,6 @@
     }
   }
 
-  // 12. Upload File Event Bindings
   uploadFileInput.addEventListener('change', () => {
     const file = uploadFileInput.files[0];
     if (file) {
@@ -3763,11 +3729,9 @@
     e.preventDefault();
     uploadDropzone.classList.add('drag-active');
   });
-
   uploadDropzone.addEventListener('dragleave', () => {
     uploadDropzone.classList.remove('drag-active');
   });
-
   uploadDropzone.addEventListener('drop', e => {
     e.preventDefault();
     uploadDropzone.classList.remove('drag-active');
@@ -3780,7 +3744,7 @@
     }
   });
 
-  // 13. Form Submission
+  /* ── Form Submission ── */
   uploadForm.addEventListener('submit', async e => {
     e.preventDefault();
     const finalFile = activeAudioFile || (uploadFileInput.files ? uploadFileInput.files[0] : null);
@@ -3840,8 +3804,8 @@
       : 'ĐANG TỔNG HỢP GIỌNG NÓI...';
 
     showToast('info', currentEngine === 'vieneu-v2'
-      ? '⟳ Đang chạy mô hình VieNeu v2 GGUF Q8 (bám ngữ điệu Bắc bằng ref_text)...'
-      : '⟳ Đang tổng hợp siêu tốc bằng VieNeu v3 Turbo...');
+      ? 'Đang chạy mô hình VieNeu v2 GGUF Q8 (bám ngữ điệu Bắc bằng ref_text)...'
+      : 'Đang tổng hợp siêu tốc bằng VieNeu v3 Turbo...');
 
     try {
       const payload = {
@@ -3876,6 +3840,13 @@
       btnDownloadWav.href = activeAudioBlobUrl;
       btnDownloadWav.download = `luatu_${selectedVoiceName}_${Date.now()}.wav`;
 
+      miniWaveDownloadBtn.onclick = () => {
+        const a = document.createElement('a');
+        a.href = activeAudioBlobUrl;
+        a.download = `luatu_${selectedVoiceName}_${Date.now()}.wav`;
+        a.click();
+      };
+
       playerShowcase.classList.add('active');
       audioPlayer.play().catch(() => {});
 
@@ -3890,10 +3861,10 @@
       benchmarkStrip.innerHTML = `
         <div class="benchmark-pill">Mô hình: <b class="gold">${currentEngine} (${prec})</b></div>
         <div class="benchmark-pill">Tần số: <b>${sr} Hz</b></div>
-        <div class="benchmark-pill">Độ dài audio: <b>${dur}s</b></div>
-        <div class="benchmark-pill">Thời gian sinh: <b>${inf}s</b></div>
-        <div class="benchmark-pill">Chỉ số RTF: <b class="gold">${rtf}</b></div>
-        <div class="benchmark-pill">Bộ nhớ đệm: <b>${cached === 'true' ? 'HIT' : 'MISS'}</b></div>
+        <div class="benchmark-pill">Độ dài: <b>${dur}s</b></div>
+        <div class="benchmark-pill">Sinh: <b>${inf}s</b></div>
+        <div class="benchmark-pill">RTF: <b class="gold">${rtf}</b></div>
+        <div class="benchmark-pill">Cache: <b>${cached === 'true' ? 'HIT' : 'MISS'}</b></div>
       `;
 
       showToast('ok', `Hoàn tất tạo giọng! Thời lượng: ${dur}s · RTF: ${rtf}`);
@@ -3903,6 +3874,7 @@
         engine: currentEngine,
         duration: dur,
         timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+        dateStr: new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' }),
         audioUrl: activeAudioBlobUrl,
       });
 
@@ -3918,7 +3890,6 @@
 
   btnGenerateSpeech.addEventListener('click', generateSpeech);
 
-  // Keyboard shortcut Ctrl + Enter
   document.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
       e.preventDefault();
@@ -3926,63 +3897,90 @@
     }
   });
 
-  /* ── History Persistence & Management ── */
+  /* ── History Persistence & Management (Formatted to match screenshot!) ── */
   function saveToHistory(item) {
     generationHistory.unshift(item);
     if (generationHistory.length > 20) generationHistory.pop();
     localStorage.setItem('luatu_history', JSON.stringify(generationHistory.map(h => ({
       ...h,
-      audioUrl: null // Blob URLs can't be saved in localStorage
+      audioUrl: null
     }))));
     renderHistory();
+    updateStats();
   }
 
   function renderHistory() {
+    if (!historyList) return;
     if (generationHistory.length === 0) {
-      historyList.innerHTML = `<div style="font-size: 11px; color: var(--text-muted); padding: 12px 0;">Chưa có lịch sử nào.</div>`;
+      historyList.innerHTML = `<div style="font-size: 11.5px; color: #7A6635; padding: 12px 0;">Chưa có bản đọc nào gần đây.</div>`;
       return;
     }
 
     historyList.innerHTML = '';
     generationHistory.forEach((item, idx) => {
       const el = document.createElement('div');
-      el.className = 'history-item';
+      el.className = 'recent-card';
+
+      const durSec = parseFloat(item.duration) || 0;
+      const durFormatted = durSec >= 60
+        ? `${Math.floor(durSec / 60)}:${Math.floor(durSec % 60).toString().padStart(2, '0')}`
+        : `${durSec.toFixed(1)}s`;
+
+      const timeLabel = item.timestamp || '00:00';
+      const dateLabel = item.dateStr ? `${item.dateStr} · ${timeLabel}` : `Hôm nay · ${timeLabel}`;
+
       el.innerHTML = `
-        <div class="history-info">
-          <div class="history-meta-line">
-            <span class="history-voice-name">${item.voice}</span>
-            <span class="badge-micro ${item.engine === 'vieneu-v2' ? 'gold' : 'red'}">${item.engine}</span>
-            <span class="history-time">${item.timestamp} · ${item.duration}s</span>
-          </div>
-          <div class="history-excerpt">${item.text}</div>
+        <div class="recent-card-topline">
+          <span class="recent-card-title">Bản đọc ${timeLabel}</span>
+          <span class="recent-card-dur">${durFormatted}</span>
         </div>
-        <div class="history-actions">
-          <button class="btn-circle" data-reuse="${idx}" title="Dùng lại đoạn văn này"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg></button>
-          <button class="btn-circle play" data-speakagain="${idx}" title="Đọc lại câu này"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
+        <div class="recent-card-meta">
+          <span>${dateLabel}</span>
+          <button class="recent-dl-pill" data-historydl="${idx}" title="Tải về file âm thanh">
+            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Tải về
+          </button>
+        </div>
+        <div class="recent-player-bar">
+          <button type="button" class="recent-play-btn" data-historyspeak="${idx}" title="Phát lại đoạn này">
+            ▶
+          </button>
+          <div class="recent-scrub-track" data-historytrack="${idx}">
+            <div class="recent-scrub-fill" style="width: 45%;"></div>
+          </div>
+          <span class="recent-time-tag">${durFormatted}</span>
         </div>
       `;
       historyList.appendChild(el);
     });
 
-    historyList.querySelectorAll('[data-reuse]').forEach(btn => {
+    historyList.querySelectorAll('[data-historyspeak]').forEach(btn => {
       btn.addEventListener('click', () => {
-        const item = generationHistory[parseInt(btn.dataset.reuse, 10)];
-        textInput.value = item.text;
-        updateTextCounter();
-        selectVoice(item.voice);
-        setEngine(item.engine);
-        showToast('info', 'Đã nạp lại văn bản từ lịch sử.');
-      });
-    });
-
-    historyList.querySelectorAll('[data-speakagain]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const item = generationHistory[parseInt(btn.dataset.speakagain, 10)];
+        const item = generationHistory[parseInt(btn.dataset.historyspeak, 10)];
         textInput.value = item.text;
         updateTextCounter();
         selectVoice(item.voice);
         setEngine(item.engine);
         generateSpeech();
+      });
+    });
+
+    historyList.querySelectorAll('[data-historydl]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = generationHistory[parseInt(btn.dataset.historydl, 10)];
+        if (item.audioUrl) {
+          const a = document.createElement('a');
+          a.href = item.audioUrl;
+          a.download = `luatu_${item.voice}_${Date.now()}.wav`;
+          a.click();
+        } else {
+          // Re-generate to download
+          textInput.value = item.text;
+          updateTextCounter();
+          selectVoice(item.voice);
+          setEngine(item.engine);
+          generateSpeech();
+        }
       });
     });
   }
@@ -3992,6 +3990,7 @@
     generationHistory = [];
     localStorage.removeItem('luatu_history');
     renderHistory();
+    updateStats();
     showToast('info', 'Đã dọn dẹp lịch sử.');
   });
 
@@ -4041,11 +4040,33 @@
     }, 4500);
   }
 
+  /* ── Server Health Check ── */
+  async function checkHealth() {
+    try {
+      const res = await fetch('/health');
+      const data = await res.json();
+      if (res.ok && data.status === 'ok') {
+        $('healthPill').className = 'health-pill online';
+        $('healthLabel').textContent = `VieNeu Online (${data.backend || 'CPU'})`;
+      } else {
+        $('healthPill').className = 'health-pill';
+        $('healthLabel').textContent = 'Server bảo trì';
+      }
+    } catch {
+      $('healthPill').className = 'health-pill';
+      $('healthLabel').textContent = 'Mất kết nối server';
+    }
+  }
+
   /* ── Initialization ── */
+  updateGreetingAndDate();
   checkHealth();
   loadVoicesRegistry();
   renderHistory();
+  updateTextCounter();
+  drawMiniWaveform();
   setInterval(checkHealth, 30000);
+  setInterval(updateGreetingAndDate, 60000);
 })();
 </script>
 </body>
