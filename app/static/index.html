@@ -428,47 +428,6 @@
       stroke-width: 2.2;
     }
 
-    /* ── 3 Quick Stats Cards (Sleek, Proportional) ── */
-    .stats-metric-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      flex-shrink: 0;
-    }
-
-    .stat-metric-card {
-      background: #FAF8FA;
-      border: 1px solid var(--border-card);
-      border-radius: var(--radius-md);
-      padding: 9px 14px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
-      transition: all 0.15s ease;
-    }
-    .stat-metric-card:hover {
-      background: #FFFFFF;
-      border-color: #DFD5E0;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .stat-metric-val {
-      font-size: 19px;
-      font-weight: 800;
-      color: var(--text-main);
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-    }
-
-    .stat-metric-label {
-      font-size: 11.5px;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
     /* ── Engine Segmented Switch (Compact Pill Bar) ── */
     .engine-grid {
       display: flex;
@@ -2154,21 +2113,7 @@
       </div>
     </div>
 
-    <!-- 3 Stat Metric Cards (Directly from Reference Image!) -->
-    <div class="stats-metric-row">
-      <div class="stat-metric-card">
-        <div class="stat-metric-val" id="statCreatedCount">15</div>
-        <div class="stat-metric-label">Bản đã tạo</div>
-      </div>
-      <div class="stat-metric-card">
-        <div class="stat-metric-val" id="statTotalMinutes">14 phút</div>
-        <div class="stat-metric-label">Tổng thời lượng</div>
-      </div>
-      <div class="stat-metric-card">
-        <div class="stat-metric-val" id="statVoiceCount">27</div>
-        <div class="stat-metric-label">Giọng trong thư viện</div>
-      </div>
-    </div>
+
 
     <!-- Engine Toggle Segmented Switch (Compact & Clean) -->
     <div class="engine-grid">
