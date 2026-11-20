@@ -312,7 +312,7 @@
     }
 
     .workspace-topbar {
-      padding: 24px 32px 18px;
+      padding: 16px 28px 12px;
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
@@ -363,87 +363,90 @@
       border: 1px solid var(--yellow-border);
     }
 
-    /* Scrollable Center Content */
+    /* Scrollable Center Content - optimized padding and gap */
     .workspace-content {
       flex: 1;
       overflow-y: auto;
-      padding: 0 32px 32px;
+      padding: 16px 28px 24px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 12px;
     }
 
-    /* ── Hero Coral Banner (Exact match from screenshot!) ── */
+    /* ── Hero Coral Banner (Signature Warm Welcome, anti-clipping) ── */
     .hero-coral-banner {
       background: var(--coral-primary);
-      border-radius: var(--radius-xl);
-      padding: 22px 28px;
+      border-radius: var(--radius-lg);
+      padding: 13px 20px;
       color: #FFFFFF;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 20px;
-      box-shadow: 0 10px 24px rgba(235, 107, 99, 0.22);
+      gap: 16px;
+      box-shadow: 0 6px 18px rgba(235, 107, 99, 0.2);
       position: relative;
       overflow: hidden;
+      flex-shrink: 0;
     }
 
     .hero-banner-content {
       flex: 1;
-      max-width: 580px;
+      max-width: 620px;
     }
 
     .hero-banner-title {
-      font-size: 22px;
+      font-size: 17px;
       font-weight: 800;
       letter-spacing: -0.02em;
-      margin-bottom: 7px;
-      line-height: 1.2;
+      margin-bottom: 3px;
+      line-height: 1.25;
+      padding-top: 1px;
     }
 
     .hero-banner-desc {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 400;
-      line-height: 1.55;
-      color: rgba(255, 255, 255, 0.94);
+      line-height: 1.45;
+      color: rgba(255, 255, 255, 0.95);
     }
 
     .hero-banner-graphic {
-      width: 72px;
-      height: 72px;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.18);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      border: 2px solid rgba(255, 255, 255, 0.28);
+      border: 2px solid rgba(255, 255, 255, 0.35);
     }
     .hero-banner-graphic svg {
-      width: 36px;
-      height: 36px;
+      width: 24px;
+      height: 24px;
       stroke: #FFFFFF;
-      stroke-width: 2;
+      stroke-width: 2.2;
     }
 
-    /* ── 3 Quick Stats Cards (From screenshot!) ── */
+    /* ── 3 Quick Stats Cards (Sleek, Proportional) ── */
     .stats-metric-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      gap: 10px;
+      flex-shrink: 0;
     }
 
     .stat-metric-card {
       background: #FAF8FA;
       border: 1px solid var(--border-card);
-      border-radius: var(--radius-lg);
-      padding: 16px 20px;
+      border-radius: var(--radius-md);
+      padding: 9px 14px;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 4px;
+      gap: 2px;
       transition: all 0.15s ease;
     }
     .stat-metric-card:hover {
@@ -453,7 +456,7 @@
     }
 
     .stat-metric-val {
-      font-size: 26px;
+      font-size: 19px;
       font-weight: 800;
       color: var(--text-main);
       letter-spacing: -0.02em;
@@ -461,59 +464,71 @@
     }
 
     .stat-metric-label {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       color: var(--text-muted);
     }
 
-    /* ── Engine Selector Cards ── */
+    /* ── Engine Segmented Switch (Compact Pill Bar) ── */
     .engine-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      display: flex;
+      background: #F1EBF1;
+      padding: 4px;
+      border-radius: var(--radius-pill);
+      gap: 4px;
+      border: 1px solid var(--border-card);
+      flex-shrink: 0;
     }
 
     .engine-card {
-      background: #FAF8FA;
-      border: 1.5px solid var(--border-card);
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      background: transparent;
+      border: 1.5px solid transparent;
       cursor: pointer;
       transition: all 0.18s ease;
       position: relative;
     }
 
     .engine-card:hover {
-      background: #FFFFFF;
-      border-color: #D6CBD7;
+      background: rgba(255, 255, 255, 0.6);
     }
 
     .engine-card.active {
       background: #FFFFFF;
-      border-color: var(--coral-primary);
-      box-shadow: 0 4px 16px rgba(235, 107, 99, 0.14);
+      border-color: rgba(235, 107, 99, 0.35);
+      box-shadow: 0 2px 8px rgba(42, 29, 43, 0.08);
     }
 
     .engine-card-header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 4px;
+      gap: 7px;
+      margin-bottom: 0;
     }
 
     .engine-card-name {
-      font-size: 13.5px;
+      font-size: 12.5px;
       font-weight: 700;
       color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .engine-indicator {
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       border: 2px solid #C8BAC8;
       background: transparent;
       transition: all 0.15s;
+      flex-shrink: 0;
     }
 
     .engine-card.active .engine-indicator {
@@ -523,9 +538,18 @@
     }
 
     .engine-card-desc {
-      font-size: 11.5px;
+      font-size: 11px;
       color: var(--text-muted);
-      line-height: 1.45;
+      line-height: 1.2;
+      background: rgba(42, 29, 43, 0.05);
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      white-space: nowrap;
+    }
+    .engine-card.active .engine-card-desc {
+      background: var(--coral-subtle);
+      color: var(--coral-primary);
+      font-weight: 600;
     }
 
     /* ── Text Input Studio Card ── */
@@ -533,10 +557,11 @@
       background: #FAF8FA;
       border: 1px solid var(--border-card);
       border-radius: var(--radius-lg);
-      padding: 18px 20px;
+      padding: 13px 18px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 9px;
+      flex-shrink: 0;
     }
 
     .panel-header-row {
@@ -546,7 +571,7 @@
     }
 
     .panel-heading {
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 700;
       color: var(--text-main);
       display: flex;
@@ -564,7 +589,7 @@
       font-family: var(--font-mono);
       background: #FFFFFF;
       border: 1px solid var(--border-card);
-      padding: 3px 10px;
+      padding: 2px 9px;
       border-radius: var(--radius-pill);
     }
 
@@ -585,24 +610,26 @@
 
     #textInput {
       width: 100%;
-      min-height: 145px;
-      padding: 16px 18px;
+      min-height: 100px;
+      height: 105px;
+      max-height: 220px;
+      padding: 11px 14px;
       background: transparent;
       border: none;
       outline: none;
       color: var(--text-main);
       font-family: var(--font-main);
-      font-size: 14.5px;
-      line-height: 1.6;
+      font-size: 14px;
+      line-height: 1.55;
       resize: vertical;
     }
     #textInput::placeholder {
       color: #9E91A0;
-      font-size: 13.5px;
+      font-size: 13px;
     }
 
     .editor-footer {
-      padding: 10px 14px;
+      padding: 6px 12px;
       background: #FAF8FA;
       border-top: 1px solid var(--border-card);
       display: flex;
@@ -612,20 +639,20 @@
 
     .editor-actions {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
     }
 
     .tool-btn {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
+      gap: 5px;
+      padding: 5px 10px;
       border-radius: var(--radius-pill);
       border: 1px solid #DFD5DF;
       background: #FFFFFF;
       color: var(--text-secondary);
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       font-family: inherit;
       cursor: pointer;
@@ -642,9 +669,9 @@
     }
 
     .editor-subtext-hint {
-      font-size: 12px;
+      font-size: 11.5px;
       color: var(--text-muted);
-      margin-top: 2px;
+      margin-top: 0;
       font-style: italic;
     }
 
@@ -666,22 +693,23 @@
       background: #FAF8FA;
       border: 1px solid var(--border-card);
       border-radius: var(--radius-lg);
-      padding: 18px 20px;
+      padding: 12px 16px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 9px;
+      flex-shrink: 0;
     }
 
     .preset-chips-row {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
     }
 
     .preset-chip {
-      padding: 6px 14px;
+      padding: 4px 11px;
       border-radius: var(--radius-pill);
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       cursor: pointer;
       border: 1px solid var(--border-card);
@@ -689,7 +717,7 @@
       color: var(--text-secondary);
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       transition: all 0.15s;
     }
     .preset-chip:hover {
@@ -706,17 +734,17 @@
     .slider-columns {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      gap: 10px;
     }
 
     .slider-box {
       background: #FFFFFF;
       border: 1px solid var(--border-card);
       border-radius: var(--radius-md);
-      padding: 12px 14px;
+      padding: 8px 12px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 5px;
     }
 
     .slider-box-header {
@@ -726,18 +754,18 @@
     }
 
     .slider-label {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       color: var(--text-secondary);
     }
 
     .slider-value-badge {
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 700;
       font-family: var(--font-mono);
       color: var(--coral-primary);
       background: var(--coral-subtle);
-      padding: 2px 8px;
+      padding: 1px 7px;
       border-radius: var(--radius-pill);
     }
 
@@ -745,7 +773,7 @@
     .luxury-range {
       -webkit-appearance: none;
       width: 100%;
-      height: 6px;
+      height: 5px;
       border-radius: 4px;
       background: #EAE2EA;
       outline: none;
@@ -753,8 +781,8 @@
     }
     .luxury-range::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 16px;
-      height: 16px;
+      width: 15px;
+      height: 15px;
       border-radius: 50%;
       background: var(--coral-primary);
       box-shadow: 0 2px 6px rgba(235, 107, 99, 0.4);
@@ -766,7 +794,7 @@
     }
 
     .advanced-toggle-btn {
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--text-secondary);
       cursor: pointer;
@@ -782,15 +810,15 @@
     .advanced-params-drawer {
       display: none;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      padding-top: 6px;
+      gap: 10px;
+      padding-top: 4px;
     }
     .advanced-params-drawer.open {
       display: grid;
     }
 
     .adv-hint {
-      font-size: 11px;
+      font-size: 10.5px;
       color: var(--text-muted);
       line-height: 1.35;
     }
@@ -799,16 +827,17 @@
     .generate-wrap {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 5px;
+      flex-shrink: 0;
     }
 
     .btn-luxury-generate {
       width: 100%;
-      padding: 15px 24px;
-      border-radius: var(--radius-lg);
+      padding: 13px 22px;
+      border-radius: var(--radius-md);
       background: var(--coral-gradient);
       color: #FFFFFF;
-      font-size: 15px;
+      font-size: 14.5px;
       font-weight: 800;
       font-family: inherit;
       letter-spacing: 0.02em;
@@ -817,13 +846,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      box-shadow: 0 8px 24px rgba(235, 107, 99, 0.32);
+      gap: 8px;
+      box-shadow: 0 6px 20px rgba(235, 107, 99, 0.3);
       transition: all 0.18s ease;
     }
     .btn-luxury-generate:hover {
       background: var(--coral-gradient-hover);
-      box-shadow: 0 10px 28px rgba(235, 107, 99, 0.42);
+      box-shadow: 0 8px 24px rgba(235, 107, 99, 0.4);
       transform: translateY(-1px);
     }
     .btn-luxury-generate:active {
@@ -2097,13 +2126,9 @@
       <p id="workspaceDate">Thứ Tư, 18 tháng 11, 2026</p>
     </div>
     <div class="header-badges">
-      <span class="meta-tag v3">
-        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        v3 Turbo · 48kHz
-      </span>
-      <span class="meta-tag v2">
-        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        v2 GGUF · 24kHz
+      <span class="meta-tag v3" style="font-weight: 600;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+        Tự động ngắt nghỉ &amp; ghép nối câu
       </span>
     </div>
   </header>
@@ -2145,26 +2170,18 @@
       </div>
     </div>
 
-    <!-- Engine Toggle Cards -->
+    <!-- Engine Toggle Segmented Switch (Compact & Clean) -->
     <div class="engine-grid">
-      <div class="engine-card active" data-engine="vieneu" id="engineV3Card">
-        <div class="engine-card-header">
-          <span class="engine-card-name">VieNeu v3 Turbo (48kHz)</span>
-          <span class="engine-indicator"></span>
-        </div>
-        <div class="engine-card-desc">
-          Siêu tốc độ (RTF ~0.7x), âm thanh 48kHz trong trẻo, không yêu cầu ref_text.
-        </div>
+      <div class="engine-card active" data-engine="vieneu" id="engineV3Card" title="Mô hình v3 Turbo 48kHz không yêu cầu ref_text, siêu tốc trên máy">
+        <span class="engine-indicator"></span>
+        <span class="engine-card-name">⚡ VieNeu v3 Turbo</span>
+        <span class="engine-card-desc">48kHz · Siêu tốc RTF ~0.7x</span>
       </div>
 
-      <div class="engine-card" data-engine="vieneu-v2" id="engineV2Card">
-        <div class="engine-card-header">
-          <span class="engine-card-name">VieNeu v2 GGUF Q8 (24kHz)</span>
-          <span class="engine-indicator"></span>
-        </div>
-        <div class="engine-card-desc">
-          Bám sát 100% ngữ điệu giọng Bắc/Trung/Nam thông qua lời thoại mẫu (ref_text).
-        </div>
+      <div class="engine-card" data-engine="vieneu-v2" id="engineV2Card" title="Mô hình v2 GGUF Q8 24kHz bám sát ngữ điệu thông qua ref_text">
+        <span class="engine-indicator"></span>
+        <span class="engine-card-name">⭐ VieNeu v2 GGUF</span>
+        <span class="engine-card-desc">24kHz · Chuẩn ngữ điệu ref_text</span>
       </div>
     </div>
 
@@ -2408,8 +2425,12 @@
 
   <!-- Quick Upload Section at Bottom of Panel -->
   <div class="upload-drawer-card" id="uploadDrawerSection">
-    <div class="upload-drawer-title">
-      <span class="ico-svg md"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span> TẢI LÊN GIỌNG MẪU (CHUẨN 8 GIÂY)
+    <div class="upload-drawer-title" id="uploadDrawerToggle" style="cursor: pointer; user-select: none; display: flex; align-items: center; justify-content: space-between;">
+      <span style="display: flex; align-items: center; gap: 7px;">
+        <span class="ico-svg md"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
+        + TẢI LÊN GIỌNG MẪU ĐỂ CLONE (8S)
+      </span>
+      <span id="uploadToggleChevron" style="font-size: 13px; opacity: 0.7; transition: transform 0.2s;">▼</span>
     </div>
 
     <form class="upload-form-wrap" id="uploadForm">
