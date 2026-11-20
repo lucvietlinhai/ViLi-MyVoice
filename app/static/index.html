@@ -854,24 +854,34 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* Player Showcase Card in Center (Full audio output) */
+    /* Fixed Bottom Player Bar (Pinned to bottom of Workspace, ONLY for newly generated output) */
     .player-showcase {
       display: none;
-      background: #FAF8FA;
-      border: 1px solid var(--border-card);
-      border-radius: var(--radius-lg);
-      padding: 16px 20px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 30;
+      background: #FFFFFF;
+      border-top: 1.5px solid var(--border-strong);
+      box-shadow: 0 -8px 28px rgba(42, 29, 43, 0.10);
+      padding: 12px 28px 14px;
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
+      animation: slideUpPlayer 0.22s ease-out;
     }
     .player-showcase.active {
       display: flex;
+    }
+
+    @keyframes slideUpPlayer {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     .player-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 12px;
     }
 
     .player-title {
@@ -880,7 +890,32 @@
       color: var(--text-main);
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 8px;
+      min-width: 0;
+    }
+    .player-title .ico-svg {
+      color: var(--coral-primary);
+    }
+
+    .player-voice-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: var(--radius-pill);
+      background: var(--coral-subtle);
+      color: var(--coral-primary);
+      border: 1px solid rgba(235, 107, 99, 0.28);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 220px;
+    }
+
+    .player-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
     }
 
     .btn-download-wav {
@@ -901,23 +936,42 @@
       background: #D7ECD9;
     }
 
+    .btn-close-player {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--border-card);
+      background: #FAF8FA;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-close-player:hover {
+      background: #FDE8E7;
+      color: var(--coral-dark);
+      border-color: rgba(235, 107, 99, 0.35);
+    }
+
     #audioPlayer {
       width: 100%;
-      height: 38px;
+      height: 36px;
       border-radius: var(--radius-pill);
     }
 
     .benchmark-strip {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
     }
 
     .benchmark-pill {
       font-size: 11px;
-      padding: 3px 9px;
+      padding: 2px 9px;
       border-radius: var(--radius-pill);
-      background: #FFFFFF;
+      background: #FAF8FA;
       border: 1px solid var(--border-card);
       color: var(--text-secondary);
       font-family: var(--font-mono);
@@ -2270,23 +2324,28 @@
     <!-- Status Alert Toast -->
     <div class="status-toast" id="statusToast"></div>
 
-    <!-- Audio Player Showcase -->
-    <section class="player-showcase" id="playerShowcase">
-      <div class="player-header">
-        <div class="player-title">
-          <span class="ico-svg md"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></span> Kết quả âm thanh đã tổng hợp
-        </div>
-        <div class="player-actions">
-          <a class="btn-download-wav" id="btnDownloadWav" download="luatu_voice.wav">
-            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Tải file WAV
-          </a>
-        </div>
-      </div>
-      <audio id="audioPlayer" controls></audio>
-      <div class="benchmark-strip" id="benchmarkStrip"></div>
-    </section>
-
   </div><!-- .workspace-content -->
+
+  <!-- Fixed Bottom Bar: Newly Generated Audio Player (Only shown for newly created result) -->
+  <section class="player-showcase" id="playerShowcase">
+    <div class="player-header">
+      <div class="player-title">
+        <span class="ico-svg md"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></span>
+        <span>Kết quả âm thanh đã tổng hợp</span>
+        <span class="player-voice-badge" id="playerVoiceTag" style="display:none;"></span>
+      </div>
+      <div class="player-actions">
+        <a class="btn-download-wav" id="btnDownloadWav" download="luatu_voice.wav">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Tải file WAV
+        </a>
+        <button type="button" class="btn-close-player" id="btnClosePlayer" title="Đóng trình phát kết quả">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+    <audio id="audioPlayer" controls></audio>
+    <div class="benchmark-strip" id="benchmarkStrip"></div>
+  </section>
 </main>
 
 <!-- ════════════════════════════════════════════════════════════
@@ -2569,7 +2628,11 @@
   const playerShowcase    = $('playerShowcase');
   const audioPlayer       = $('audioPlayer');
   const btnDownloadWav    = $('btnDownloadWav');
+  const btnClosePlayer    = $('btnClosePlayer');
+  const playerVoiceTag    = $('playerVoiceTag');
   const benchmarkStrip    = $('benchmarkStrip');
+  const previewAudio      = new Audio();
+  let activeMiniAudio     = audioPlayer;
   const chunksInspector   = $('chunksInspector');
   const historyList       = $('historyList');
   const voiceRosterContainer = $('voiceRosterContainer');
@@ -2843,7 +2906,9 @@
   speedSlider.addEventListener('input', () => { speedBadge.textContent = parseFloat(speedSlider.value).toFixed(2) + 'x'; });
   volSlider.addEventListener('input', () => {
     volBadge.textContent = volSlider.value + '%';
-    audioPlayer.volume = parseInt(volSlider.value, 10) / 100;
+    const v = parseInt(volSlider.value, 10) / 100;
+    audioPlayer.volume = v;
+    previewAudio.volume = v;
   });
   tempSlider.addEventListener('input', () => { tempBadge.textContent = parseFloat(tempSlider.value).toFixed(2); });
   topKSlider.addEventListener('input', () => { topKBadge.textContent = topKSlider.value; });
@@ -2891,7 +2956,7 @@
     }
   }
 
-  // Mini player controls bindings
+  // Mini player controls bindings (supports both voice sample preview and generated result without overwriting #audioPlayer)
   let miniSpeedIdx = 0;
   const MINI_SPEEDS = [1.0, 1.25, 1.5, 0.75];
   miniWaveSpeedBtn.addEventListener('click', () => {
@@ -2899,43 +2964,68 @@
     const spd = MINI_SPEEDS[miniSpeedIdx];
     miniWaveSpeedBtn.textContent = spd + 'x';
     audioPlayer.playbackRate = spd;
+    previewAudio.playbackRate = spd;
   });
 
   miniWaveRewindBtn.addEventListener('click', () => {
-    audioPlayer.currentTime = Math.max(0, audioPlayer.currentTime - 5);
+    activeMiniAudio.currentTime = Math.max(0, activeMiniAudio.currentTime - 5);
   });
   miniWaveForwardBtn.addEventListener('click', () => {
-    audioPlayer.currentTime = Math.min(audioPlayer.duration || 0, audioPlayer.currentTime + 5);
+    activeMiniAudio.currentTime = Math.min(activeMiniAudio.duration || 0, activeMiniAudio.currentTime + 5);
   });
   miniWaveVolBtn.addEventListener('click', () => {
-    audioPlayer.muted = !audioPlayer.muted;
-    miniWaveVolBtn.style.opacity = audioPlayer.muted ? '0.4' : '1';
+    const nextMuted = !activeMiniAudio.muted;
+    audioPlayer.muted = nextMuted;
+    previewAudio.muted = nextMuted;
+    miniWaveVolBtn.style.opacity = nextMuted ? '0.4' : '1';
   });
 
   miniWavePlayBtn.addEventListener('click', () => {
-    if (!audioPlayer.src) {
-      showToast('info', 'Chưa có bản đọc nào. Hãy nhấn "Tạo giọng nói ngay" trước.');
+    if (!activeMiniAudio.src) {
+      showToast('info', 'Chưa có âm thanh nào. Hãy bấm nghe mẫu hoặc tạo giọng nói trước.');
       return;
     }
-    if (audioPlayer.paused) {
-      audioPlayer.play().catch(() => {});
+    if (activeMiniAudio.paused) {
+      activeMiniAudio.play().catch(() => {});
     } else {
-      audioPlayer.pause();
+      activeMiniAudio.pause();
     }
   });
 
-  audioPlayer.addEventListener('play', () => {
-    miniWavePlayBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="4" width="4" height="16"/><rect x="15" y="4" width="4" height="16"/></svg>';
+  const syncMiniPlayIcon = (isPlaying) => {
+    miniWavePlayBtn.innerHTML = isPlaying
+      ? '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="4" width="4" height="16"/><rect x="15" y="4" width="4" height="16"/></svg>'
+      : '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+  };
+
+  [audioPlayer, previewAudio].forEach(el => {
+    el.addEventListener('play', () => {
+      const other = (el === audioPlayer) ? previewAudio : audioPlayer;
+      if (!other.paused) other.pause();
+      activeMiniAudio = el;
+      syncMiniPlayIcon(true);
+    });
+    el.addEventListener('pause', () => {
+      if (activeMiniAudio === el) syncMiniPlayIcon(false);
+    });
+    el.addEventListener('ended', () => {
+      if (activeMiniAudio === el) syncMiniPlayIcon(false);
+    });
+    el.addEventListener('timeupdate', () => {
+      if (activeMiniAudio !== el) return;
+      const cur = el.currentTime || 0;
+      const dur = el.duration || 0;
+      miniWaveTimeCur.textContent = formatTimeShort(cur);
+      if (dur > 0) miniWaveTimeTotal.textContent = formatTimeShort(dur);
+    });
   });
-  audioPlayer.addEventListener('pause', () => {
-    miniWavePlayBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
-  });
-  audioPlayer.addEventListener('timeupdate', () => {
-    const cur = audioPlayer.currentTime || 0;
-    const dur = audioPlayer.duration || 0;
-    miniWaveTimeCur.textContent = formatTimeShort(cur);
-    if (dur > 0) miniWaveTimeTotal.textContent = formatTimeShort(dur);
-  });
+
+  if (btnClosePlayer) {
+    btnClosePlayer.addEventListener('click', () => {
+      audioPlayer.pause();
+      playerShowcase.classList.remove('active');
+    });
+  }
 
   function formatTimeShort(sec) {
     if (isNaN(sec) || sec < 0) sec = 0;
@@ -3093,8 +3183,11 @@
     const url = isCustom ? `/v1/voices/${voiceName}/audio` : `/v1/voices/${voiceName}/sample`;
     try {
       if (miniWaveVoiceTitle) miniWaveVoiceTitle.textContent = voiceName;
-      audioPlayer.src = url;
-      await audioPlayer.play();
+      if (!audioPlayer.paused) audioPlayer.pause();
+      activeMiniAudio = previewAudio;
+      previewAudio.src = url;
+      previewAudio.volume = parseInt(volSlider.value, 10) / 100;
+      await previewAudio.play();
       showToast('ok', `Đang phát âm thanh mẫu của "${voiceName}".`);
     } catch {
       showToast('err', 'Không tải được file âm thanh mẫu.');
@@ -3802,9 +3895,17 @@
       if (activeAudioBlobUrl) URL.revokeObjectURL(activeAudioBlobUrl);
       activeAudioBlobUrl = URL.createObjectURL(blob);
 
+      if (!previewAudio.paused) previewAudio.pause();
+      activeMiniAudio = audioPlayer;
       audioPlayer.src = activeAudioBlobUrl;
+      audioPlayer.volume = parseInt(volSlider.value, 10) / 100;
       btnDownloadWav.href = activeAudioBlobUrl;
       btnDownloadWav.download = `luatu_${selectedVoiceName}_${Date.now()}.wav`;
+
+      if (playerVoiceTag) {
+        playerVoiceTag.textContent = `${selectedVoiceName || 'Mặc định'} · ${currentEngine}`;
+        playerVoiceTag.style.display = 'inline-block';
+      }
 
       miniWaveDownloadBtn.onclick = () => {
         const a = document.createElement('a');
