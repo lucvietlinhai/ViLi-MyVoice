@@ -828,10 +828,11 @@
       text-align: center;
     }
 
-    /* Status Alert Toast */
+    /* Status Alert Toast (Docked cleanly above bottom player across all views) */
     .status-toast {
       display: none;
-      padding: 10px 16px;
+      margin: 0 28px 10px;
+      padding: 9px 14px;
       border-radius: var(--radius-md);
       font-size: 12.5px;
       font-weight: 600;
@@ -840,7 +841,167 @@
       box-shadow: var(--shadow-md);
       align-items: center;
       gap: 8px;
+      flex-shrink: 0;
       animation: fadeInToast 0.2s ease-out;
+    }
+
+    /* Switchable Center Views */
+    .workspace-view {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .workspace-view.active {
+      display: flex;
+    }
+
+    .view-section-card {
+      background: #FAF8FA;
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .view-hero-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 20px;
+      border-radius: var(--radius-lg);
+      background: var(--yellow-subtle);
+      border: 1px solid var(--yellow-border);
+    }
+    .view-hero-bar.coral {
+      background: var(--coral-subtle);
+      border-color: rgba(235, 107, 99, 0.3);
+    }
+    .view-hero-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--plum-dark);
+      margin-bottom: 3px;
+    }
+    .view-hero-desc {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    .btn-pill-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      background: var(--coral-gradient);
+      color: #FFFFFF;
+      border: none;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 3px 10px rgba(235, 107, 99, 0.25);
+      transition: all 0.15s;
+    }
+    .btn-pill-primary:hover {
+      background: var(--coral-gradient-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-pill-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      background: #FFFFFF;
+      color: var(--plum-dark);
+      border: 1px solid var(--border-strong);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .btn-pill-outline:hover {
+      background: #F4EFF4;
+    }
+
+    .library-section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--plum-dark);
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-card);
+    }
+    .library-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 10px;
+    }
+    .lib-voice-card {
+      background: #FFFFFF;
+      border: 1.5px solid var(--border-card);
+      border-radius: var(--radius-md);
+      padding: 11px 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: all 0.15s;
+    }
+    .lib-voice-card:hover {
+      border-color: #D7C9D8;
+      box-shadow: var(--shadow-sm);
+    }
+    .lib-voice-card.selected {
+      border-color: var(--coral-primary);
+      background: #FFF9F8;
+    }
+    .lib-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .lib-card-name {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--plum-dark);
+      word-break: break-word;
+    }
+    .lib-card-desc {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+    .lib-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-top: auto;
+      padding-top: 4px;
+    }
+
+    .history-text-snippet {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      background: #FAF8FA;
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-sm);
+      padding: 7px 10px;
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
     .status-toast.show {
       display: flex;
@@ -1043,41 +1204,69 @@
       background: var(--yellow-sun);
       display: flex;
       flex-direction: column;
-      overflow-y: auto;
+      overflow: hidden;
       color: var(--plum-dark);
-      padding: 24px 20px;
-      gap: 18px;
+      padding: 18px 18px 16px;
+      gap: 11px;
     }
 
     .right-panel-header {
       display: flex;
       flex-direction: column;
       gap: 3px;
+      flex-shrink: 0;
+    }
+
+    .right-panel-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
     }
 
     .right-panel-title {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 800;
       letter-spacing: -0.02em;
       color: var(--plum-dark);
       line-height: 1.1;
     }
 
+    .btn-quick-clone-jump {
+      padding: 5px 11px;
+      border-radius: var(--radius-pill);
+      background: var(--plum-dark);
+      color: #FFFFFF;
+      border: none;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .btn-quick-clone-jump:hover {
+      background: var(--coral-primary);
+      transform: translateY(-1px);
+    }
+
     .right-panel-subline {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: 4px;
+      margin-top: 2px;
     }
 
     .subline-label {
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 700;
       color: var(--plum-dark);
     }
 
     .subline-hint {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 500;
       color: #6C5420;
     }
@@ -1085,22 +1274,24 @@
     /* Tabs & Filters inside yellow panel */
     .tabs-strip {
       display: flex;
-      gap: 6px;
+      gap: 4px;
       background: rgba(42, 29, 43, 0.08);
       padding: 4px;
       border-radius: var(--radius-pill);
+      flex-shrink: 0;
     }
 
     .tab-pill {
       flex: 1;
       text-align: center;
-      padding: 6px 10px;
+      padding: 6px 6px;
       border-radius: var(--radius-pill);
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       cursor: pointer;
       color: var(--plum-dark);
       transition: all 0.15s;
+      white-space: nowrap;
     }
     .tab-pill.active {
       background: #FFFFFF;
@@ -1111,6 +1302,7 @@
     .search-container {
       position: relative;
       width: 100%;
+      flex-shrink: 0;
     }
     .search-container .ico-svg {
       position: absolute;
@@ -1138,6 +1330,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
+      flex-shrink: 0;
     }
 
     .filter-select {
@@ -1154,28 +1347,30 @@
       cursor: pointer;
     }
 
-    /* ── Voice Roster (White Cards with Radio Indicator) ── */
+    /* ── Voice Roster (Always occupies full middle flex area, NEVER shrinks to 0!) ── */
     .voice-roster {
+      flex: 1 1 auto;
+      min-height: 200px;
       display: flex;
       flex-direction: column;
       gap: 8px;
-      max-height: 280px;
       overflow-y: auto;
-      padding-right: 2px;
+      padding-right: 3px;
     }
 
     .voice-entry {
       background: #FFFFFF;
       border-radius: var(--radius-md);
-      padding: 10px 12px;
+      padding: 9px 11px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 9px;
       cursor: pointer;
       border: 1.5px solid transparent;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
       transition: all 0.15s ease;
       position: relative;
+      flex-shrink: 0;
     }
 
     .voice-entry:hover {
@@ -1290,13 +1485,14 @@
 
     /* ── Mini Waveform Player Bar (Directly from screenshot!) ── */
     .mini-waveform-card {
-      background: rgba(255, 255, 255, 0.45);
-      border: 1px solid rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.7);
       border-radius: var(--radius-lg);
-      padding: 14px 16px;
+      padding: 11px 14px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 7px;
+      flex-shrink: 0;
     }
 
     .mini-wave-header {
@@ -2153,7 +2349,13 @@
       <span class="icon">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
       </span>
-      Tạo giọng
+      Tạo giọng đọc
+    </button>
+    <button class="nav-btn" id="navMyVoices">
+      <span class="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+      </span>
+      Tạo giọng clone
     </button>
     <button class="nav-btn" id="navLibrary">
       <span class="icon">
@@ -2166,12 +2368,6 @@
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg>
       </span>
       Lịch sử
-    </button>
-    <button class="nav-btn" id="navMyVoices">
-      <span class="icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      </span>
-      Giọng clone của tôi
     </button>
   </nav>
 
@@ -2201,6 +2397,9 @@
   </header>
 
   <div class="workspace-content" id="workspaceScroll">
+
+    <!-- VIEW 1: SỬ DỤNG GIỌNG TẠO BẢN ĐỌC (TTS Studio) -->
+    <div class="workspace-view active" id="viewWorkspace">
 
     <!-- Hero Coral Banner (Signature Element from Reference Image!) -->
     <div class="hero-coral-banner">
@@ -2375,10 +2574,130 @@
       </div>
     </div>
 
-    <!-- Status Alert Toast -->
-    <div class="status-toast" id="statusToast"></div>
+    </div><!-- #viewWorkspace -->
+
+    <!-- VIEW 2: TẠO GIỌNG NÓI TƯƠNG TỰ (CLONE VOICE -> LƯU VÀO THƯ VIỆN) -->
+    <div class="workspace-view" id="viewCreateClone">
+      <div class="view-hero-bar coral">
+        <div>
+          <div class="view-hero-title">Bước 1 · Tạo giọng nói tương tự mới (Voice Clone)</div>
+          <div class="view-hero-desc">
+            Tải lên đoạn âm thanh mẫu sạch (3–8 giây), cắt chuẩn 8.0s và nhận diện lời thoại mẫu để lưu thành một giọng đọc mới trong Thư viện giọng nói.
+          </div>
+        </div>
+        <button type="button" class="btn-pill-outline" id="btnBackToStudioFromClone">← Sang Tạo giọng đọc</button>
+      </div>
+
+      <div class="upload-drawer-card" id="uploadDrawerSection" style="border: 1px solid var(--border-card); padding: 18px 20px;">
+        <div class="upload-drawer-title" style="font-size: 13.5px; margin-bottom: 4px;">
+          <span class="ico-svg md"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
+          Thông tin &amp; Tệp âm thanh mẫu (chuẩn tối ưu 3–8 giây)
+        </div>
+
+        <form class="upload-form-wrap" id="uploadForm" style="gap: 12px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <input type="text" class="input-compact" id="uploadVoiceName" placeholder="Tên giọng (vd: giong_bac_thanh)" required/>
+            <input type="text" class="input-compact" id="uploadVoiceDesc" placeholder="Mô tả (vd: Giọng nữ Hà Nội truyền cảm)"/>
+          </div>
+
+          <div class="dropzone-compact" id="uploadDropzone">
+            <input type="file" id="uploadFileInput" accept="audio/*" required/>
+            <div class="dropzone-text">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.6;display:block;margin:0 auto 4px"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+              Kéo thả hoặc nhấn chọn tệp âm thanh mẫu<br/>
+              <span style="color: var(--text-muted); font-size: 11.5px;">Hỗ trợ WAV / MP3 / M4A · Tự động mở bảng cắt 8.0s chuẩn nếu dài hơn 8 giây</span>
+            </div>
+            <div class="dropzone-selected-name" id="dropzoneFileName"></div>
+          </div>
+
+          <div class="audio-file-summary-card" id="audioFileSummaryCard">
+            <div class="summary-card-row">
+              <span class="file-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
+              <div class="summary-card-info">
+                <div class="summary-file-name" id="summaryFileName">audio.wav</div>
+                <div class="summary-meta-line">
+                  <span class="summary-duration-badge" id="summaryDurationBadge">8.0s (Chuẩn 8.0s)</span>
+                  <span class="summary-status-hint" id="summaryStatusHint">Khung cố định 8.0s</span>
+                </div>
+              </div>
+              <button type="button" class="btn-open-trimmer-pill" id="btnOpenTrimmerModal" title="Mở bảng cắt sóng âm kiểu MP3Cut">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg> Cắt 8s
+              </button>
+            </div>
+          </div>
+
+          <div class="ref-text-field-wrap">
+            <div class="ref-text-header">
+              <label for="uploadRefText">Lời thoại câu nói trong file (dùng cho VieNeu v2):</label>
+              <button type="button" class="btn-auto-stt" id="btnAutoSTT" title="AI tự động nhận diện lại từ âm thanh">
+                ✨ Nhận diện chữ
+              </button>
+            </div>
+            <textarea class="input-compact textarea-ref" id="uploadRefText" placeholder="AI sẽ tự động nhận diện chữ từ file audio và điền vào đây (bạn có thể sửa lại cho khớp từng từ)..."></textarea>
+            <div class="stt-indicator" id="sttIndicator">
+              <span class="ico-svg sm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg></span> <span id="sttIndicatorText">Đang nhận diện lời thoại...</span>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-wrap: wrap; gap: 16px;">
+            <label class="checkbox-compact" for="uploadDenoiseCheckbox">
+              <input type="checkbox" id="uploadDenoiseCheckbox"/>
+              <div class="checkbox-box"></div>
+              <span>Khử nhiễu nền (khuyên tắt nếu file thu đã sạch)</span>
+            </label>
+
+            <label class="checkbox-compact" for="uploadConsentCheckbox">
+              <input type="checkbox" id="uploadConsentCheckbox" required/>
+              <div class="checkbox-box"></div>
+              <span>Tôi xác nhận có quyền sử dụng giọng này</span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn-submit-clone" id="btnSubmitVoice" style="padding: 12px; font-size: 13.5px;">
+            Tạo &amp; Lưu giọng clone vào thư viện (8.0s)
+          </button>
+        </form>
+      </div>
+    </div><!-- #viewCreateClone -->
+
+    <!-- VIEW 3: THƯ VIỆN GIỌNG (GIỌNG MẶC ĐỊNH TÍCH HỢP + GIỌNG CLONE) -->
+    <div class="workspace-view" id="viewLibrary">
+      <div class="view-hero-bar">
+        <div>
+          <div class="view-hero-title">Thư viện giọng đọc tích hợp &amp; Giọng Clone</div>
+          <div class="view-hero-desc">
+            Gồm toàn bộ các giọng mặc định VieNeu (Bắc / Trung / Nam) và các giọng clone tương tự bạn đã tạo. Bấm nghe mẫu hoặc chọn dùng ngay.
+          </div>
+        </div>
+        <button type="button" class="btn-pill-primary" id="btnLibToCreateClone">+ Tạo giọng clone mới</button>
+      </div>
+      <div class="view-section-card" id="libraryCardsContainer">
+        <!-- Populated by renderLibraryGrid() -->
+      </div>
+    </div><!-- #viewLibrary -->
+
+    <!-- VIEW 4: LỊCH SỬ KẾT QUẢ ĐÃ TẠO (CHỈ HIỂN THỊ KHI ẤN MỤC LỊCH SỬ) -->
+    <div class="workspace-view" id="viewHistory">
+      <div class="view-hero-bar">
+        <div>
+          <div class="view-hero-title">Lịch sử kết quả giọng nói đã tạo</div>
+          <div class="view-hero-desc">
+            Toàn bộ các bản âm thanh được tổng hợp (từ giọng clone và giọng mặc định) được lưu tại đây để nghe lại, tải xuống hoặc nạp lại văn bản.
+          </div>
+        </div>
+        <button type="button" class="btn-pill-outline" id="btnClearHistory" style="color: var(--coral-dark); border-color: rgba(235, 107, 99, 0.35);">Xóa tất cả</button>
+      </div>
+      <div class="recent-section" id="historyCardSection">
+        <div class="recent-list" id="historyList">
+          <!-- Populated by renderHistory() -->
+        </div>
+      </div>
+    </div><!-- #viewHistory -->
 
   </div><!-- .workspace-content -->
+
+  <!-- Status Alert Toast (Visible across all views) -->
+  <div class="status-toast" id="statusToast"></div>
 
   <!-- Fixed Bottom Bar: Newly Generated Audio Player (Always pinned at bottom; waits for newly created result) -->
   <section class="player-showcase" id="playerShowcase">
@@ -2412,18 +2731,22 @@
 ════════════════════════════════════════════════════════════ -->
 <aside class="right-panel">
   <div class="right-panel-header">
-    <div class="right-panel-title">Giọng đọc</div>
+    <div class="right-panel-title-row">
+      <div class="right-panel-title">Thư viện giọng</div>
+      <button type="button" class="btn-quick-clone-jump" id="btnQuickCreateClone" title="Tạo 1 giọng clone mới vào thư viện">+ Tạo clone</button>
+    </div>
     <div class="right-panel-subline">
-      <span class="subline-label">Chọn giọng</span>
-      <span class="subline-hint">bấm để nghe mẫu</span>
+      <span class="subline-label">Chọn giọng để đọc</span>
+      <span class="subline-hint">bấm ▶ nghe mẫu</span>
     </div>
   </div>
 
-  <!-- Tabs -->
+  <!-- Tabs: Tất cả / Mặc định / Clone / Yêu thích -->
   <div class="tabs-strip">
     <div class="tab-pill active" data-tab="all" id="tabAll">Tất cả (<span id="countAll">0</span>)</div>
-    <div class="tab-pill" data-tab="custom" id="tabCustom">Giọng clone (<span id="countCustom">0</span>)</div>
-    <div class="tab-pill" data-tab="fav" id="tabFav">Yêu thích (<span id="countFav">0</span>)</div>
+    <div class="tab-pill" data-tab="preset" id="tabPreset">Mặc định (<span id="countPreset">0</span>)</div>
+    <div class="tab-pill" data-tab="custom" id="tabCustom">Clone (<span id="countCustom">0</span>)</div>
+    <div class="tab-pill" data-tab="fav" id="tabFav">Thích (<span id="countFav">0</span>)</div>
   </div>
 
   <!-- Search input -->
@@ -2436,22 +2759,23 @@
   <div class="filter-grid">
     <select class="filter-select" id="filterEngineSelect">
       <option value="">Tất cả nguồn</option>
+      <option value="preset">Giọng mặc định VieNeu</option>
       <option value="custom">Giọng clone của bạn</option>
-      <option value="preset">Giọng mặc định v3</option>
     </select>
     <select class="filter-select" id="filterRegionSelect">
       <option value="">Tất cả vùng miền</option>
       <option value="Bắc">Miền Bắc</option>
+      <option value="Trung">Miền Trung</option>
       <option value="Nam">Miền Nam</option>
     </select>
   </div>
 
-  <!-- Voice Roster Scrollable List -->
+  <!-- Voice Roster Scrollable List (Always visible!) -->
   <div class="voice-roster" id="voiceRosterContainer">
     <!-- Populated by JavaScript with radio dots -->
   </div>
 
-  <!-- Mini Waveform Player Bar (Directly from Screenshot!) -->
+  <!-- Mini Waveform Preview Card -->
   <div class="mini-waveform-card">
     <div class="mini-wave-header">
       <div class="mini-wave-title" id="miniWaveVoiceTitle">Âm thanh xem trước</div>
@@ -2473,90 +2797,6 @@
       <button type="button" class="btn-mini-play" id="miniWavePlayBtn" title="Phát / Tạm dừng"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
       <button type="button" class="btn-mini-ctrl" id="miniWaveForwardBtn" title="Tiến 5s"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 19 22 12 13 5 13 19"/><polygon points="2 19 11 12 2 5 2 19"/></svg></button>
     </div>
-  </div>
-
-  <!-- Section "Gần đây" (Recent History from Screenshot!) -->
-  <div class="recent-section" id="historyCardSection">
-    <div style="display:flex;align-items:center;justify-content:space-between">
-      <div class="recent-header-title">Gần đây</div>
-      <button type="button" id="btnClearHistory" style="background:transparent;border:none;color:#745823;font-size:11.5px;font-weight:700;cursor:pointer">Xóa</button>
-    </div>
-    <div class="recent-list" id="historyList">
-      <!-- Populated by JavaScript with recent cards matching image -->
-    </div>
-  </div>
-
-  <!-- Quick Upload Section at Bottom of Panel -->
-  <div class="upload-drawer-card" id="uploadDrawerSection">
-    <div class="upload-drawer-title" id="uploadDrawerToggle" style="cursor: pointer; user-select: none; display: flex; align-items: center; justify-content: space-between;">
-      <span style="display: flex; align-items: center; gap: 7px;">
-        <span class="ico-svg md"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
-        + TẢI LÊN GIỌNG MẪU ĐỂ CLONE (8S)
-      </span>
-      <span id="uploadToggleChevron" style="font-size: 13px; opacity: 0.7; transition: transform 0.2s;">▼</span>
-    </div>
-
-    <form class="upload-form-wrap" id="uploadForm">
-      <input type="text" class="input-compact" id="uploadVoiceName" placeholder="Tên giọng (vd: giong_bac_thanh)" required/>
-      <input type="text" class="input-compact" id="uploadVoiceDesc" placeholder="Mô tả (vd: Giọng nữ Hà Nội truyền cảm)"/>
-
-      <div class="dropzone-compact" id="uploadDropzone">
-        <input type="file" id="uploadFileInput" accept="audio/*" required/>
-        <div class="dropzone-text">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.6;display:block;margin:0 auto 4px"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-          Kéo thả hoặc nhấn chọn tệp âm thanh<br/>
-          <span style="color: var(--text-muted); font-size: 11px;">WAV / MP3 / M4A · Cắt chuẩn cố định đúng 8.0 giây</span>
-        </div>
-        <div class="dropzone-selected-name" id="dropzoneFileName"></div>
-      </div>
-
-      <!-- Clean File Summary Card in Upload Drawer -->
-      <div class="audio-file-summary-card" id="audioFileSummaryCard">
-        <div class="summary-card-row">
-          <span class="file-icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
-          <div class="summary-card-info">
-            <div class="summary-file-name" id="summaryFileName">audio.wav</div>
-            <div class="summary-meta-line">
-              <span class="summary-duration-badge" id="summaryDurationBadge">8.0s (Chuẩn 8.0s)</span>
-              <span class="summary-status-hint" id="summaryStatusHint">Khung cố định 8.0s</span>
-            </div>
-          </div>
-          <button type="button" class="btn-open-trimmer-pill" id="btnOpenTrimmerModal" title="Mở bảng cắt sóng âm kiểu MP3Cut">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg> Cắt 8s
-          </button>
-        </div>
-      </div>
-
-      <!-- Ref Text Field with Auto-STT -->
-      <div class="ref-text-field-wrap">
-        <div class="ref-text-header">
-          <label for="uploadRefText">Lời thoại câu nói trong file (v2):</label>
-          <button type="button" class="btn-auto-stt" id="btnAutoSTT" title="AI tự động nhận diện lại từ âm thanh">
-            ✨ Nhận diện chữ
-          </button>
-        </div>
-        <textarea class="input-compact textarea-ref" id="uploadRefText" placeholder="AI sẽ tự động nhận diện chữ từ file audio và điền vào đây (bạn có thể sửa lại)..."></textarea>
-        <div class="stt-indicator" id="sttIndicator">
-          <span class="ico-svg sm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg></span> <span id="sttIndicatorText">Đang nhận diện lời thoại...</span>
-        </div>
-      </div>
-
-      <label class="checkbox-compact" for="uploadDenoiseCheckbox">
-        <input type="checkbox" id="uploadDenoiseCheckbox"/>
-        <div class="checkbox-box"></div>
-        <span>Khử nhiễu nền (khuyên tắt nếu file thu đã sạch)</span>
-      </label>
-
-      <label class="checkbox-compact" for="uploadConsentCheckbox">
-        <input type="checkbox" id="uploadConsentCheckbox" required/>
-        <div class="checkbox-box"></div>
-        <span>Tôi xác nhận có quyền sử dụng giọng này</span>
-      </label>
-
-      <button type="submit" class="btn-submit-clone" id="btnSubmitVoice">
-        Đăng ký giọng clone mới (8.0s)
-      </button>
-    </form>
   </div>
 </aside>
 
@@ -2855,10 +3095,11 @@
     $('engineV3Card').classList.toggle('active', engine === 'vieneu');
     $('engineV2Card').classList.toggle('active', engine === 'vieneu-v2');
     const hint = $('engineStatusHint');
+    const vName = selectedVoiceName && selectedVoiceName !== 'default' ? selectedVoiceName : 'Mặc định VieNeu';
     if (engine === 'vieneu-v2') {
-      hint.textContent = 'Đang kích hoạt · VieNeu v2 GGUF Q8 24kHz (yêu cầu ref_text để sao chép chuẩn giọng)';
+      hint.innerHTML = `Giọng đang chọn: <b style="color:var(--coral-primary);">${vName}</b> · VieNeu v2 GGUF Q8 24kHz (cần ref_text)`;
     } else {
-      hint.textContent = 'Đang sẵn sàng · VieNeu v3 Turbo 48kHz (tổng hợp siêu tốc trên máy)';
+      hint.innerHTML = `Giọng đang chọn: <b style="color:var(--coral-primary);">${vName}</b> · VieNeu v3 Turbo 48kHz (siêu tốc trên máy)`;
     }
   }
 
@@ -3099,7 +3340,7 @@
     return `${m}:${s.toString().padStart(2, '0')}`;
   }
 
-  /* ── Right Panel: Voice Roster ── */
+  /* ── Right Panel: Voice Roster & Center Library Grid ── */
   function renderVoiceRoster() {
     const q = $('inputSearchVoice').value.toLowerCase().trim();
     const engFilter = $('filterEngineSelect').value;
@@ -3111,6 +3352,8 @@
 
     if (currentTab === 'custom') {
       list = list.filter(v => v.isCustom);
+    } else if (currentTab === 'preset') {
+      list = list.filter(v => !v.isCustom);
     } else if (currentTab === 'fav') {
       list = list.filter(v => favoritesList.includes(v.name));
     }
@@ -3125,9 +3368,11 @@
       return true;
     });
 
-    $('countAll').textContent = voicesRegistry.custom_voices.length + voicesRegistry.preset_voices.length;
-    $('countCustom').textContent = voicesRegistry.custom_voices.length;
-    $('countFav').textContent = favoritesList.length;
+    const totalCount = voicesRegistry.custom_voices.length + voicesRegistry.preset_voices.length;
+    if ($('countAll')) $('countAll').textContent = totalCount;
+    if ($('countPreset')) $('countPreset').textContent = voicesRegistry.preset_voices.length;
+    if ($('countCustom')) $('countCustom').textContent = voicesRegistry.custom_voices.length;
+    if ($('countFav')) $('countFav').textContent = favoritesList.length;
 
     voiceRosterContainer.innerHTML = '';
 
@@ -3136,6 +3381,7 @@
         <div style="text-align: center; padding: 28px 12px; color: #7A6635; font-size: 12px; font-weight: 500;">
           Không tìm thấy giọng đọc nào phù hợp.
         </div>`;
+      renderLibraryGrid();
       return;
     }
 
@@ -3149,13 +3395,14 @@
 
       let chips = '';
       if (voice.isCustom) {
-        chips += `<span class="badge-micro red">Mẫu Clone · ${voice.duration_sec}s</span>`;
+        chips += `<span class="badge-micro red">Giọng Clone · ${voice.duration_sec}s</span>`;
         chips += voice.has_ref_text
           ? `<span class="badge-micro green">✓ v2 chuẩn</span>`
           : `<span class="badge-micro gray">Thiếu ref_text</span>`;
       } else {
-        chips += `<span class="badge-micro gray">VieNeu v3</span>`;
+        chips += `<span class="badge-micro gray">Mặc định VieNeu</span>`;
         if (voice.description && voice.description.includes('Bắc')) chips += `<span class="badge-micro gold">Miền Bắc</span>`;
+        if (voice.description && voice.description.includes('Trung')) chips += `<span class="badge-micro green">Miền Trung</span>`;
         if (voice.description && voice.description.includes('Nam')) chips += `<span class="badge-micro red">Miền Nam</span>`;
       }
 
@@ -3168,12 +3415,17 @@
         ? `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="#EB6B63" stroke="#EB6B63" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`
         : `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
 
+      const subDesc = voice.description
+        ? `<div style="font-size:11px;color:#7A6A7B;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${voice.description}</div>`
+        : '';
+
       entry.innerHTML = `
         <div class="voice-radio-dot"></div>
         <div class="voice-details">
           <div class="voice-name-row">
             <span class="voice-card-name">${voice.name}</span>
           </div>
+          ${subDesc}
           <div class="voice-chips-line">${chips}</div>
         </div>
         <div class="voice-card-actions">
@@ -3222,6 +3474,66 @@
         deleteVoice(btn.dataset.del);
       });
     });
+
+    renderLibraryGrid();
+  }
+
+  function renderLibraryGrid() {
+    const container = $('libraryCardsContainer');
+    if (!container) return;
+
+    const custom = voicesRegistry.custom_voices || [];
+    const presets = voicesRegistry.preset_voices || [];
+
+    const makeCardHtml = (v, isCustom) => {
+      const sel = v.name === selectedVoiceName ? ' selected' : '';
+      const badge = isCustom
+        ? `<span class="badge-micro red">Clone · ${v.duration_sec}s</span>`
+        : `<span class="badge-micro gold">Mặc định VieNeu</span>`;
+      const desc = v.description || (isCustom ? 'Giọng clone do bạn tạo' : 'Giọng đọc tích hợp sẵn');
+      return `
+        <div class="lib-voice-card${sel}" data-libcard="${v.name}">
+          <div class="lib-card-top">
+            <div class="lib-card-name">${v.name}</div>
+            ${badge}
+          </div>
+          <div class="lib-card-desc">${desc}</div>
+          <div class="lib-card-footer">
+            <button type="button" class="btn-pill-outline" data-libpreview="${v.name}" style="padding:4px 10px;font-size:11px;">▶ Nghe mẫu</button>
+            <button type="button" class="btn-pill-primary" data-libuse="${v.name}" style="padding:4px 11px;font-size:11px;">${v.name === selectedVoiceName ? '✓ Đang chọn' : 'Chọn dùng'}</button>
+          </div>
+        </div>`;
+    };
+
+    const customHtml = custom.length
+      ? custom.map(v => makeCardHtml(v, true)).join('')
+      : `<div style="font-size:12.5px;color:var(--text-muted);padding:10px 0;">Chưa có giọng clone nào. Hãy sang mục <b>Tạo giọng clone</b> để tạo giọng nói tương tự đầu tiên vào thư viện.</div>`;
+
+    const presetHtml = presets.length
+      ? presets.map(v => makeCardHtml(v, false)).join('')
+      : `<div style="font-size:12.5px;color:var(--text-muted);padding:10px 0;">Không có giọng mặc định nào từ server.</div>`;
+
+    container.innerHTML = `
+      <div class="library-section-heading">
+        <span>Giọng Clone của bạn (${custom.length})</span>
+      </div>
+      <div class="library-grid">${customHtml}</div>
+      <div class="library-section-heading" style="margin-top:8px;">
+        <span>Giọng Mặc định tích hợp sẵn — VieNeu (${presets.length})</span>
+      </div>
+      <div class="library-grid">${presetHtml}</div>
+    `;
+
+    container.querySelectorAll('[data-libpreview]').forEach(btn => {
+      btn.addEventListener('click', () => playVoicePreview(btn.dataset.libpreview));
+    });
+    container.querySelectorAll('[data-libuse]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        selectVoice(btn.dataset.libuse);
+        switchWorkspaceView('viewWorkspace', 'navWorkspace');
+        textInput.focus();
+      });
+    });
   }
 
   function selectVoice(name) {
@@ -3230,6 +3542,8 @@
       el.classList.toggle('active-selected', el.dataset.voice === name);
     });
     if (miniWaveVoiceTitle) miniWaveVoiceTitle.textContent = name;
+    setEngine(currentEngine);
+    renderLibraryGrid();
     showToast('info', `Đã chọn giọng: "${name}"`);
   }
 
@@ -3245,11 +3559,13 @@
 
   async function playVoicePreview(voiceName) {
     const isCustom = voicesRegistry.custom_voices.some(v => v.name === voiceName);
-    const url = isCustom ? `/v1/voices/${voiceName}/audio` : `/v1/voices/${voiceName}/sample`;
+    const encoded = encodeURIComponent(voiceName);
+    const url = isCustom ? `/v1/voices/${encoded}/audio` : `/v1/voices/${encoded}/sample`;
     try {
       if (miniWaveVoiceTitle) miniWaveVoiceTitle.textContent = voiceName;
       if (!audioPlayer.paused) audioPlayer.pause();
       activeMiniAudio = previewAudio;
+      if (!isCustom) showToast('info', `Đang tải mẫu giọng mặc định "${voiceName}"...`);
       previewAudio.src = url;
       previewAudio.volume = parseInt(volSlider.value, 10) / 100;
       await previewAudio.play();
@@ -3263,7 +3579,7 @@
     const current = prompt(`Nhập nội dung câu nói mẫu (ref_text) cho giọng "${voiceName}":`);
     if (current === null) return;
     try {
-      const res = await fetch(`/v1/voices/${voiceName}`, {
+      const res = await fetch(`/v1/voices/${encodeURIComponent(voiceName)}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ref_text: current.trim() }),
@@ -3280,7 +3596,7 @@
   async function deleteVoice(voiceName) {
     if (!confirm(`Bạn có chắc muốn xóa giọng clone "${voiceName}"?`)) return;
     try {
-      const res = await fetch(`/v1/voices/${voiceName}`, { method: 'DELETE' });
+      const res = await fetch(`/v1/voices/${encodeURIComponent(voiceName)}`, { method: 'DELETE' });
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail || 'Xóa thất bại.');
       showToast('ok', `Đã xóa giọng "${voiceName}".`);
@@ -3313,6 +3629,7 @@
   }
 
   $('tabAll').addEventListener('click', () => switchTab('all'));
+  if ($('tabPreset')) $('tabPreset').addEventListener('click', () => switchTab('preset'));
   $('tabCustom').addEventListener('click', () => switchTab('custom'));
   $('tabFav').addEventListener('click', () => switchTab('fav'));
 
@@ -3893,7 +4210,7 @@
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail || 'Đăng ký giọng thất bại.');
 
-      showToast('ok', `Đã lưu thành công giọng clone "${data.voice.name}" (${data.voice.duration_sec}s).`);
+      showToast('ok', `Đã lưu giọng clone "${data.voice.name}" vào thư viện (${data.voice.duration_sec}s)! Hãy chuyển sang "Tạo giọng đọc" để sử dụng.`);
       uploadForm.reset();
       dropzoneFileName.style.display = 'none';
       audioFileSummaryCard.style.display = 'none';
@@ -4057,7 +4374,7 @@
   function renderHistory() {
     if (!historyList) return;
     if (generationHistory.length === 0) {
-      historyList.innerHTML = `<div style="font-size: 11.5px; color: #7A6635; padding: 12px 0;">Chưa có bản đọc nào gần đây.</div>`;
+      historyList.innerHTML = `<div style="text-align:center; padding: 32px 16px; background:#FAF8FA; border:1px dashed var(--border-card); border-radius:var(--radius-lg); color: var(--text-muted); font-size: 13px;">Chưa có kết quả âm thanh nào được tạo. Hãy chọn giọng ở bảng bên phải và nhấn <b>TẠO GIỌNG NÓI NGAY</b>.</div>`;
       return;
     }
 
@@ -4065,6 +4382,7 @@
     generationHistory.forEach((item, idx) => {
       const el = document.createElement('div');
       el.className = 'recent-card';
+      el.style.border = '1px solid var(--border-card)';
 
       const durSec = parseFloat(item.duration) || 0;
       const durFormatted = durSec >= 60
@@ -4073,25 +4391,34 @@
 
       const timeLabel = item.timestamp || '00:00';
       const dateLabel = item.dateStr ? `${item.dateStr} · ${timeLabel}` : `Hôm nay · ${timeLabel}`;
+      const voiceBadge = `<span class="badge-micro red">${item.voice || 'Mặc định'}</span> <span class="badge-micro gray">${item.engine || 'vieneu'}</span>`;
+      const textSnippet = item.text ? `<div class="history-text-snippet">${item.text}</div>` : '';
 
       el.innerHTML = `
         <div class="recent-card-topline">
-          <span class="recent-card-title">Bản đọc ${timeLabel}</span>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <span class="recent-card-title">Bản đọc ${timeLabel}</span>
+            ${voiceBadge}
+          </div>
           <span class="recent-card-dur">${durFormatted}</span>
         </div>
+        ${textSnippet}
         <div class="recent-card-meta">
           <span>${dateLabel}</span>
-          <button class="recent-dl-pill" data-historydl="${idx}" title="Tải về file âm thanh">
-            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Tải về
-          </button>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button type="button" class="recent-dl-pill" style="background:var(--coral-subtle);color:var(--coral-dark);" data-historyreuse="${idx}" title="Nạp lại vào trình tạo">Nạp vào trình tạo</button>
+            <button type="button" class="recent-dl-pill" data-historydl="${idx}" title="Tải về file âm thanh">
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Tải về
+            </button>
+          </div>
         </div>
         <div class="recent-player-bar">
-          <button type="button" class="recent-play-btn" data-historyspeak="${idx}" title="Phát lại đoạn này">
+          <button type="button" class="recent-play-btn" data-historyspeak="${idx}" title="${item.audioUrl ? 'Phát kết quả vừa tạo' : 'Tạo lại và phát đoạn này'}">
             ▶
           </button>
           <div class="recent-scrub-track" data-historytrack="${idx}">
-            <div class="recent-scrub-fill" style="width: 45%;"></div>
+            <div class="recent-scrub-fill" style="width: ${item.audioUrl ? '100%' : '35%'};"></div>
           </div>
           <span class="recent-time-tag">${durFormatted}</span>
         </div>
@@ -4102,11 +4429,36 @@
     historyList.querySelectorAll('[data-historyspeak]').forEach(btn => {
       btn.addEventListener('click', () => {
         const item = generationHistory[parseInt(btn.dataset.historyspeak, 10)];
-        textInput.value = item.text;
+        if (item.audioUrl) {
+          if (!previewAudio.paused) previewAudio.pause();
+          activeMiniAudio = audioPlayer;
+          audioPlayer.src = item.audioUrl;
+          btnDownloadWav.href = item.audioUrl;
+          btnDownloadWav.download = `luatu_${item.voice}_${Date.now()}.wav`;
+          if (playerVoiceTag) playerVoiceTag.textContent = `${item.voice || 'Mặc định'} · ${item.engine || 'vieneu'}`;
+          playerShowcase.classList.add('active');
+          audioPlayer.play().catch(() => {});
+          showToast('ok', `Đang phát lại bản đọc (${item.voice}).`);
+        } else {
+          textInput.value = item.text;
+          updateTextCounter();
+          selectVoice(item.voice);
+          setEngine(item.engine);
+          switchWorkspaceView('viewWorkspace', 'navWorkspace');
+          generateSpeech();
+        }
+      });
+    });
+
+    historyList.querySelectorAll('[data-historyreuse]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = generationHistory[parseInt(btn.dataset.historyreuse, 10)];
+        textInput.value = item.text || '';
         updateTextCounter();
-        selectVoice(item.voice);
-        setEngine(item.engine);
-        generateSpeech();
+        if (item.voice) selectVoice(item.voice);
+        if (item.engine) setEngine(item.engine);
+        switchWorkspaceView('viewWorkspace', 'navWorkspace');
+        textInput.focus();
       });
     });
 
@@ -4119,11 +4471,11 @@
           a.download = `luatu_${item.voice}_${Date.now()}.wav`;
           a.click();
         } else {
-          // Re-generate to download
           textInput.value = item.text;
           updateTextCounter();
           selectVoice(item.voice);
           setEngine(item.engine);
+          switchWorkspaceView('viewWorkspace', 'navWorkspace');
           generateSpeech();
         }
       });
@@ -4139,29 +4491,54 @@
     showToast('info', 'Đã dọn dẹp lịch sử.');
   });
 
-  /* ── Sidebar Navigation Link Events ── */
-  $('navWorkspace').addEventListener('click', () => {
-    setActiveNav('navWorkspace');
+  /* ── Sidebar Navigation & View Switching ── */
+  function switchWorkspaceView(viewId, navId) {
+    document.querySelectorAll('.workspace-view').forEach(v => v.classList.remove('active'));
+    const target = $(viewId);
+    if (target) target.classList.add('active');
+    if (navId) setActiveNav(navId);
     $('workspaceScroll').scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  $('navWorkspace').addEventListener('click', () => {
+    switchWorkspaceView('viewWorkspace', 'navWorkspace');
     textInput.focus();
   });
 
+  $('navMyVoices').addEventListener('click', () => {
+    switchWorkspaceView('viewCreateClone', 'navMyVoices');
+    switchTab('custom');
+  });
+
   $('navLibrary').addEventListener('click', () => {
-    setActiveNav('navLibrary');
+    switchWorkspaceView('viewLibrary', 'navLibrary');
+    renderLibraryGrid();
     switchTab('all');
-    $('inputSearchVoice').focus();
   });
 
   $('navHistory').addEventListener('click', () => {
-    setActiveNav('navHistory');
-    $('historyCardSection').scrollIntoView({ behavior: 'smooth' });
+    switchWorkspaceView('viewHistory', 'navHistory');
+    renderHistory();
   });
 
-  $('navMyVoices').addEventListener('click', () => {
-    setActiveNav('navMyVoices');
-    switchTab('custom');
-    $('uploadDrawerSection').scrollIntoView({ behavior: 'smooth' });
-  });
+  if ($('btnQuickCreateClone')) {
+    $('btnQuickCreateClone').addEventListener('click', () => {
+      switchWorkspaceView('viewCreateClone', 'navMyVoices');
+      switchTab('custom');
+    });
+  }
+  if ($('btnBackToStudioFromClone')) {
+    $('btnBackToStudioFromClone').addEventListener('click', () => {
+      switchWorkspaceView('viewWorkspace', 'navWorkspace');
+      textInput.focus();
+    });
+  }
+  if ($('btnLibToCreateClone')) {
+    $('btnLibToCreateClone').addEventListener('click', () => {
+      switchWorkspaceView('viewCreateClone', 'navMyVoices');
+      switchTab('custom');
+    });
+  }
 
   function setActiveNav(id) {
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));

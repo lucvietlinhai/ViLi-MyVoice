@@ -126,6 +126,28 @@ async def get_voice_audio(voice_id: str):
     return FileResponse(str(wav_path), media_type="audio/wav")
 
 
+@app.get("/v1/voices/{voice_id}/sample")
+async def get_voice_sample(voice_id: str):
+    """Tổng hợp (kèm LRU cache) câu chào mẫu để nghe thử các giọng mặc định tích hợp sẵn."""
+    engine, voice_mgr = _require_ready()
+    voices = voice_mgr.list_voices(engine.tts_v2)
+    preset_names = {v["name"] for v in voices["preset_voices"]}
+    if voice_id not in preset_names:
+        if voice_mgr.is_custom_voice(voice_id):
+            return await get_voice_audio(voice_id)
+        raise HTTPException(status_code=404, detail=f"Không tìm thấy giọng mẫu '{voice_id}'.")
+
+    sample_text = "Xin chào, đây là giọng đọc mẫu được tích hợp sẵn trong Voice Studio."
+    wav_bytes, _stats = engine.synthesize_wav(
+        sample_text,
+        model="vieneu",
+        voice=voice_id,
+        speed=1.0,
+        voice_manager=voice_mgr,
+    )
+    return Response(content=wav_bytes, media_type="audio/wav")
+
+
 @app.post("/v1/voices")
 async def upload_voice(
     name: str = Form(..., description="Tên gợi nhớ cho giọng clone"),
