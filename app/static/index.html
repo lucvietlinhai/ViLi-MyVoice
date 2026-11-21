@@ -3175,6 +3175,9 @@
   </div>
 </div>
 
+<!-- Top-Right Floating Push Toast Notification (Must appear before <script>!) -->
+<div class="status-toast" id="statusToast" role="status" aria-live="polite"></div>
+
 <!-- ════════════════════════════════════════════════════════════
      5. JAVASCRIPT LOGIC & STATE ENGINE
 ════════════════════════════════════════════════════════════ -->
@@ -3302,6 +3305,8 @@
   // Trimmer State
   let audioCtx = null;
   let rawAudioBuffer = null;
+  let cachedModalPeaks = null;
+  let cachedModalPeaksWidth = 0;
   let currentFileObj = null;
   let activeAudioFile = null;
   let trimStartSec = 0;
@@ -4002,10 +4007,27 @@
     ctx.lineTo(width, height / 2);
     ctx.stroke();
 
-    const channelData = rawAudioBuffer.getChannelData(0);
-    const totalSamples = channelData.length;
     const barCount = Math.floor(width / 4);
-    const step = Math.floor(totalSamples / barCount);
+    if (!cachedModalPeaks || cachedModalPeaksWidth !== barCount) {
+      const channelData = rawAudioBuffer.getChannelData(0);
+      const totalSamples = channelData.length;
+      const step = Math.max(1, Math.floor(totalSamples / barCount));
+      const stride = Math.max(1, Math.floor(step / 96));
+      cachedModalPeaks = new Float32Array(barCount);
+      for (let i = 0; i < barCount; i++) {
+        let min = 1.0;
+        let max = -1.0;
+        const startIdx = i * step;
+        const endIdx = Math.min(totalSamples, startIdx + step);
+        for (let j = startIdx; j < endIdx; j += stride) {
+          const val = channelData[j];
+          if (val < min) min = val;
+          if (val > max) max = val;
+        }
+        cachedModalPeaks[i] = Math.max(0.04, (max - min) / 2);
+      }
+      cachedModalPeaksWidth = barCount;
+    }
 
     const startPct = Math.max(0, trimStartSec / totalDuration);
     const endPct = Math.min(1, trimEndSec / totalDuration);
@@ -4013,17 +4035,7 @@
     for (let i = 0; i < barCount; i++) {
       const barPct = (i + 0.5) / barCount;
       const isSelected = barPct >= startPct && barPct <= endPct;
-
-      let min = 1.0;
-      let max = -1.0;
-      const startIdx = i * step;
-      const endIdx = Math.min(totalSamples, startIdx + step);
-      for (let j = startIdx; j < endIdx; j += 4) {
-        const val = channelData[j];
-        if (val < min) min = val;
-        if (val > max) max = val;
-      }
-      const amp = Math.max(0.04, (max - min) / 2);
+      const amp = cachedModalPeaks[i];
       const barH = amp * (height - 24);
       const x = i * 4 + 1;
       const y = (height - barH) / 2;
@@ -4398,6 +4410,12 @@
 
     stopModalPlayTrim();
     currentFileObj = file;
+    cachedModalPeaks = null;
+    summaryFileName.textContent = file.name;
+    summaryDurationBadge.className = 'summary-duration-badge warn';
+    summaryDurationBadge.textContent = 'Đang đọc file...';
+    summaryStatusHint.textContent = 'Đang giải mã sóng âm (vui lòng đợi giây lát)...';
+    audioFileSummaryCard.style.display = 'block';
     showToast('info', `Đang phân tích tệp âm thanh "${file.name}"...`);
 
     try {
@@ -4850,10 +4868,12 @@
   /* ── Top-Right Floating Push Toast Helper ── */
   let toastTimer = null;
   function showToast(type, msg) {
+    const toastEl = statusToast || $('statusToast');
+    if (!toastEl) return;
     clearTimeout(toastTimer);
-    statusToast.className = 'status-toast';
-    void statusToast.offsetWidth;
-    statusToast.className = `status-toast show ${type}`;
+    toastEl.className = 'status-toast';
+    void toastEl.offsetWidth;
+    toastEl.className = `status-toast show ${type}`;
     const cleanMsg = (msg || '').replace(/^[✓✗ℹ✨⟳⏳•\s]+/, '');
     const titles = {
       ok: 'Thành công',
@@ -4865,7 +4885,7 @@
       err: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
       info: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
     };
-    statusToast.innerHTML = `
+    toastEl.innerHTML = `
       <div class="status-toast-icon">${icons[type] || ''}</div>
       <div class="status-toast-body">
         <div class="status-toast-title">${titles[type] || 'Thông báo'}</div>
@@ -4880,11 +4900,11 @@
     if (closeBtn) {
       closeBtn.addEventListener('click', () => {
         clearTimeout(toastTimer);
-        statusToast.classList.remove('show');
+        toastEl.classList.remove('show');
       });
     }
     toastTimer = setTimeout(() => {
-      statusToast.classList.remove('show');
+      toastEl.classList.remove('show');
     }, 4500);
   }
 
@@ -4917,7 +4937,5 @@
   setInterval(updateGreetingAndDate, 60000);
 })();
 </script>
-<!-- Top-Right Floating Push Toast Notification -->
-<div class="status-toast" id="statusToast" role="status" aria-live="polite"></div>
 </body>
 </html>
