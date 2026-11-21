@@ -828,21 +828,28 @@
       text-align: center;
     }
 
-    /* Status Alert Toast (Docked cleanly above bottom player across all views) */
+    /* Floating Top-Right Push Toast Notification */
     .status-toast {
       display: none;
-      margin: 0 28px 10px;
-      padding: 9px 14px;
+      position: fixed;
+      top: 18px;
+      right: 20px;
+      z-index: 12000;
+      min-width: 290px;
+      max-width: 400px;
+      padding: 12px 14px 14px;
       border-radius: var(--radius-md);
       font-size: 12.5px;
-      font-weight: 600;
-      background: #FFFFFF;
-      border: 1px solid var(--border-card);
-      box-shadow: var(--shadow-md);
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-      animation: fadeInToast 0.2s ease-out;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-strong);
+      box-shadow: 0 14px 36px rgba(42, 29, 43, 0.18), 0 4px 12px rgba(42, 29, 43, 0.08);
+      align-items: flex-start;
+      gap: 10px;
+      overflow: hidden;
+      animation: slideInToastRight 0.24s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     /* Switchable Center Views */
@@ -1007,13 +1014,84 @@
     .status-toast.show {
       display: flex;
     }
-    .status-toast.ok   { color: var(--color-emerald); border-color: rgba(46, 125, 50, 0.3); background: #F1F8F2; }
-    .status-toast.err  { color: var(--color-rose);    border-color: rgba(198, 40, 40, 0.3);  background: #FDF2F2; }
-    .status-toast.info { color: var(--color-sapphire);border-color: rgba(21, 101, 192, 0.3); background: #F0F6FD; }
+    .status-toast-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .status-toast-body {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .status-toast-title {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+    }
+    .status-toast-msg {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      line-height: 1.4;
+      word-break: break-word;
+    }
+    .status-toast-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 2px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.15s;
+    }
+    .status-toast-close:hover {
+      background: rgba(42, 29, 43, 0.08);
+      color: var(--plum-dark);
+    }
+    .status-toast-progress {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 3px;
+      width: 100%;
+      transform-origin: left;
+      animation: toastCountdown 4.5s linear forwards;
+    }
 
-    @keyframes fadeInToast {
-      from { opacity: 0; transform: translateY(-6px); }
-      to   { opacity: 1; transform: translateY(0); }
+    .status-toast.ok   { border-color: rgba(46, 125, 50, 0.35); }
+    .status-toast.ok   .status-toast-icon { background: #E8F5E9; color: var(--color-emerald); }
+    .status-toast.ok   .status-toast-title { color: var(--color-emerald); }
+    .status-toast.ok   .status-toast-progress { background: var(--color-emerald); }
+
+    .status-toast.err  { border-color: rgba(198, 40, 40, 0.35); }
+    .status-toast.err  .status-toast-icon { background: #FDECEA; color: var(--color-rose); }
+    .status-toast.err  .status-toast-title { color: var(--color-rose); }
+    .status-toast.err  .status-toast-progress { background: var(--color-rose); }
+
+    .status-toast.info { border-color: rgba(21, 101, 192, 0.3); }
+    .status-toast.info .status-toast-icon { background: #E8F2FC; color: var(--color-sapphire); }
+    .status-toast.info .status-toast-title { color: var(--color-sapphire); }
+    .status-toast.info .status-toast-progress { background: var(--color-sapphire); }
+
+    @keyframes slideInToastRight {
+      from { opacity: 0; transform: translateX(28px) scale(0.97); }
+      to   { opacity: 1; transform: translateX(0) scale(1); }
+    }
+    @keyframes toastCountdown {
+      from { transform: scaleX(1); }
+      to   { transform: scaleX(0); }
     }
 
     /* Fixed Bottom Player Bar (Always pinned to bottom of Workspace; waits for newly generated output) */
@@ -2741,9 +2819,6 @@
     </div><!-- #viewHistory -->
 
   </div><!-- .workspace-content -->
-
-  <!-- Status Alert Toast (Visible across all views) -->
-  <div class="status-toast" id="statusToast"></div>
 
   <!-- Fixed Bottom Bar: Newly Generated Audio Player (Always pinned at bottom; waits for newly created result) -->
   <section class="player-showcase" id="playerShowcase">
@@ -4592,18 +4667,42 @@
     $(id).classList.add('active');
   }
 
-  /* ── Toast Feedback Helper ── */
+  /* ── Top-Right Floating Push Toast Helper ── */
   let toastTimer = null;
   function showToast(type, msg) {
     clearTimeout(toastTimer);
+    statusToast.className = 'status-toast';
+    void statusToast.offsetWidth;
     statusToast.className = `status-toast show ${type}`;
     const cleanMsg = (msg || '').replace(/^[✓✗ℹ✨⟳⏳•\s]+/, '');
+    const titles = {
+      ok: 'Thành công',
+      err: 'Thông báo lỗi',
+      info: 'Thông báo'
+    };
     const icons = {
-      ok: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+      ok: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
       err: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
       info: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
     };
-    statusToast.innerHTML = `<span style="display:inline-flex;align-items:center;flex-shrink:0;">${icons[type] || ''}</span> <span>${cleanMsg}</span>`;
+    statusToast.innerHTML = `
+      <div class="status-toast-icon">${icons[type] || ''}</div>
+      <div class="status-toast-body">
+        <div class="status-toast-title">${titles[type] || 'Thông báo'}</div>
+        <div class="status-toast-msg">${cleanMsg}</div>
+      </div>
+      <button type="button" class="status-toast-close" id="btnCloseToast" title="Đóng thông báo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="status-toast-progress"></div>
+    `;
+    const closeBtn = $('btnCloseToast');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        clearTimeout(toastTimer);
+        statusToast.classList.remove('show');
+      });
+    }
     toastTimer = setTimeout(() => {
       statusToast.classList.remove('show');
     }, 4500);
@@ -4638,5 +4737,7 @@
   setInterval(updateGreetingAndDate, 60000);
 })();
 </script>
+<!-- Top-Right Floating Push Toast Notification -->
+<div class="status-toast" id="statusToast" role="status" aria-live="polite"></div>
 </body>
 </html>
