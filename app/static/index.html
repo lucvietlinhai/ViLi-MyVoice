@@ -961,8 +961,9 @@
       box-shadow: var(--shadow-sm);
     }
     .lib-voice-card.selected {
-      border-color: var(--coral-primary);
-      background: #FFF9F8;
+      border: 2px solid var(--coral-primary);
+      background: #FFF1EF;
+      box-shadow: 0 4px 14px rgba(235, 107, 99, 0.18);
     }
     .lib-card-top {
       display: flex;
@@ -1379,11 +1380,13 @@
     }
 
     .voice-entry.active-selected {
-      border-color: var(--plum-dark);
-      box-shadow: 0 4px 12px rgba(42, 29, 43, 0.15);
+      background: linear-gradient(135deg, #2A1D2B 0%, #3E2E3E 100%);
+      border-color: var(--coral-primary);
+      box-shadow: 0 6px 18px rgba(42, 29, 43, 0.28), 0 0 0 2px rgba(235, 107, 99, 0.32);
+      transform: translateY(-1px);
     }
 
-    /* Radio button indicator (like cuong-tt & chinh in image!) */
+    /* Radio button indicator */
     .voice-radio-dot {
       width: 18px;
       height: 18px;
@@ -1398,14 +1401,16 @@
     }
 
     .voice-entry.active-selected .voice-radio-dot {
-      border-color: var(--plum-dark);
+      border-color: var(--coral-primary);
+      background: var(--coral-primary);
+      box-shadow: 0 0 8px rgba(235, 107, 99, 0.55);
     }
     .voice-entry.active-selected .voice-radio-dot::after {
       content: '';
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: var(--plum-dark);
+      background: #FFFFFF;
     }
 
     .voice-details {
@@ -1426,6 +1431,47 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+    .voice-entry.active-selected .voice-card-name {
+      color: #FFFFFF;
+    }
+
+    .voice-selected-badge {
+      display: none;
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 1px 7px;
+      border-radius: var(--radius-pill);
+      background: var(--yellow-sun);
+      color: var(--plum-dark);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .voice-entry.active-selected .voice-selected-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .voice-card-sub {
+      font-size: 11px;
+      color: #7A6A7B;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .voice-entry.active-selected .voice-card-sub {
+      color: #D8CAD9;
+    }
+
+    .voice-entry.active-selected .btn-action-icon:not(.play-preview) {
+      background: rgba(255, 255, 255, 0.14);
+      color: #F4EAF4;
+    }
+    .voice-entry.active-selected .btn-action-icon:not(.play-preview):hover {
+      background: rgba(255, 255, 255, 0.26);
+      color: #FFFFFF;
     }
 
     .voice-chips-line {
@@ -3416,7 +3462,7 @@
         : `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
 
       const subDesc = voice.description
-        ? `<div style="font-size:11px;color:#7A6A7B;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${voice.description}</div>`
+        ? `<div class="voice-card-sub">${voice.description}</div>`
         : '';
 
       entry.innerHTML = `
@@ -3424,6 +3470,7 @@
         <div class="voice-details">
           <div class="voice-name-row">
             <span class="voice-card-name">${voice.name}</span>
+            <span class="voice-selected-badge">✓ Đang chọn</span>
           </div>
           ${subDesc}
           <div class="voice-chips-line">${chips}</div>
