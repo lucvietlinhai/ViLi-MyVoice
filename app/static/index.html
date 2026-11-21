@@ -791,6 +791,8 @@
     }
 
     .btn-luxury-generate {
+      position: relative;
+      overflow: hidden;
       width: 100%;
       padding: 13px 22px;
       border-radius: var(--radius-md);
@@ -805,7 +807,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 9px;
       box-shadow: 0 6px 20px rgba(235, 107, 99, 0.3);
       transition: all 0.18s ease;
     }
@@ -817,9 +819,27 @@
     .btn-luxury-generate:active {
       transform: translateY(0);
     }
-    .btn-luxury-generate.loading {
-      opacity: 0.75;
+    .btn-luxury-generate.loading,
+    .btn-submit-clone.loading {
       cursor: wait;
+      background: linear-gradient(135deg, #D95249 0%, #EB6B63 50%, #D95249 100%);
+      background-size: 200% 100%;
+      animation: btnShimmerMove 1.4s ease-in-out infinite;
+      box-shadow: 0 6px 24px rgba(235, 107, 99, 0.48);
+    }
+    @keyframes btnShimmerMove {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes spinLoader {
+      to { transform: rotate(360deg); }
+    }
+    .spin-loader {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      animation: spinLoader 0.85s linear infinite;
     }
 
     .generate-subtext {
@@ -1138,13 +1158,22 @@
       border: 1px solid var(--border-card);
       white-space: nowrap;
     }
-    .player-showcase.active .player-waiting-badge {
+    .player-showcase.active:not(.generating) .player-waiting-badge {
       display: none;
     }
     .player-showcase.generating .player-waiting-badge {
-      background: var(--yellow-subtle);
-      color: var(--yellow-dark);
-      border-color: var(--yellow-border);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--coral-primary);
+      color: #FFFFFF;
+      border-color: var(--coral-primary);
+      font-weight: 700;
+      animation: pulseBadge 1.2s ease-in-out infinite;
+    }
+    @keyframes pulseBadge {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0.72; }
     }
 
     .player-voice-badge {
@@ -1161,7 +1190,7 @@
       text-overflow: ellipsis;
       max-width: 220px;
     }
-    .player-showcase.active .player-voice-badge {
+    .player-showcase.active:not(.generating) .player-voice-badge {
       display: inline-block;
     }
 
@@ -1171,7 +1200,7 @@
       gap: 8px;
       flex-shrink: 0;
     }
-    .player-showcase.active .player-actions {
+    .player-showcase.active:not(.generating) .player-actions {
       display: flex;
     }
 
@@ -1196,13 +1225,105 @@
       color: var(--coral-primary);
       font-weight: 700;
     }
-    .player-showcase.active .player-empty-hint {
+    .player-showcase.active .player-empty-hint,
+    .player-showcase.generating .player-empty-hint {
       display: none;
     }
-    .player-showcase.generating .player-empty-hint {
-      border-color: rgba(235, 107, 99, 0.45);
-      background: var(--coral-subtle);
+
+    /* Prominent Active Loader State Inside Fixed Bottom Player */
+    .player-generating-box {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, #FFF5F4 0%, #FFF9EE 100%);
+      border: 1.5px solid rgba(235, 107, 99, 0.42);
+      box-shadow: 0 4px 16px rgba(235, 107, 99, 0.12);
+    }
+    .player-showcase.generating .player-generating-box {
+      display: flex;
+    }
+    .gen-loader-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .gen-loader-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .eq-bars {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+    .eq-bars span {
+      width: 4px;
+      border-radius: 3px;
+      background: var(--coral-primary);
+      animation: eqBounce 0.9s ease-in-out infinite;
+    }
+    .eq-bars span:nth-child(1) { height: 10px; animation-delay: 0.0s; }
+    .eq-bars span:nth-child(2) { height: 20px; animation-delay: 0.15s; background: var(--plum-dark); }
+    .eq-bars span:nth-child(3) { height: 14px; animation-delay: 0.30s; }
+    .eq-bars span:nth-child(4) { height: 22px; animation-delay: 0.45s; background: var(--yellow-dark); }
+    .eq-bars span:nth-child(5) { height: 12px; animation-delay: 0.60s; }
+    @keyframes eqBounce {
+      0%, 100% { transform: scaleY(0.35); opacity: 0.65; }
+      50%      { transform: scaleY(1); opacity: 1; }
+    }
+    .gen-loader-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--plum-dark);
+      line-height: 1.25;
+    }
+    .gen-loader-sub {
+      font-size: 11.5px;
+      font-weight: 600;
       color: var(--coral-dark);
+      margin-top: 1px;
+    }
+    .gen-timer-pill {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 800;
+      color: #FFFFFF;
+      background: var(--plum-dark);
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      flex-shrink: 0;
+    }
+    .gen-progress-track {
+      width: 100%;
+      height: 5px;
+      border-radius: 99px;
+      background: rgba(235, 107, 99, 0.18);
+      overflow: hidden;
+      position: relative;
+    }
+    .gen-progress-bar {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 42%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--coral-primary), var(--yellow-bright), var(--coral-primary));
+      animation: genIndeterminate 1.25s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+    @keyframes genIndeterminate {
+      0%   { left: -45%; }
+      100% { left: 105%; }
+    }
+    .player-showcase.generating #audioPlayer,
+    .player-showcase.generating #benchmarkStrip {
+      display: none !important;
     }
 
     .btn-download-wav {
@@ -2045,14 +2166,23 @@
 
     .stt-indicator {
       display: none;
-      font-size: 11px;
+      font-size: 11.5px;
       color: var(--yellow-dark);
-      font-weight: 600;
+      font-weight: 700;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      background: var(--yellow-subtle);
+      border: 1px solid var(--yellow-border);
+      margin-top: 2px;
     }
     .stt-indicator.active {
       display: flex;
+    }
+    .spin {
+      display: inline-flex;
+      animation: spinLoader 0.85s linear infinite;
     }
 
     .checkbox-compact {
@@ -2841,6 +2971,19 @@
     <div class="player-empty-hint" id="playerEmptyHint">
       <span class="ico-svg md"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
       <span id="playerEmptyHintText">Chưa có giọng voice nào được tạo — Nhập văn bản rồi nhấn <b>TẠO GIỌNG NÓI NGAY</b> để nghe và tải kết quả tại đây.</span>
+    </div>
+    <div class="player-generating-box" id="playerGeneratingBox">
+      <div class="gen-loader-row">
+        <div class="gen-loader-left">
+          <div class="eq-bars" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+          <div>
+            <div class="gen-loader-title" id="playerGenTitle">Đang tổng hợp giọng nói AI...</div>
+            <div class="gen-loader-sub" id="playerGenSub">Đang xử lý văn bản và tổng hợp âm thanh</div>
+          </div>
+        </div>
+        <span class="gen-timer-pill" id="playerGenTimer">0.0s</span>
+      </div>
+      <div class="gen-progress-track"><div class="gen-progress-bar"></div></div>
     </div>
     <audio id="audioPlayer" controls></audio>
     <div class="benchmark-strip" id="benchmarkStrip"></div>
@@ -3683,17 +3826,30 @@
     const isCustom = voicesRegistry.custom_voices.some(v => v.name === voiceName);
     const encoded = encodeURIComponent(voiceName);
     const url = isCustom ? `/v1/voices/${encoded}/audio` : `/v1/voices/${encoded}/sample`;
+    const previewBtns = Array.from(document.querySelectorAll(`[data-preview="${voiceName}"], [data-libpreview="${voiceName}"]`));
+    const origHtmlMap = new Map(previewBtns.map(b => [b, b.innerHTML]));
+    previewBtns.forEach(b => {
+      b.disabled = true;
+      b.innerHTML = '<span class="spin-loader"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span>';
+    });
     try {
-      if (miniWaveVoiceTitle) miniWaveVoiceTitle.textContent = voiceName;
+      if (miniWaveVoiceTitle) miniWaveVoiceTitle.textContent = `${voiceName} (đang tải mẫu...)`;
       if (!audioPlayer.paused) audioPlayer.pause();
       activeMiniAudio = previewAudio;
       if (!isCustom) showToast('info', `Đang tải mẫu giọng mặc định "${voiceName}"...`);
       previewAudio.src = url;
       previewAudio.volume = parseInt(volSlider.value, 10) / 100;
       await previewAudio.play();
+      if (miniWaveVoiceTitle) miniWaveVoiceTitle.textContent = voiceName;
       showToast('ok', `Đang phát âm thanh mẫu của "${voiceName}".`);
     } catch {
+      if (miniWaveVoiceTitle) miniWaveVoiceTitle.textContent = voiceName;
       showToast('err', 'Không tải được file âm thanh mẫu.');
+    } finally {
+      previewBtns.forEach(b => {
+        b.disabled = false;
+        if (origHtmlMap.has(b)) b.innerHTML = origHtmlMap.get(b);
+      });
     }
   }
 
@@ -4317,6 +4473,8 @@
     }
 
     btnSubmitVoice.disabled = true;
+    btnSubmitVoice.classList.add('loading');
+    btnSubmitVoice.innerHTML = `<span class="spin-loader"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span> Đang phân tích &amp; lưu giọng clone vào thư viện...`;
     showToast('info', 'Đang phân tích và trích xuất đặc trưng âm thanh mẫu...');
 
     try {
@@ -4348,10 +4506,13 @@
       showToast('err', err.message);
     } finally {
       btnSubmitVoice.disabled = false;
+      btnSubmitVoice.classList.remove('loading');
+      btnSubmitVoice.innerHTML = 'Tạo &amp; Lưu giọng clone vào thư viện (8.0s)';
     }
   });
 
   /* ── Generate Speech (TTS Core) ── */
+  let genTimerInterval = null;
   async function generateSpeech() {
     const text = textInput.value.trim();
     if (!text) {
@@ -4360,19 +4521,37 @@
       return;
     }
 
+    const genStartedAt = performance.now();
+    const activeVoiceLabel = selectedVoiceName && selectedVoiceName !== 'default' ? selectedVoiceName : 'Mặc định VieNeu';
+    const spinnerSvg = '<span class="spin-loader"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span>';
+
     btnGenerateSpeech.disabled = true;
     btnGenerateSpeech.classList.add('loading');
-    btnGenerateSpeech.innerHTML = currentEngine === 'vieneu-v2'
-      ? 'ĐANG TỔNG HỢP VỚI v2 GGUF Q8 (VUI LÒNG ĐỢI)...'
-      : 'ĐANG TỔNG HỢP GIỌNG NÓI...';
+    const baseBtnLabel = currentEngine === 'vieneu-v2'
+      ? 'ĐANG TỔNG HỢP VỚI v2 GGUF Q8'
+      : 'ĐANG TỔNG HỢP GIỌNG NÓI';
+    btnGenerateSpeech.innerHTML = `${spinnerSvg} ${baseBtnLabel}... (0.0s)`;
 
-    if (!playerShowcase.classList.contains('active')) {
-      playerShowcase.classList.add('generating');
-      if (playerWaitingBadge) playerWaitingBadge.textContent = 'Đang tổng hợp...';
-      if (playerEmptyHintText) {
-        playerEmptyHintText.innerHTML = 'Đang tổng hợp giọng nói từ văn bản của bạn, kết quả sẽ sẵn sàng ngay tại đây...';
-      }
+    playerShowcase.classList.add('generating');
+    if (playerWaitingBadge) playerWaitingBadge.textContent = 'Đang tạo kết quả...';
+    if ($('playerGenTitle')) {
+      $('playerGenTitle').textContent = currentEngine === 'vieneu-v2'
+        ? `Đang tổng hợp giọng "${activeVoiceLabel}" với VieNeu v2 GGUF...`
+        : `Đang tổng hợp giọng "${activeVoiceLabel}" với VieNeu v3 Turbo...`;
     }
+    if ($('playerGenSub')) {
+      $('playerGenSub').textContent = currentEngine === 'vieneu-v2'
+        ? 'Đang bám ngữ điệu qua ref_text (lần đầu nạp v2 có thể mất vài chục giây)'
+        : 'Đang tách đoạn thông minh & tạo âm thanh 48kHz chất lượng cao';
+    }
+    if ($('playerGenTimer')) $('playerGenTimer').textContent = '0.0s';
+
+    clearInterval(genTimerInterval);
+    genTimerInterval = setInterval(() => {
+      const sec = ((performance.now() - genStartedAt) / 1000).toFixed(1);
+      if ($('playerGenTimer')) $('playerGenTimer').textContent = `${sec}s`;
+      btnGenerateSpeech.innerHTML = `${spinnerSvg} ${baseBtnLabel}... (${sec}s)`;
+    }, 100);
 
     showToast('info', currentEngine === 'vieneu-v2'
       ? 'Đang chạy mô hình VieNeu v2 GGUF Q8 (bám ngữ điệu Bắc bằng ref_text)...'
@@ -4461,6 +4640,7 @@
     } catch (err) {
       showToast('err', err.message);
     } finally {
+      clearInterval(genTimerInterval);
       btnGenerateSpeech.disabled = false;
       btnGenerateSpeech.classList.remove('loading');
       btnGenerateSpeech.innerHTML = '<span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></span> TẠO GIỌNG NÓI NGAY (Ctrl + Enter)';
