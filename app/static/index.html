@@ -2638,6 +2638,234 @@
     }
     .btn-modal-apply:hover { background: var(--coral-gradient-hover); }
 
+    /* ════════════════════════════════════════════════════════════
+       5. TERMINAL LOG CONSOLE (Real-time Backend + Frontend Logs)
+    ════════════════════════════════════════════════════════════ */
+    .nav-err-badge {
+      display: none;
+      margin-left: auto;
+      background: #EF4444;
+      color: #FFFFFF;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 1px 7px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-mono);
+    }
+    .nav-err-badge.has-err {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .meta-tag.term-toggle {
+      background: #0F172A;
+      color: #E2E8F0;
+      border: 1px solid #334155;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      transition: all 0.15s;
+    }
+    .meta-tag.term-toggle:hover {
+      background: #1E293B;
+      border-color: #38BDF8;
+      color: #FFFFFF;
+    }
+
+    .terminal-shell {
+      background: #0B1120;
+      border-radius: 16px;
+      border: 1px solid #1E293B;
+      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.24);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 440px;
+    }
+
+    .terminal-topbar {
+      background: #111827;
+      border-bottom: 1px solid #1F2937;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .terminal-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .term-dots {
+      display: inline-flex;
+      gap: 6px;
+    }
+    .term-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .term-dots span:nth-child(1) { background: #EF4444; }
+    .term-dots span:nth-child(2) { background: #F59E0B; }
+    .term-dots span:nth-child(3) { background: #22C55E; }
+    .term-heading {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: #E2E8F0;
+    }
+    .term-live-pill {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      background: rgba(34, 197, 94, 0.16);
+      color: #4ADE80;
+      border: 1px solid rgba(74, 222, 128, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .term-live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #4ADE80;
+      animation: pulse 1.6s infinite;
+    }
+
+    .terminal-toolbar {
+      background: #0F172A;
+      border-bottom: 1px solid #1E293B;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .term-filters {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .btn-term-filter {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #334155;
+      color: #94A3B8;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-term-filter:hover { color: #E2E8F0; border-color: #475569; }
+    .btn-term-filter.active {
+      background: #2563EB;
+      border-color: #3B82F6;
+      color: #FFFFFF;
+    }
+    .btn-term-filter.err-only.active {
+      background: #DC2626;
+      border-color: #EF4444;
+    }
+
+    .term-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .term-search {
+      background: #070C17;
+      border: 1px solid #334155;
+      color: #E2E8F0;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      outline: none;
+      width: 170px;
+    }
+    .term-search:focus { border-color: #38BDF8; }
+    .btn-term-act {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid #334155;
+      color: #CBD5E1;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-term-act:hover { background: rgba(255, 255, 255, 0.14); color: #FFFFFF; }
+    .btn-term-act.danger:hover { background: rgba(239, 68, 68, 0.2); border-color: #EF4444; color: #FCA5A5; }
+
+    .terminal-body {
+      background: #070C17;
+      color: #E2E8F0;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.55;
+      padding: 12px 14px;
+      overflow-y: auto;
+      max-height: 460px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .term-line {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 3px 6px;
+      border-radius: 6px;
+      word-break: break-word;
+    }
+    .term-line:hover { background: rgba(255, 255, 255, 0.03); }
+    .term-line.lvl-ERROR { background: rgba(239, 68, 68, 0.10); }
+    .term-line.lvl-WARN  { background: rgba(245, 158, 11, 0.08); }
+
+    .term-ts { color: #64748B; flex-shrink: 0; font-size: 11px; }
+    .term-origin {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 0 5px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .term-origin.BE { background: rgba(139, 92, 246, 0.22); color: #C4B5FD; }
+    .term-origin.FE { background: rgba(250, 203, 84, 0.18); color: #FDE047; }
+
+    .term-lvl {
+      font-size: 10.5px;
+      font-weight: 800;
+      min-width: 44px;
+      flex-shrink: 0;
+    }
+    .term-lvl.INFO  { color: #38BDF8; }
+    .term-lvl.OK    { color: #4ADE80; }
+    .term-lvl.WARN  { color: #FBBF24; }
+    .term-lvl.ERROR { color: #F87171; }
+
+    .term-src {
+      color: #94A3B8;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .term-msg {
+      color: #E2E8F0;
+      flex: 1;
+    }
+    .term-line.lvl-ERROR .term-msg { color: #FCA5A5; }
+    .term-line.lvl-OK    .term-msg { color: #DCFCE7; }
+
   </style>
 </head>
 <body>
@@ -2685,6 +2913,13 @@
       </span>
       Lịch sử
     </button>
+    <button class="nav-btn" id="navTerminal">
+      <span class="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+      </span>
+      Terminal Log
+      <span class="nav-err-badge" id="terminalErrBadge">0</span>
+    </button>
   </nav>
 
   <div class="sidebar-footer-simple">
@@ -2709,6 +2944,10 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
         Tự động ngắt nghỉ &amp; ghép nối câu
       </span>
+      <button type="button" class="meta-tag term-toggle" id="btnQuickTerminal" title="Mở nhanh bảng Terminal Log">
+        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        Terminal Log
+      </button>
     </div>
   </header>
 
@@ -3009,6 +3248,38 @@
         </div>
       </div>
     </div><!-- #viewHistory -->
+
+    <!-- VIEW 5: TERMINAL LOG (REAL-TIME BACKEND + FRONTEND PROCESS & ERROR MONITOR) -->
+    <div class="workspace-view" id="viewTerminal">
+      <div class="terminal-shell">
+        <div class="terminal-topbar">
+          <div class="terminal-title-group">
+            <div class="term-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+            <span class="term-heading">voice-studio@local — Terminal Log</span>
+            <span class="term-live-pill"><span class="term-live-dot"></span> LIVE</span>
+          </div>
+          <span style="font-family:var(--font-mono);font-size:11px;color:#64748B;" id="terminalCountInfo">0 dòng log</span>
+        </div>
+
+        <div class="terminal-toolbar">
+          <div class="term-filters">
+            <button type="button" class="btn-term-filter active" data-termfilter="all">Tất cả</button>
+            <button type="button" class="btn-term-filter err-only" data-termfilter="errors">Chỉ lỗi &amp; cảnh báo</button>
+            <button type="button" class="btn-term-filter" data-termfilter="BE">Backend (Python)</button>
+            <button type="button" class="btn-term-filter" data-termfilter="FE">Frontend (UI)</button>
+          </div>
+          <div class="term-actions">
+            <input type="text" class="term-search" id="inputTerminalSearch" placeholder="Lọc từ khóa..."/>
+            <button type="button" class="btn-term-act" id="btnCopyLogs">Sao chép</button>
+            <button type="button" class="btn-term-act danger" id="btnClearLogs">Xóa log</button>
+          </div>
+        </div>
+
+        <div class="terminal-body" id="terminalLogBody">
+          <!-- Populated in real-time by appendTerminalLog() -->
+        </div>
+      </div>
+    </div><!-- #viewTerminal -->
 
   </div><!-- .workspace-content -->
 
@@ -3492,7 +3763,7 @@
       const res = await fetch('/v1/text/preview-chunks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ input: text }),
       });
       const data = await res.json();
       if (Array.isArray(data.chunks)) {
@@ -4968,16 +5239,180 @@
     $(id).classList.add('active');
   }
 
+  /* ── Terminal Log Engine (Real-time Backend + Frontend Process & Error Monitor) ── */
+  const terminalLogBody = $('terminalLogBody');
+  const terminalErrBadge = $('terminalErrBadge');
+  const terminalCountInfo = $('terminalCountInfo');
+  const inputTerminalSearch = $('inputTerminalSearch');
+  let terminalEntries = [];
+  let terminalFilter = 'all';
+  let lastBackendLogId = 0;
+  let terminalUnreadErrors = 0;
+
+  function escapeHtmlLog(s) {
+    return String(s || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function appendTerminalLog(entry) {
+    terminalEntries.push(entry);
+    if (terminalEntries.length > 600) terminalEntries.shift();
+
+    if (entry.level === 'ERROR') {
+      const termViewActive = $('viewTerminal') && $('viewTerminal').classList.contains('active');
+      if (!termViewActive) {
+        terminalUnreadErrors++;
+        if (terminalErrBadge) {
+          terminalErrBadge.textContent = terminalUnreadErrors > 99 ? '99+' : String(terminalUnreadErrors);
+          terminalErrBadge.classList.add('has-err');
+        }
+      }
+    }
+    renderTerminalLogs();
+  }
+
+  function logFE(level, source, message) {
+    const now = new Date();
+    const ts = now.toTimeString().slice(0, 8);
+    appendTerminalLog({
+      ts,
+      level: (level || 'INFO').toUpperCase(),
+      source: (source || 'UI').toUpperCase(),
+      origin: 'FE',
+      message: String(message || ''),
+    });
+  }
+
+  function renderTerminalLogs() {
+    if (!terminalLogBody) return;
+    const q = (inputTerminalSearch ? inputTerminalSearch.value : '').trim().toLowerCase();
+    const filtered = terminalEntries.filter(e => {
+      if (terminalFilter === 'errors' && e.level !== 'ERROR' && e.level !== 'WARN') return false;
+      if (terminalFilter === 'BE' && e.origin !== 'BE') return false;
+      if (terminalFilter === 'FE' && e.origin !== 'FE') return false;
+      if (q && !`${e.source} ${e.level} ${e.message}`.toLowerCase().includes(q)) return false;
+      return true;
+    });
+
+    if (terminalCountInfo) {
+      terminalCountInfo.textContent = `${filtered.length} / ${terminalEntries.length} dòng log`;
+    }
+
+    if (filtered.length === 0) {
+      terminalLogBody.innerHTML = `<div style="color:#64748B;padding:18px 8px;text-align:center;">Chưa có dòng log nào phù hợp với bộ lọc hiện tại.</div>`;
+      return;
+    }
+
+    terminalLogBody.innerHTML = filtered.map(e => `
+      <div class="term-line lvl-${escapeHtmlLog(e.level)}">
+        <span class="term-ts">${escapeHtmlLog(e.ts)}</span>
+        <span class="term-origin ${escapeHtmlLog(e.origin)}">${escapeHtmlLog(e.origin)}</span>
+        <span class="term-lvl ${escapeHtmlLog(e.level)}">${escapeHtmlLog(e.level)}</span>
+        <span class="term-src">[${escapeHtmlLog(e.source)}]</span>
+        <span class="term-msg">${escapeHtmlLog(e.message)}</span>
+      </div>
+    `).join('');
+    terminalLogBody.scrollTop = terminalLogBody.scrollHeight;
+  }
+
+  async function pollBackendLogs() {
+    try {
+      const res = await fetch(`/v1/logs?since_id=${lastBackendLogId}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      if (Array.isArray(data.logs) && data.logs.length > 0) {
+        data.logs.forEach(item => appendTerminalLog(item));
+      }
+      if (typeof data.latest_id === 'number' && data.latest_id > lastBackendLogId) {
+        lastBackendLogId = data.latest_id;
+      }
+    } catch {
+      // Ignore transient poll failure
+    }
+  }
+
+  if ($('navTerminal')) {
+    $('navTerminal').addEventListener('click', () => {
+      switchWorkspaceView('viewTerminal', 'navTerminal');
+      terminalUnreadErrors = 0;
+      if (terminalErrBadge) terminalErrBadge.classList.remove('has-err');
+      pollBackendLogs();
+      renderTerminalLogs();
+    });
+  }
+  if ($('btnQuickTerminal')) {
+    $('btnQuickTerminal').addEventListener('click', () => {
+      const isTerm = $('viewTerminal') && $('viewTerminal').classList.contains('active');
+      if (isTerm) {
+        switchWorkspaceView('viewWorkspace', 'navWorkspace');
+      } else {
+        switchWorkspaceView('viewTerminal', 'navTerminal');
+        terminalUnreadErrors = 0;
+        if (terminalErrBadge) terminalErrBadge.classList.remove('has-err');
+        pollBackendLogs();
+        renderTerminalLogs();
+      }
+    });
+  }
+
+  document.querySelectorAll('.btn-term-filter').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.btn-term-filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      terminalFilter = btn.dataset.termfilter || 'all';
+      renderTerminalLogs();
+    });
+  });
+
+  if (inputTerminalSearch) {
+    inputTerminalSearch.addEventListener('input', renderTerminalLogs);
+  }
+
+  if ($('btnCopyLogs')) {
+    $('btnCopyLogs').addEventListener('click', async () => {
+      const text = terminalEntries.map(e => `[${e.ts}] [${e.origin}] [${e.level}] [${e.source}] ${e.message}`).join('\n');
+      try {
+        await navigator.clipboard.writeText(text || '(Trống)');
+        showToast('ok', 'Đã sao chép toàn bộ Terminal Log vào clipboard.');
+      } catch {
+        showToast('err', 'Không thể sao chép vào clipboard.');
+      }
+    });
+  }
+
+  if ($('btnClearLogs')) {
+    $('btnClearLogs').addEventListener('click', async () => {
+      terminalEntries = [];
+      terminalUnreadErrors = 0;
+      if (terminalErrBadge) terminalErrBadge.classList.remove('has-err');
+      renderTerminalLogs();
+      try { await fetch('/v1/logs', { method: 'DELETE' }); } catch {}
+      logFE('INFO', 'UI', 'Đã xóa sạch bảng Terminal Log.');
+    });
+  }
+
+  window.addEventListener('error', (ev) => {
+    logFE('ERROR', 'JS', `${ev.message} (${ev.filename || 'inline'}:${ev.lineno || 0})`);
+  });
+  window.addEventListener('unhandledrejection', (ev) => {
+    logFE('ERROR', 'PROMISE', String(ev.reason || 'Unhandled promise rejection'));
+  });
+
   /* ── Top-Right Floating Push Toast Helper ── */
   let toastTimer = null;
   function showToast(type, msg) {
+    const cleanMsg = (msg || '').replace(/^[✓✗ℹ✨⟳⏳•\s]+/, '');
+    const lvlMap = { ok: 'OK', err: 'ERROR', info: 'INFO' };
+    logFE(lvlMap[type] || 'INFO', 'UI', cleanMsg);
+
     const toastEl = statusToast || $('statusToast');
     if (!toastEl) return;
     clearTimeout(toastTimer);
     toastEl.className = 'status-toast';
     void toastEl.offsetWidth;
     toastEl.className = `status-toast show ${type}`;
-    const cleanMsg = (msg || '').replace(/^[✓✗ℹ✨⟳⏳•\s]+/, '');
     const titles = {
       ok: 'Thành công',
       err: 'Thông báo lỗi',
@@ -5030,12 +5465,15 @@
   }
 
   /* ── Initialization ── */
+  logFE('INFO', 'UI', 'Voice Studio UI đã khởi tạo. Bắt đầu đồng bộ luồng log từ server...');
   updateGreetingAndDate();
   checkHealth();
   loadVoicesRegistry();
   renderHistory();
   updateTextCounter();
   drawMiniWaveform();
+  pollBackendLogs();
+  setInterval(pollBackendLogs, 2000);
   setInterval(checkHealth, 30000);
   setInterval(updateGreetingAndDate, 60000);
 })();

@@ -14,6 +14,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from .config import settings
+from .log_stream import attach_python_logging, log_store, push_log
 from .normalizer import split_and_normalize
 from .tts_engine import TTSEngine
 from .voice_manager import VoiceManager
@@ -55,9 +56,15 @@ _voice_mgr: Optional[VoiceManager] = None
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     global _engine, _voice_mgr
+    attach_python_logging()
+    push_log("INFO", "SERVER", f"Khởi động TTS Studio (mode={settings.vieneu_mode}, backend={settings.vieneu_backend}, precision={settings.vieneu_precision})...")
     _engine = TTSEngine()
+    push_log("OK", "TTS", f"Nạp thành công VieNeu v3 Turbo ({_engine.sample_rate} Hz) trong {_engine.load_seconds}s.")
     _voice_mgr = VoiceManager(_engine.tts, settings.voices_dir)
+    voices = _voice_mgr.list_voices(_engine.tts_v2)
+    push_log("OK", "VOICE", f"Đã nạp {len(voices['custom_voices'])} giọng clone & {len(voices['preset_voices'])} giọng mặc định VieNeu.")
     yield
+    push_log("INFO", "SERVER", "Đang tắt TTS Engine...")
     if _engine is not None:
         _engine.tts.close()
         if _engine.tts_v2 is not None:
@@ -106,6 +113,20 @@ async def health():
         "custom_voice_count": len(voices["custom_voices"]),
         "preset_voice_count": len(voices["preset_voices"]),
     }
+
+
+@app.get("/v1/logs")
+async def get_logs(since_id: int = 0):
+    """Trả về danh sách log backend mới nhất kể từ since_id cho bảng Terminal Log."""
+    return log_store.get_since(since_id)
+
+
+@app.delete("/v1/logs")
+async def clear_logs():
+    """Xóa sạch bộ đệm log backend."""
+    log_store.clear()
+    push_log("INFO", "SERVER", "Đã xóa sạch lịch sử Terminal Log.")
+    return {"status": "cleared"}
 
 
 @app.get("/v1/voices")
@@ -164,6 +185,7 @@ async def upload_voice(
         tmp_path = Path(tmp.name)
 
     try:
+        push_log("INFO", "CLONE", f"Bắt đầu đăng ký giọng clone '{name}' (file={file.filename}, denoise={denoise})...")
         meta = voice_mgr.register_voice(
             name=name,
             uploaded_file_path=tmp_path,
@@ -173,10 +195,13 @@ async def upload_voice(
             consent_confirmed=consent_confirmed,
         )
         engine.bump_voice_revision()
+        push_log("OK", "CLONE", f"Đã lưu giọng clone '{meta['name']}' ({meta['duration_sec']}s, ref_text={'có' if meta['has_ref_text'] else 'trống'}).")
         return {"status": "registered", "voice": meta}
     except ValueError as exc:
+        push_log("WARN", "CLONE", f"Từ chối đăng ký giọng '{name}': {exc}")
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
+        push_log("ERROR", "CLONE", f"Lỗi xử lý giọng mẫu '{name}': {exc}")
         raise HTTPException(status_code=500, detail=f"Lỗi xử lý giọng mẫu: {exc}") from exc
     finally:
         tmp_path.unlink(missing_ok=True)
@@ -214,6 +239,7 @@ async def preview_chunks(req: PreviewTextRequest):
 @app.post("/v1/audio/speech")
 async def create_speech(req: SpeechRequest):
     engine, voice_mgr = _require_ready()
+    push_log("INFO", "TTS", f"Yêu cầu tạo giọng [{req.model}] voice='{req.voice}' ({len(req.input)} ký tự, speed={req.speed}, temp={req.temperature})...")
     try:
         if req.response_format == "pcm":
             sr, gen = engine.stream_pcm(
@@ -252,6 +278,11 @@ async def create_speech(req: SpeechRequest):
             ref_text_override=req.ref_text,
             voice_manager=voice_mgr,
         )
+        push_log(
+            "OK",
+            "TTS",
+            f"Hoàn tất [{req.model}] voice='{req.voice}': dur={stats['audio_duration_sec']}s, infer={stats['inference_sec']}s, RTF={stats['rtf']}, cache={'HIT' if stats['cached'] else 'MISS'}.",
+        )
         return Response(
             content=wav_bytes,
             media_type="audio/wav",
@@ -267,8 +298,10 @@ async def create_speech(req: SpeechRequest):
             },
         )
     except ValueError as exc:
+        push_log("WARN", "TTS", f"Tham số không hợp lệ [{req.model}] voice='{req.voice}': {exc}")
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
+        push_log("ERROR", "TTS", f"Lỗi tổng hợp [{req.model}] voice='{req.voice}': {exc}")
         raise HTTPException(status_code=500, detail=f"Lỗi tổng hợp giọng nói: {exc}") from exc
 
 
@@ -283,10 +316,13 @@ async def transcribe_audio(file: UploadFile = File(...)):
         tmp_path = Path(tmp.name)
 
     try:
+        push_log("INFO", "STT", f"Whisper STT bắt đầu nhận diện file '{file.filename}'...")
         stt = STTEngine.get_instance()
         text = stt.transcribe(tmp_path)
+        push_log("OK", "STT", f"Whisper STT nhận diện xong ({len(text)} ký tự): \"{text[:60]}{'...' if len(text) > 60 else ''}\"")
         return {"status": "ok", "text": text}
     except Exception as exc:
+        push_log("ERROR", "STT", f"Lỗi Whisper STT cho '{file.filename}': {exc}")
         raise HTTPException(status_code=500, detail=f"Lỗi nhận diện âm thanh: {exc}") from exc
     finally:
         tmp_path.unlink(missing_ok=True)
