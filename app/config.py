@@ -61,13 +61,18 @@ class Settings:
     max_chars_per_chunk: int = int(os.getenv("MAX_CHARS_PER_CHUNK", "220"))
     hf_home_dir: Path = _HF_HOME_DIR
     voices_dir: Path = _resolve_dir(os.getenv("VOICES_DIR", "voices"), "voices")
+    bgm_dir: Path = _resolve_dir(os.getenv("VOICES_DIR", "voices"), "voices") / "bgm"
+    lexicon_path: Path = _resolve_dir(os.getenv("VOICES_DIR", "voices"), "voices") / "pronunciation_dict.json"
     outputs_dir: Path = _resolve_dir(os.getenv("OUTPUTS_DIR", "outputs"), "outputs")
     history_dir: Path = _resolve_dir(os.getenv("HISTORY_DIR", "history"), "history")
+    audiobooks_dir: Path = _resolve_dir(os.getenv("AUDIOBOOKS_DIR", "audiobooks"), "audiobooks")
     host: str = os.getenv("HOST", "127.0.0.1")
     port: int = int(os.getenv("PORT", "8000"))
 
 
 settings = Settings()
 settings.voices_dir.mkdir(parents=True, exist_ok=True)
+settings.bgm_dir.mkdir(parents=True, exist_ok=True)
 settings.outputs_dir.mkdir(parents=True, exist_ok=True)
 settings.history_dir.mkdir(parents=True, exist_ok=True)
+settings.audiobooks_dir.mkdir(parents=True, exist_ok=True)

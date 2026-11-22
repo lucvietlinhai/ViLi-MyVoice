@@ -3106,6 +3106,236 @@
     .term-line.lvl-ERROR .term-msg { color: #FCA5A5; }
     .term-line.lvl-OK    .term-msg { color: #DCFCE7; }
 
+    /* ── Stage 2 & 3 Studio Extensions (Cues, FX/Export, Lexicon, Audiobook, A/B, API) ── */
+    .cue-chips-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .cue-bar-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-right: 2px;
+    }
+    .cue-chip {
+      background: #FAF5F2;
+      border: 1px solid #E8DCD6;
+      color: var(--plum-dark);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: all 0.14s;
+    }
+    .cue-chip:hover {
+      border-color: var(--coral-primary);
+      background: var(--coral-subtle);
+      color: var(--coral-dark);
+    }
+
+    .export-fx-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      background: #FAF8FA;
+      border: 1px solid var(--border-card);
+    }
+    .export-fx-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .fmt-pills-group {
+      display: inline-flex;
+      gap: 4px;
+      background: #EFE9EF;
+      padding: 3px;
+      border-radius: var(--radius-pill);
+    }
+    .fmt-pill {
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 4px 11px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .fmt-pill.active {
+      background: var(--plum-dark);
+      color: #FFFFFF;
+    }
+    .fx-toggles-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .fx-toggle-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 11px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-strong);
+      background: #FFFFFF;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--plum-dark);
+      cursor: pointer;
+      user-select: none;
+    }
+    .fx-toggle-pill input { display: none; }
+    .fx-toggle-pill:has(input:checked) {
+      background: var(--coral-subtle);
+      border-color: var(--coral-primary);
+      color: var(--coral-dark);
+    }
+    .bgm-inline-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding-top: 8px;
+      border-top: 1px dashed #E4DAE4;
+      font-size: 11.5px;
+    }
+    .bgm-select {
+      flex: 1;
+      min-width: 170px;
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+      background: #FFFFFF;
+      font-size: 12px;
+      color: var(--plum-dark);
+    }
+    .btn-cancel-gen {
+      background: #FEE2E2;
+      border: 1px solid #FCA5A5;
+      color: #B91C1C;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+    }
+    .btn-cancel-gen:hover {
+      background: #FECACA;
+    }
+
+    /* Lexicon & Audiobook & History Filter & A/B Compare */
+    .lexicon-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+    .lexicon-rule-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-md);
+      padding: 9px 12px;
+    }
+    .lexicon-arrow {
+      color: var(--coral-primary);
+      font-weight: 800;
+      margin: 0 6px;
+    }
+    .ab-compare-bar {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      background: linear-gradient(135deg, #2A1D2B 0%, #3E2E3E 100%);
+      color: #FFFFFF;
+      padding: 12px 16px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+    }
+    .ab-compare-bar.active { display: flex; }
+    .ab-slots-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .ab-slot-box {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .ab-slot-box.playing {
+      border-color: var(--yellow-sun);
+      background: rgba(250, 203, 84, 0.16);
+    }
+    .history-toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      background: #FAF8FA;
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+    }
+    .book-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .chapter-list-compact {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      max-height: 240px;
+      overflow-y: auto;
+    }
+    .chapter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      background: #FAF8FA;
+      font-size: 12px;
+    }
+    .api-code-block {
+      background: #0B1220;
+      color: #E2E8F0;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      line-height: 1.5;
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      white-space: pre;
+    }
+
   </style>
 </head>
 <body>
@@ -3147,11 +3377,29 @@
       </span>
       Thư viện giọng
     </button>
+    <button class="nav-btn" id="navLexicon">
+      <span class="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+      </span>
+      Từ điển phát âm
+    </button>
+    <button class="nav-btn" id="navAudiobook">
+      <span class="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      </span>
+      Sách nói / Tài liệu
+    </button>
     <button class="nav-btn" id="navHistory">
       <span class="icon">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polyline points="12 8 12 12 14 14"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg>
       </span>
       Lịch sử
+    </button>
+    <button class="nav-btn" id="navApiDocs">
+      <span class="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </span>
+      API &amp; Tích hợp
     </button>
     <button class="nav-btn" id="navTerminal">
       <span class="icon">
@@ -3267,7 +3515,16 @@
           </div>
         </div>
       </div>
-      <div class="editor-subtext-hint">Dán lời cần đọc – dài bao nhiêu cũng được, Studio tự chia thành đoạn ngắn.</div>
+      <div class="cue-chips-bar">
+        <span class="cue-bar-label">Chèn nhanh thẻ biểu cảm &amp; ngắt nghỉ:</span>
+        <button type="button" class="cue-chip" data-cuetag="[cười]">😊 [cười]</button>
+        <button type="button" class="cue-chip" data-cuetag="[thở dài]">😮‍💨 [thở dài]</button>
+        <button type="button" class="cue-chip" data-cuetag="[hắng giọng]">🗣️ [hắng giọng]</button>
+        <button type="button" class="cue-chip" data-cuetag="[nghỉ 0.5]">⏸️ [nghỉ 0.5s]</button>
+        <button type="button" class="cue-chip" data-cuetag="[nghỉ 1]">⏸️ [nghỉ 1s]</button>
+        <button type="button" class="cue-chip" data-cuetag="[nghỉ 2]">⏸️ [nghỉ 2s]</button>
+      </div>
+      <div class="editor-subtext-hint">Dán lời cần đọc – dài bao nhiêu cũng được, Studio tự chia đoạn &amp; áp dụng từ điển phát âm.</div>
       <div class="chunks-inspector" id="chunksInspector"></div>
     </section>
 
@@ -3310,6 +3567,42 @@
             <span class="slider-value-badge" id="tempBadge">0.40</span>
           </div>
           <input type="range" class="luxury-range" id="tempSlider" min="0.15" max="1.20" step="0.05" value="0.40"/>
+        </div>
+      </div>
+
+      <!-- Định dạng xuất & Hậu kỳ Studio 1-Click (FFmpeg) -->
+      <div class="export-fx-bar">
+        <div class="export-fx-row">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <span style="font-size:11.5px;font-weight:800;color:var(--plum-dark);">Định dạng xuất:</span>
+            <div class="fmt-pills-group" id="exportFormatGroup">
+              <button type="button" class="fmt-pill active" data-fmt="wav">WAV (Gốc 48k)</button>
+              <button type="button" class="fmt-pill" data-fmt="mp3">MP3 (256k)</button>
+              <button type="button" class="fmt-pill" data-fmt="m4a">M4A (AAC)</button>
+            </div>
+          </div>
+          <div class="fx-toggles-group">
+            <label class="fx-toggle-pill" title="Chuẩn hóa âm lượng đều -14 LUFS chuẩn YouTube/TikTok/Podcast">
+              <input type="checkbox" id="fxLufsCheckbox"/>
+              <span>🎚️ Chuẩn âm -14 LUFS</span>
+            </label>
+            <label class="fx-toggle-pill" title="Cắt ù tần thấp <80Hz và nén nhẹ làm ấm, dày giọng nói">
+              <input type="checkbox" id="fxEnhanceCheckbox"/>
+              <span>✨ Lọc ù &amp; Làm ấm giọng</span>
+            </label>
+          </div>
+        </div>
+        <div class="bgm-inline-row">
+          <span style="font-weight:700;color:var(--plum-dark);">🎵 Nhạc nền (Auto-Ducking):</span>
+          <select class="bgm-select" id="bgmSelect">
+            <option value="">Không chèn nhạc nền</option>
+          </select>
+          <label class="tool-btn" style="cursor:pointer;" title="Tải thêm file nhạc nền MP3/WAV">
+            + Tải nhạc nền
+            <input type="file" id="bgmUploadInput" accept="audio/*" style="display:none;"/>
+          </label>
+          <span style="color:var(--text-muted);font-weight:600;">Âm lượng nhạc: <b id="bgmVolLabel">14%</b></span>
+          <input type="range" id="bgmVolSlider" min="4" max="40" step="2" value="14" style="width:85px;"/>
         </div>
       </div>
 
@@ -3516,23 +3809,152 @@
       </div>
     </div><!-- #viewLibrary -->
 
-    <!-- VIEW 4: LỊCH SỬ KẾT QUẢ ĐÃ TẠO (CHỈ HIỂN THỊ KHI ẤN MỤC LỊCH SỬ) -->
+    <!-- VIEW 4: TỪ ĐIỂN PHÁT ÂM TÙY CHỈNH (LEXICON) -->
+    <div class="workspace-view" id="viewLexicon">
+      <div class="view-hero-bar">
+        <div>
+          <div class="view-hero-title">Từ điển phát âm tùy chỉnh (Pronunciation Dictionary)</div>
+          <div class="view-hero-desc">
+            Tự động chuyển đổi từ viết tắt, tên thương hiệu hoặc tiếng Anh sang phiên âm tiếng Việt chuẩn trước khi đọc (ví dụ: <code>AI → ây ai</code>, <code>KOC → cây ô xi</code>).
+          </div>
+        </div>
+        <button type="button" class="btn-pill-primary" id="btnInstallStarterLexicon">+ Nạp 8 mẫu phổ biến</button>
+      </div>
+
+      <div class="view-section-card">
+        <div class="lexicon-form-grid">
+          <input type="text" class="input-compact" id="lexPatternInput" placeholder="Từ gốc (vd: AI, TikTok, VNĐ...)"/>
+          <input type="text" class="input-compact" id="lexReplacementInput" placeholder="Cách đọc thay thế (vd: ây ai, Tích Tóc...)"/>
+          <button type="button" class="btn-pill-primary" id="btnAddLexiconRule">+ Thêm quy tắc</button>
+        </div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;">
+          <label class="checkbox-compact"><input type="checkbox" id="lexWholeWordCheck" checked/><div class="checkbox-box"></div><span>Chỉ khớp nguyên từ</span></label>
+          <label class="checkbox-compact"><input type="checkbox" id="lexCaseSensCheck"/><div class="checkbox-box"></div><span>Phân biệt HOA/thường</span></label>
+          <input type="text" class="input-compact" id="lexNoteInput" placeholder="Ghi chú (tùy chọn)..." style="flex:1;min-width:160px;"/>
+        </div>
+      </div>
+
+      <div class="view-section-card">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="text" class="input-compact" id="lexTestInput" placeholder="Thử gõ câu có chứa từ khóa để kiểm tra kết quả sau chuẩn hóa..."/>
+          <button type="button" class="btn-pill-outline" id="btnTestLexicon">Kiểm tra</button>
+        </div>
+        <div id="lexTestOutput" style="display:none;padding:8px 12px;border-radius:var(--radius-sm);background:#FFFFFF;border:1px solid var(--border-card);font-size:12.5px;"></div>
+      </div>
+
+      <div class="view-section-card" id="lexiconRulesList"></div>
+    </div><!-- #viewLexicon -->
+
+    <!-- VIEW 5: SÁCH NÓI / TÀI LIỆU DÀI (BATCH AUDIOBOOK QUEUE) -->
+    <div class="workspace-view" id="viewAudiobook">
+      <div class="view-hero-bar coral">
+        <div>
+          <div class="view-hero-title">Đọc Sách nói &amp; Tài liệu dài theo hàng đợi</div>
+          <div class="view-hero-desc">
+            Tải lên file <b>.TXT, .DOCX, .EPUB, .PDF</b> hoặc dán nội dung nhiều chương. Hệ thống tự tách chương, tổng hợp nền dùng giọng đang chọn và cho phép tải trọn bộ <b>.ZIP</b>.
+          </div>
+        </div>
+      </div>
+
+      <div class="view-section-card">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <input type="text" class="input-compact" id="bookTitleInput" placeholder="Tên sách / tài liệu (vd: Đắc Nhân Tâm)"/>
+          <input type="file" class="input-compact" id="bookFileInput" accept=".txt,.md,.docx,.epub,.pdf"/>
+        </div>
+        <textarea class="input-compact" id="bookRawTextInput" rows="4" placeholder="Hoặc dán văn bản dài nhiều chương tại đây (Chương 1..., Chương 2...)..."></textarea>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+          <span style="font-size:11.5px;color:var(--text-muted);">Sẽ dùng giọng &amp; cài đặt hiện tại (<b id="bookActiveVoiceLabel">Mặc định</b> · <span id="bookActiveFmtLabel">MP3</span>)</span>
+          <button type="button" class="btn-pill-primary" id="btnStartAudiobook">📚 Tạo hàng đợi Sách nói</button>
+        </div>
+      </div>
+
+      <div class="recent-list" id="audiobookList"></div>
+    </div><!-- #viewAudiobook -->
+
+    <!-- VIEW 6: LỊCH SỬ KẾT QUẢ ĐÃ TẠO (NÂNG CẤP TÌM KIẾM, ĐỔI NHÃN & SO SÁNH A/B) -->
     <div class="workspace-view" id="viewHistory">
       <div class="view-hero-bar">
         <div>
           <div class="view-hero-title">Lịch sử kết quả giọng nói đã tạo</div>
           <div class="view-hero-desc">
-            Toàn bộ các bản âm thanh sau khi tạo xong được tự động lưu thành file WAV trong thư mục <code>history/</code>. Nhấn <b>▶</b> để nghe lại ngay lập tức mà không cần tổng hợp lại.
+            Toàn bộ các bản âm thanh được lưu thành file trong thư mục <code>history/</code>. Nhấn <b>▶</b> để nghe lại tức thì hoặc chọn <b>A / B</b> để so sánh trực tiếp 2 bản đọc.
           </div>
         </div>
         <button type="button" class="btn-pill-outline" id="btnClearHistory" style="color: var(--coral-dark); border-color: rgba(235, 107, 99, 0.35);">Xóa tất cả</button>
       </div>
+
+      <div class="ab-compare-bar" id="abCompareBar">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:12.5px;font-weight:800;">⚖️ Chế độ nghe so sánh A / B (chuyển đổi tức thì giữ nguyên vị trí)</span>
+          <button type="button" class="btn-term-act" id="btnClearAB">Đóng A/B</button>
+        </div>
+        <div class="ab-slots-row">
+          <div class="ab-slot-box" id="abSlotA">
+            <span id="abLabelA">Bản A: chưa chọn</span>
+            <button type="button" class="btn-pill-primary" id="btnPlayAB_A" style="padding:3px 10px;font-size:11px;">▶ Nghe A</button>
+          </div>
+          <div class="ab-slot-box" id="abSlotB">
+            <span id="abLabelB">Bản B: chưa chọn</span>
+            <button type="button" class="btn-pill-primary" id="btnPlayAB_B" style="padding:3px 10px;font-size:11px;">▶ Nghe B</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="history-toolbar">
+        <input type="text" class="input-compact" id="historySearchInput" placeholder="Tìm theo lời thoại, tên giọng, nhãn..." style="flex:1;min-width:180px;"/>
+        <select class="filter-select" id="historyEngineFilter" style="width:auto;">
+          <option value="">Tất cả mô hình</option>
+          <option value="vieneu">VieNeu v3 Turbo</option>
+          <option value="vieneu-v2">VieNeu v2 GGUF</option>
+        </select>
+        <select class="filter-select" id="historyFormatFilter" style="width:auto;">
+          <option value="">Tất cả định dạng</option>
+          <option value="wav">WAV</option>
+          <option value="mp3">MP3</option>
+          <option value="m4a">M4A</option>
+        </select>
+      </div>
+
       <div class="recent-section" id="historyCardSection">
         <div class="recent-list" id="historyList">
           <!-- Populated by renderHistory() -->
         </div>
       </div>
     </div><!-- #viewHistory -->
+
+    <!-- VIEW 7: API TƯƠNG THÍCH OPENAI & TÍCH HỢP -->
+    <div class="workspace-view" id="viewApiDocs">
+      <div class="view-hero-bar">
+        <div>
+          <div class="view-hero-title">API Tương thích OpenAI &amp; Tích hợp Tự động hóa</div>
+          <div class="view-hero-desc">
+            Endpoint <code>POST /v1/audio/speech</code> tương thích trực tiếp với OpenAI TTS SDK, n8n, Open WebUI và Home Assistant — chạy hoàn toàn miễn phí trên máy bạn.
+          </div>
+        </div>
+      </div>
+
+      <div class="view-section-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <b>1. Ví dụ cURL (xuất MP3 + chuẩn hóa -14 LUFS)</b>
+          <button type="button" class="btn-pill-outline" data-copycode="apiCodeCurl">Sao chép</button>
+        </div>
+        <div class="api-code-block" id="apiCodeCurl">curl -X POST http://127.0.0.1:8000/v1/audio/speech \
+  -H "Content-Type: application/json" \
+  -d '{"model":"vieneu","voice":"default","input":"Xin chào Việt Nam!","response_format":"mp3","normalize_lufs":true}' \
+  --output output.mp3</div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+          <b>2. Python OpenAI SDK (dùng trực tiếp Open WebUI / script ngoài)</b>
+          <button type="button" class="btn-pill-outline" data-copycode="apiCodePy">Sao chép</button>
+        </div>
+        <div class="api-code-block" id="apiCodePy">from openai import OpenAI
+client = OpenAI(base_url="http://127.0.0.1:8000/v1", api_key="local")
+with client.audio.speech.with_streaming_response.create(
+    model="tts-1", voice="alloy", input="Đây là giọng đọc tiếng Việt chạy local.", response_format="mp3"
+) as resp:
+    resp.stream_to_file("speech.mp3")</div>
+      </div>
+    </div><!-- #viewApiDocs -->
 
     <!-- VIEW 5: TERMINAL LOG (REAL-TIME BACKEND + FRONTEND PROCESS & ERROR MONITOR) -->
     <div class="workspace-view" id="viewTerminal">
@@ -3602,6 +4024,7 @@
         <div class="gen-meta-pills">
           <span class="gen-pct-pill" id="playerGenPct">0%</span>
           <span class="gen-timer-pill" id="playerGenTimer">0.0s</span>
+          <button type="button" class="btn-cancel-gen" id="btnCancelGen" title="Dừng tạo sau khi xong đoạn hiện tại">Hủy</button>
         </div>
       </div>
       <div class="gen-progress-track"><div class="gen-progress-bar" id="playerGenProgressBar"></div></div>
@@ -4041,6 +4464,76 @@
     updateTextCounter();
     showToast('info', `Đã nạp mẫu: "${script.title}"`);
   });
+
+  /* ── Cue Chips Quick Insertion at Cursor ── */
+  document.querySelectorAll('.cue-chip[data-cuetag]').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const tag = chip.dataset.cuetag;
+      const start = textInput.selectionStart ?? textInput.value.length;
+      const end = textInput.selectionEnd ?? start;
+      const before = textInput.value.slice(0, start);
+      const after = textInput.value.slice(end);
+      const leadSpace = before && !before.endsWith(' ') && !before.endsWith('\n') ? ' ' : '';
+      const trailSpace = after && !after.startsWith(' ') && !after.startsWith('\n') ? ' ' : '';
+      textInput.value = before + leadSpace + tag + trailSpace + after;
+      const newPos = before.length + leadSpace.length + tag.length + trailSpace.length;
+      textInput.setSelectionRange(newPos, newPos);
+      textInput.focus();
+      updateTextCounter();
+    });
+  });
+
+  /* ── Export Format & Studio FX & BGM Library ── */
+  let currentExportFormat = 'wav';
+  document.querySelectorAll('#exportFormatGroup .fmt-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#exportFormatGroup .fmt-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentExportFormat = btn.dataset.fmt || 'wav';
+      if ($('bookActiveFmtLabel')) $('bookActiveFmtLabel').textContent = currentExportFormat.toUpperCase();
+    });
+  });
+  if ($('bgmVolSlider')) {
+    $('bgmVolSlider').addEventListener('input', () => {
+      if ($('bgmVolLabel')) $('bgmVolLabel').textContent = $('bgmVolSlider').value + '%';
+    });
+  }
+
+  async function loadBgmTracks(selectAfterName = null) {
+    const sel = $('bgmSelect');
+    if (!sel) return;
+    try {
+      const res = await fetch('/v1/bgm');
+      if (!res.ok) return;
+      const data = await res.json();
+      const tracks = data.tracks || [];
+      const prev = selectAfterName || sel.value;
+      sel.innerHTML = '<option value="">Không chèn nhạc nền</option>' +
+        tracks.map(t => `<option value="${t.name.replace(/"/g, '&quot;')}">${t.name} (${t.size_kb} KB)</option>`).join('');
+      if (prev && tracks.some(t => t.name === prev)) sel.value = prev;
+    } catch {}
+  }
+
+  if ($('bgmUploadInput')) {
+    $('bgmUploadInput').addEventListener('change', async () => {
+      const f = $('bgmUploadInput').files && $('bgmUploadInput').files[0];
+      if (!f) return;
+      try {
+        const fd = new FormData();
+        fd.append('file', f);
+        showToast('info', `Đang tải lên nhạc nền "${f.name}"...`);
+        const res = await fetch('/v1/bgm', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Tải nhạc nền thất bại.');
+        await loadBgmTracks(data.track.name);
+        showToast('ok', `Đã thêm nhạc nền "${data.track.name}" (bật auto-ducking khi tổng hợp).`);
+      } catch (err) {
+        showToast('err', err.message);
+      } finally {
+        $('bgmUploadInput').value = '';
+      }
+    });
+  }
 
   let isPreviewingChunks = false;
   $('btnChunks').addEventListener('click', async () => {
@@ -5495,8 +5988,21 @@
     }
   });
 
-  /* ── Generate Speech (TTS Core — Anti-Double-Click + Progress %) ── */
+  /* ── Generate Speech (TTS Core — Anti-Double-Click + Progress % + Cancel + FX) ── */
   let isGeneratingSpeech = false;
+  let activeTtsJobId = null;
+  if ($('btnCancelGen')) {
+    $('btnCancelGen').addEventListener('click', async () => {
+      if (!activeTtsJobId) return;
+      $('btnCancelGen').disabled = true;
+      $('btnCancelGen').textContent = 'Đang hủy...';
+      try {
+        await fetch(`/v1/jobs/${encodeURIComponent(activeTtsJobId)}/cancel`, { method: 'POST' });
+        showToast('info', 'Đã gửi lệnh hủy, chờ kết thúc đoạn đang chạy...');
+      } catch {}
+    });
+  }
+
   async function generateSpeech() {
     if (isGeneratingSpeech) return;
     const text = textInput.value.trim();
@@ -5508,6 +6014,11 @@
 
     isGeneratingSpeech = true;
     const jobId = `tts_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+    activeTtsJobId = jobId;
+    if ($('btnCancelGen')) {
+      $('btnCancelGen').disabled = false;
+      $('btnCancelGen').textContent = 'Hủy';
+    }
     const activeVoiceLabel = selectedVoiceName && selectedVoiceName !== 'default' ? selectedVoiceName : 'Mặc định VieNeu';
     const spinnerSvg = '<span class="spin-loader"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span>';
 
@@ -5547,7 +6058,7 @@
 
     showToast('info', currentEngine === 'vieneu-v2'
       ? 'Đang chạy mô hình VieNeu v2 GGUF Q8 (bám ngữ điệu Bắc bằng ref_text)...'
-      : 'Đang tổng hợp siêu tốc bằng VieNeu v3 Turbo...');
+      : `Đang tổng hợp (${currentExportFormat.toUpperCase()}) bằng VieNeu v3 Turbo...`);
 
     try {
       const payload = {
@@ -5560,7 +6071,11 @@
         top_p: parseFloat(topPSlider.value),
         repetition_penalty: parseFloat(repSlider.value),
         use_ref_codes: refCodesCheckbox.checked,
-        response_format: 'wav',
+        response_format: currentExportFormat,
+        normalize_lufs: Boolean($('fxLufsCheckbox') && $('fxLufsCheckbox').checked),
+        voice_enhance: Boolean($('fxEnhanceCheckbox') && $('fxEnhanceCheckbox').checked),
+        bgm_name: $('bgmSelect') && $('bgmSelect').value ? $('bgmSelect').value : null,
+        bgm_volume: $('bgmVolSlider') ? (parseInt($('bgmVolSlider').value, 10) / 100) : 0.14,
         job_id: jobId,
       };
 
@@ -5577,7 +6092,8 @@
 
       const historyId       = res.headers.get('X-History-Id') || '';
       const historyAudioUrl = res.headers.get('X-History-Audio-Url') || '';
-      const historyFilename = res.headers.get('X-History-Filename') || `luatu_${selectedVoiceName}_${Date.now()}.wav`;
+      const audioFormat     = res.headers.get('X-Audio-Format') || currentExportFormat;
+      const historyFilename = res.headers.get('X-History-Filename') || `luatu_${selectedVoiceName}_${Date.now()}.${audioFormat}`;
 
       const blob = await res.blob();
       tracker.finish('Hoàn tất 100% — Đang phát âm thanh!');
@@ -5592,9 +6108,10 @@
       audioPlayer.volume = parseInt(volSlider.value, 10) / 100;
       btnDownloadWav.href = playbackUrl;
       btnDownloadWav.download = historyFilename;
+      btnDownloadWav.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Tải file ${audioFormat.toUpperCase()}`;
 
       if (playerVoiceTag) {
-        playerVoiceTag.textContent = `${selectedVoiceName || 'Mặc định'} · ${currentEngine}`;
+        playerVoiceTag.textContent = `${selectedVoiceName || 'Mặc định'} · ${currentEngine} · ${audioFormat.toUpperCase()}`;
       }
 
       miniWaveDownloadBtn.onclick = () => {
@@ -5608,7 +6125,6 @@
       playerShowcase.classList.add('active');
       audioPlayer.play().catch(() => {});
 
-      // Stats
       const dur    = res.headers.get('X-Audio-Duration-Sec') || '0';
       const inf    = res.headers.get('X-Inference-Sec') || '0';
       const rtf    = res.headers.get('X-RTF') || '0';
@@ -5618,17 +6134,18 @@
 
       benchmarkStrip.innerHTML = `
         <div class="benchmark-pill">Mô hình: <b class="gold">${currentEngine} (${prec})</b></div>
-        <div class="benchmark-pill">Tần số: <b>${sr} Hz</b></div>
+        <div class="benchmark-pill">Định dạng: <b>${audioFormat.toUpperCase()} · ${sr} Hz</b></div>
         <div class="benchmark-pill">Độ dài: <b>${dur}s</b></div>
         <div class="benchmark-pill">Sinh: <b>${inf}s</b></div>
         <div class="benchmark-pill">RTF: <b class="gold">${rtf}</b></div>
         <div class="benchmark-pill">Cache: <b>${cached === 'true' ? 'HIT' : 'MISS'}</b></div>
       `;
 
-      showToast('ok', `Hoàn tất tạo giọng! Đã lưu vào history/${historyFilename} (${dur}s · RTF: ${rtf})`);
+      showToast('ok', `Hoàn tất tạo giọng! Đã lưu history/${historyFilename} (${dur}s · RTF: ${rtf})`);
       saveToHistory({
         id: historyId,
         filename: historyFilename,
+        format: audioFormat,
         audio_url: playbackUrl,
         text,
         voice: selectedVoiceName || 'Mặc định',
@@ -5644,6 +6161,7 @@
       showToast('err', err.message);
     } finally {
       isGeneratingSpeech = false;
+      activeTtsJobId = null;
       btnGenerateSpeech.disabled = false;
       btnGenerateSpeech.classList.remove('loading', 'btn-is-loading');
       btnGenerateSpeech.innerHTML = '<span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></span> TẠO GIỌNG NÓI NGAY (Ctrl + Enter)';
@@ -5763,15 +6281,83 @@
     showToast('ok', `Đang phát trực tiếp bản đọc đã lưu (${item.voice || 'Mặc định'}).`);
   }
 
+  /* ── History Search, Filter, Label & A/B Compare ── */
+  let abItemA = null;
+  let abItemB = null;
+  let abActiveSlot = null;
+
+  function renderABBar() {
+    const bar = $('abCompareBar');
+    if (!bar) return;
+    if (!abItemA && !abItemB) {
+      bar.classList.remove('active');
+      return;
+    }
+    bar.classList.add('active');
+    if ($('abLabelA')) $('abLabelA').textContent = abItemA ? `A: ${abItemA.label || abItemA.voice} (${abItemA.engine})` : 'Bản A: chưa chọn';
+    if ($('abLabelB')) $('abLabelB').textContent = abItemB ? `B: ${abItemB.label || abItemB.voice} (${abItemB.engine})` : 'Bản B: chưa chọn';
+    if ($('abSlotA')) $('abSlotA').classList.toggle('playing', abActiveSlot === 'A');
+    if ($('abSlotB')) $('abSlotB').classList.toggle('playing', abActiveSlot === 'B');
+  }
+
+  function playABSlot(slot) {
+    const item = slot === 'A' ? abItemA : abItemB;
+    if (!item) {
+      showToast('info', `Hãy bấm nút "Chọn ${slot}" trên một bản ghi lịch sử trước.`);
+      return;
+    }
+    const prevTime = (abActiveSlot && abActiveSlot !== slot && !audioPlayer.paused) ? audioPlayer.currentTime : 0;
+    abActiveSlot = slot;
+    playHistoryItem(item);
+    if (prevTime > 0) {
+      audioPlayer.addEventListener('loadedmetadata', function syncAB() {
+        if (audioPlayer.duration > prevTime) audioPlayer.currentTime = prevTime;
+        audioPlayer.removeEventListener('loadedmetadata', syncAB);
+      });
+    }
+    renderABBar();
+  }
+
+  if ($('btnPlayAB_A')) $('btnPlayAB_A').addEventListener('click', () => playABSlot('A'));
+  if ($('btnPlayAB_B')) $('btnPlayAB_B').addEventListener('click', () => playABSlot('B'));
+  if ($('btnClearAB')) $('btnClearAB').addEventListener('click', () => {
+    abItemA = null;
+    abItemB = null;
+    abActiveSlot = null;
+    renderABBar();
+  });
+
+  if ($('historySearchInput')) $('historySearchInput').addEventListener('input', renderHistory);
+  if ($('historyEngineFilter')) $('historyEngineFilter').addEventListener('change', renderHistory);
+  if ($('historyFormatFilter')) $('historyFormatFilter').addEventListener('change', renderHistory);
+
   function renderHistory() {
     if (!historyList) return;
+    const q = ($('historySearchInput') ? $('historySearchInput').value : '').trim().toLowerCase();
+    const engF = $('historyEngineFilter') ? $('historyEngineFilter').value : '';
+    const fmtF = $('historyFormatFilter') ? $('historyFormatFilter').value : '';
+
+    const filtered = generationHistory.filter(item => {
+      if (engF && (item.engine || 'vieneu') !== engF) return false;
+      if (fmtF && (item.format || 'wav').toLowerCase() !== fmtF) return false;
+      if (q) {
+        const hay = `${item.text || ''} ${item.voice || ''} ${item.label || ''} ${item.filename || ''}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+
     if (generationHistory.length === 0) {
       historyList.innerHTML = `<div style="text-align:center; padding: 32px 16px; background:#FAF8FA; border:1px dashed var(--border-card); border-radius:var(--radius-lg); color: var(--text-muted); font-size: 13px;">Chưa có file âm thanh nào trong thư mục <code>history/</code>. Hãy chọn giọng ở bảng bên phải và nhấn <b>TẠO GIỌNG NÓI NGAY</b>.</div>`;
       return;
     }
+    if (filtered.length === 0) {
+      historyList.innerHTML = `<div style="text-align:center; padding: 24px 16px; background:#FAF8FA; border:1px dashed var(--border-card); border-radius:var(--radius-lg); color: var(--text-muted); font-size: 13px;">Không có bản ghi lịch sử nào khớp bộ lọc tìm kiếm.</div>`;
+      return;
+    }
 
     historyList.innerHTML = '';
-    generationHistory.forEach((item, idx) => {
+    filtered.forEach((item, idx) => {
       const el = document.createElement('div');
       el.className = 'recent-card';
       el.style.border = '1px solid var(--border-card)';
@@ -5783,7 +6369,10 @@
 
       const timeLabel = item.timestamp || '00:00';
       const dateLabel = item.dateStr ? `${item.dateStr} · ${timeLabel}` : `Hôm nay · ${timeLabel}`;
-      const voiceBadge = `<span class="badge-micro red">${escapeHtmlSafe(item.voice || 'Mặc định')}</span> <span class="badge-micro gray">${escapeHtmlSafe(item.engine || 'vieneu')}</span>`;
+      const fmtUpper = (item.format || 'wav').toUpperCase();
+      const fxTag = item.fx_summary ? `<span class="badge-micro green">${escapeHtmlSafe(item.fx_summary)}</span>` : '';
+      const voiceBadge = `<span class="badge-micro red">${escapeHtmlSafe(item.voice || 'Mặc định')}</span> <span class="badge-micro gray">${escapeHtmlSafe(item.engine || 'vieneu')} · ${fmtUpper}</span> ${fxTag}`;
+      const titleText = item.label ? escapeHtmlSafe(item.label) : `Bản đọc ${escapeHtmlSafe(timeLabel)}`;
       const textSnippet = item.text ? `<div class="history-text-snippet">${escapeHtmlSafe(item.text)}</div>` : '';
       const hid = item.id || String(idx);
       const isPlayingThis = activePlayingHistoryId && hid === activePlayingHistoryId && !audioPlayer.paused;
@@ -5791,7 +6380,7 @@
       el.innerHTML = `
         <div class="recent-card-topline">
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-            <span class="recent-card-title">Bản đọc ${escapeHtmlSafe(timeLabel)}</span>
+            <span class="recent-card-title">${titleText}</span>
             ${voiceBadge}
           </div>
           <span class="recent-card-dur">${durFormatted}</span>
@@ -5799,20 +6388,23 @@
         ${textSnippet}
         <div class="recent-card-meta">
           <span>${escapeHtmlSafe(dateLabel)}${item.filename ? ` · <span style="font-family:var(--font-mono);font-size:10.5px;opacity:0.8;">${escapeHtmlSafe(item.filename)}</span>` : ''}</span>
-          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
-            <button type="button" class="recent-dl-pill" style="background:var(--coral-subtle);color:var(--coral-dark);" data-historyreuse="${idx}" title="Nạp văn bản & giọng vào trình tạo">Nạp vào trình tạo</button>
-            <button type="button" class="recent-dl-pill" data-historydl="${idx}" title="Tải về file WAV đã lưu">
+          <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;">
+            <button type="button" class="recent-dl-pill" style="background:#EEF2FF;color:#3730A3;" data-historyab="A" data-hid="${escapeHtmlSafe(hid)}" title="Gán làm bản A để so sánh">Chọn A</button>
+            <button type="button" class="recent-dl-pill" style="background:#EEF2FF;color:#3730A3;" data-historyab="B" data-hid="${escapeHtmlSafe(hid)}" title="Gán làm bản B để so sánh">Chọn B</button>
+            <button type="button" class="recent-dl-pill" style="background:#FFF7ED;color:#9A3412;" data-historyrename="${escapeHtmlSafe(hid)}" title="Đổi nhãn / tên">Đổi tên</button>
+            <button type="button" class="recent-dl-pill" style="background:var(--coral-subtle);color:var(--coral-dark);" data-historyreuse="${escapeHtmlSafe(hid)}" title="Nạp văn bản & giọng vào trình tạo">Nạp lại</button>
+            <button type="button" class="recent-dl-pill" data-historydl="${escapeHtmlSafe(hid)}" title="Tải về file đã lưu">
               <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Tải về
             </button>
-            <button type="button" class="recent-dl-pill" style="background:#FEE2E2;color:#B91C1C;" data-historydel="${idx}" title="Xóa file khỏi thư mục history">Xóa</button>
+            <button type="button" class="recent-dl-pill" style="background:#FEE2E2;color:#B91C1C;" data-historydel="${escapeHtmlSafe(hid)}" title="Xóa file khỏi thư mục history">Xóa</button>
           </div>
         </div>
         <div class="recent-player-bar">
-          <button type="button" class="recent-play-btn" data-historyspeak="${idx}" data-historyid="${escapeHtmlSafe(hid)}" title="Phát ngay file âm thanh đã lưu">
+          <button type="button" class="recent-play-btn" data-historyspeak="${escapeHtmlSafe(hid)}" data-historyid="${escapeHtmlSafe(hid)}" title="Phát ngay file âm thanh đã lưu">
             ${isPlayingThis ? '⏸' : '▶'}
           </button>
-          <div class="recent-scrub-track" data-historytrack="${idx}" title="Nhấn để tua nhanh">
+          <div class="recent-scrub-track" data-historytrack="${escapeHtmlSafe(hid)}" title="Nhấn để tua nhanh">
             <div class="recent-scrub-fill" data-fillid="${escapeHtmlSafe(hid)}" style="width: ${isPlayingThis ? '0%' : '100%'};"></div>
           </div>
           <span class="recent-time-tag">${durFormatted}</span>
@@ -5821,16 +6413,50 @@
       historyList.appendChild(el);
     });
 
+    const findByHid = (hid) => generationHistory.find(h => String(h.id) === String(hid));
+
     historyList.querySelectorAll('[data-historyspeak]').forEach(btn => {
       btn.addEventListener('click', () => {
-        const item = generationHistory[parseInt(btn.dataset.historyspeak, 10)];
+        const item = findByHid(btn.dataset.historyspeak);
         if (item) playHistoryItem(item);
+      });
+    });
+
+    historyList.querySelectorAll('[data-historyab]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = findByHid(btn.dataset.hid);
+        if (!item) return;
+        if (btn.dataset.historyab === 'A') abItemA = item;
+        else abItemB = item;
+        renderABBar();
+        showToast('info', `Đã gán "${item.label || item.voice}" vào Bản ${btn.dataset.historyab}.`);
+      });
+    });
+
+    historyList.querySelectorAll('[data-historyrename]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const item = findByHid(btn.dataset.historyrename);
+        if (!item) return;
+        const nextLabel = prompt('Nhập nhãn / tên gợi nhớ cho bản đọc này:', item.label || '');
+        if (nextLabel === null) return;
+        try {
+          const res = await fetch(`/v1/history/${encodeURIComponent(item.id)}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ label: nextLabel.trim() }),
+          });
+          if (!res.ok) throw new Error('Không đổi tên được.');
+          item.label = nextLabel.trim();
+          renderHistory();
+        } catch (err) {
+          showToast('err', err.message);
+        }
       });
     });
 
     historyList.querySelectorAll('[data-historytrack]').forEach(track => {
       track.addEventListener('click', (e) => {
-        const item = generationHistory[parseInt(track.dataset.historytrack, 10)];
+        const item = findByHid(track.dataset.historytrack);
         if (!item) return;
         const rect = track.getBoundingClientRect();
         const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
@@ -5849,7 +6475,7 @@
 
     historyList.querySelectorAll('[data-historyreuse]').forEach(btn => {
       btn.addEventListener('click', () => {
-        const item = generationHistory[parseInt(btn.dataset.historyreuse, 10)];
+        const item = findByHid(btn.dataset.historyreuse);
         if (!item) return;
         textInput.value = item.text || '';
         updateTextCounter();
@@ -5862,11 +6488,11 @@
 
     historyList.querySelectorAll('[data-historydl]').forEach(btn => {
       btn.addEventListener('click', () => {
-        const item = generationHistory[parseInt(btn.dataset.historydl, 10)];
+        const item = findByHid(btn.dataset.historydl);
         if (!item) return;
         const audioUrl = item.audio_url || (item.id ? `/v1/history/${encodeURIComponent(item.id)}/audio` : '');
         if (!audioUrl) {
-          showToast('err', 'Không tìm thấy file WAV để tải về.');
+          showToast('err', 'Không tìm thấy file để tải về.');
           return;
         }
         const a = document.createElement('a');
@@ -5878,9 +6504,10 @@
 
     historyList.querySelectorAll('[data-historydel]').forEach(btn => {
       btn.addEventListener('click', async () => {
-        const item = generationHistory[parseInt(btn.dataset.historydel, 10)];
-        if (!item || !item.id) return;
+        const item = findByHid(btn.dataset.historydel);
+        if (!item || !item.id || btn.disabled) return;
         if (!confirm(`Xóa bản đọc "${item.filename || item.id}" khỏi thư mục history?`)) return;
+        btn.disabled = true;
         try {
           const res = await fetch(`/v1/history/${encodeURIComponent(item.id)}`, { method: 'DELETE' });
           if (!res.ok) throw new Error('Không xóa được file lịch sử.');
@@ -5893,6 +6520,7 @@
           updateStats();
           showToast('info', 'Đã xóa bản ghi khỏi thư mục history.');
         } catch (err) {
+          btn.disabled = false;
           showToast('err', err.message);
         }
       });
@@ -5943,6 +6571,323 @@
   $('navHistory').addEventListener('click', () => {
     switchWorkspaceView('viewHistory', 'navHistory');
     loadHistoryFromServer();
+  });
+
+  if ($('navLexicon')) {
+    $('navLexicon').addEventListener('click', () => {
+      switchWorkspaceView('viewLexicon', 'navLexicon');
+      loadLexicon();
+    });
+  }
+  if ($('navAudiobook')) {
+    $('navAudiobook').addEventListener('click', () => {
+      switchWorkspaceView('viewAudiobook', 'navAudiobook');
+      if ($('bookActiveVoiceLabel')) $('bookActiveVoiceLabel').textContent = selectedVoiceName || 'Mặc định';
+      if ($('bookActiveFmtLabel')) $('bookActiveFmtLabel').textContent = currentExportFormat.toUpperCase();
+      loadAudiobooks();
+    });
+  }
+  if ($('navApiDocs')) {
+    $('navApiDocs').addEventListener('click', () => {
+      switchWorkspaceView('viewApiDocs', 'navApiDocs');
+    });
+  }
+
+  /* ── Pronunciation Dictionary (Lexicon) Manager ── */
+  let lexiconRules = [];
+  async function loadLexicon() {
+    const container = $('lexiconRulesList');
+    if (!container) return;
+    try {
+      const res = await fetch('/v1/lexicon');
+      if (!res.ok) return;
+      const data = await res.json();
+      lexiconRules = data.rules || [];
+      renderLexicon();
+    } catch {}
+  }
+
+  function renderLexicon() {
+    const container = $('lexiconRulesList');
+    if (!container) return;
+    if (!lexiconRules.length) {
+      container.innerHTML = `<div style="text-align:center;color:var(--text-muted);font-size:12.5px;padding:18px;">Chưa có quy tắc phát âm nào. Bạn có thể thêm quy tắc mới hoặc bấm <b>+ Nạp 8 mẫu phổ biến</b> ở trên.</div>`;
+      return;
+    }
+    container.innerHTML = lexiconRules.map(r => `
+      <div class="lexicon-rule-row">
+        <div style="min-width:0;flex:1;">
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
+            <b>${escapeHtmlSafe(r.pattern)}</b>
+            <span class="lexicon-arrow">→</span>
+            <span style="color:#2E7D32;font-weight:700;">${escapeHtmlSafe(r.replacement)}</span>
+            ${r.whole_word ? '<span class="badge-micro gray">Nguyên từ</span>' : ''}
+            ${r.case_sensitive ? '<span class="badge-micro gold">Đúng HOA/thường</span>' : ''}
+          </div>
+          ${r.note ? `<div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${escapeHtmlSafe(r.note)}</div>` : ''}
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <button type="button" class="recent-dl-pill" style="background:${r.enabled ? '#E8F5E9' : '#F3EEF3'};color:${r.enabled ? '#2E7D32' : '#6E5F70'};" data-lextoggle="${escapeHtmlSafe(r.id)}">${r.enabled ? 'Đang bật' : 'Đã tắt'}</button>
+          <button type="button" class="recent-dl-pill" style="background:#FEE2E2;color:#B91C1C;" data-lexdel="${escapeHtmlSafe(r.id)}">Xóa</button>
+        </div>
+      </div>
+    `).join('');
+
+    container.querySelectorAll('[data-lextoggle]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const rule = lexiconRules.find(x => x.id === btn.dataset.lextoggle);
+        if (!rule) return;
+        btn.disabled = true;
+        try {
+          await fetch(`/v1/lexicon/${encodeURIComponent(rule.id)}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ enabled: !rule.enabled }),
+          });
+          await loadLexicon();
+        } finally { btn.disabled = false; }
+      });
+    });
+
+    container.querySelectorAll('[data-lexdel]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        btn.disabled = true;
+        try {
+          await fetch(`/v1/lexicon/${encodeURIComponent(btn.dataset.lexdel)}`, { method: 'DELETE' });
+          await loadLexicon();
+        } finally { btn.disabled = false; }
+      });
+    });
+  }
+
+  if ($('btnAddLexiconRule')) {
+    $('btnAddLexiconRule').addEventListener('click', async () => {
+      const pat = ($('lexPatternInput') ? $('lexPatternInput').value : '').trim();
+      const rep = ($('lexReplacementInput') ? $('lexReplacementInput').value : '').trim();
+      if (!pat || !rep) {
+        showToast('err', 'Nhập đầy đủ từ gốc và cách đọc thay thế.');
+        return;
+      }
+      const btn = $('btnAddLexiconRule');
+      btn.disabled = true;
+      try {
+        const res = await fetch('/v1/lexicon', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            pattern: pat,
+            replacement: rep,
+            whole_word: Boolean($('lexWholeWordCheck') && $('lexWholeWordCheck').checked),
+            case_sensitive: Boolean($('lexCaseSensCheck') && $('lexCaseSensCheck').checked),
+            note: ($('lexNoteInput') ? $('lexNoteInput').value : '').trim(),
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Thêm quy tắc thất bại.');
+        $('lexPatternInput').value = '';
+        $('lexReplacementInput').value = '';
+        if ($('lexNoteInput')) $('lexNoteInput').value = '';
+        await loadLexicon();
+        showToast('ok', `Đã thêm "${pat}" → "${rep}"`);
+      } catch (err) {
+        showToast('err', err.message);
+      } finally { btn.disabled = false; }
+    });
+  }
+
+  if ($('btnInstallStarterLexicon')) {
+    $('btnInstallStarterLexicon').addEventListener('click', async () => {
+      const btn = $('btnInstallStarterLexicon');
+      btn.disabled = true;
+      try {
+        const res = await fetch('/v1/lexicon/starter', { method: 'POST' });
+        const data = await res.json();
+        await loadLexicon();
+        showToast('ok', `Đã nạp ${data.added || 0} quy tắc mẫu phổ biến.`);
+      } finally { btn.disabled = false; }
+    });
+  }
+
+  if ($('btnTestLexicon')) {
+    $('btnTestLexicon').addEventListener('click', async () => {
+      const txt = ($('lexTestInput') ? $('lexTestInput').value : '').trim();
+      if (!txt) return;
+      const res = await fetch('/v1/lexicon/test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ input: txt }),
+      });
+      const data = await res.json();
+      if ($('lexTestOutput')) {
+        $('lexTestOutput').style.display = 'block';
+        $('lexTestOutput').innerHTML = `<b>Sau chuẩn hóa:</b> ${escapeHtmlSafe(data.after || '')}`;
+      }
+    });
+  }
+
+  /* ── Audiobook Batch Queue Manager ── */
+  let audiobookPollTimer = null;
+  async function loadAudiobooks() {
+    const listEl = $('audiobookList');
+    if (!listEl) return;
+    try {
+      const res = await fetch('/v1/audiobooks');
+      if (!res.ok) return;
+      const data = await res.json();
+      const books = data.books || [];
+      renderAudiobooks(books);
+      const anyRunning = books.some(b => b.status === 'running' || b.status === 'queued');
+      if (anyRunning && !audiobookPollTimer) {
+        audiobookPollTimer = setInterval(loadAudiobooks, 2500);
+      } else if (!anyRunning && audiobookPollTimer) {
+        clearInterval(audiobookPollTimer);
+        audiobookPollTimer = null;
+      }
+    } catch {}
+  }
+
+  function renderAudiobooks(books) {
+    const listEl = $('audiobookList');
+    if (!listEl) return;
+    if (!books.length) {
+      listEl.innerHTML = `<div style="text-align:center;color:var(--text-muted);font-size:12.5px;padding:22px;background:#FAF8FA;border:1px dashed var(--border-card);border-radius:var(--radius-lg);">Chưa có hàng đợi Sách nói nào. Hãy chọn file .TXT/.DOCX/.EPUB/.PDF hoặc dán nội dung phía trên.</div>`;
+      return;
+    }
+    const statusMap = {
+      running: ['Đang tạo...', 'gold'],
+      completed: ['Hoàn thành', 'green'],
+      paused: ['Tạm dừng', 'gray'],
+      cancelled: ['Đã hủy', 'red'],
+      error: ['Có lỗi', 'red'],
+    };
+    listEl.innerHTML = books.map(b => {
+      const pct = b.total_chapters > 0 ? Math.round((b.completed_chapters / b.total_chapters) * 100) : 0;
+      const [stText, stCls] = statusMap[b.status] || [b.status, 'gray'];
+      const chRows = (b.chapters || []).map(ch => `
+        <div class="chapter-row">
+          <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${ch.index + 1}. ${escapeHtmlSafe(ch.title)} (${ch.chars} ký tự)</span>
+          <span style="font-size:11px;font-weight:700;color:${ch.status === 'done' ? '#2E7D32' : (ch.status === 'running' ? '#D97706' : '#6E5F70')};">
+            ${ch.status === 'done' ? `✓ ${ch.duration_sec}s` : (ch.status === 'running' ? '⏳ Đang đọc...' : (ch.status === 'error' ? '✗ Lỗi' : 'Chờ'))}
+          </span>
+          ${ch.status === 'done' ? `<button type="button" class="recent-dl-pill" data-bookplay="${escapeHtmlSafe(b.id)}" data-ch="${ch.index}">▶ Nghe</button>` : ''}
+        </div>
+      `).join('');
+
+      return `
+        <div class="book-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+            <div>
+              <b style="font-size:14px;color:var(--plum-dark);">${escapeHtmlSafe(b.title)}</b>
+              <div style="font-size:11.5px;color:var(--text-muted);margin-top:2px;">Giọng: ${escapeHtmlSafe(b.voice)} · ${escapeHtmlSafe(b.model)} · ${(b.format || 'mp3').toUpperCase()} · ${b.completed_chapters}/${b.total_chapters} chương (${pct}%)</div>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+              <span class="badge-micro ${stCls}">${stText}</span>
+              ${b.status === 'running' ? `<button type="button" class="recent-dl-pill" data-bookact="pause" data-bid="${escapeHtmlSafe(b.id)}">⏸ Tạm dừng</button>` : ''}
+              ${b.status === 'paused' || b.status === 'cancelled' || b.status === 'error' ? `<button type="button" class="recent-dl-pill" data-bookact="resume" data-bid="${escapeHtmlSafe(b.id)}">▶ Tiếp tục</button>` : ''}
+              ${b.status === 'running' || b.status === 'paused' ? `<button type="button" class="recent-dl-pill" data-bookact="cancel" data-bid="${escapeHtmlSafe(b.id)}">Hủy</button>` : ''}
+              ${b.completed_chapters > 0 ? `<a class="recent-dl-pill" href="/v1/audiobooks/${encodeURIComponent(b.id)}/zip" download="${escapeHtmlSafe(b.id)}.zip">📦 Tải ZIP</a>` : ''}
+              <button type="button" class="recent-dl-pill" style="background:#FEE2E2;color:#B91C1C;" data-bookdel="${escapeHtmlSafe(b.id)}">Xóa</button>
+            </div>
+          </div>
+          <div class="gen-progress-track"><div class="gen-progress-bar" style="width:${pct}%;"></div></div>
+          <div class="chapter-list-compact">${chRows}</div>
+        </div>
+      `;
+    }).join('');
+
+    listEl.querySelectorAll('[data-bookact]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        btn.disabled = true;
+        await fetch(`/v1/audiobooks/${encodeURIComponent(btn.dataset.bid)}/${btn.dataset.bookact}`, { method: 'POST' });
+        await loadAudiobooks();
+      });
+    });
+    listEl.querySelectorAll('[data-bookdel]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Xóa sách nói này khỏi hàng đợi?')) return;
+        btn.disabled = true;
+        await fetch(`/v1/audiobooks/${encodeURIComponent(btn.dataset.bookdel)}`, { method: 'DELETE' });
+        await loadAudiobooks();
+      });
+    });
+    listEl.querySelectorAll('[data-bookplay]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const url = `/v1/audiobooks/${encodeURIComponent(btn.dataset.bookplay)}/chapters/${btn.dataset.ch}/audio`;
+        if (!previewAudio.paused) previewAudio.pause();
+        activeMiniAudio = audioPlayer;
+        audioPlayer.src = url;
+        audioPlayer.volume = parseInt(volSlider.value, 10) / 100;
+        btnDownloadWav.href = url;
+        playerShowcase.classList.add('active');
+        audioPlayer.play().catch(() => {});
+      });
+    });
+  }
+
+  let isCreatingBook = false;
+  if ($('btnStartAudiobook')) {
+    $('btnStartAudiobook').addEventListener('click', async () => {
+      if (isCreatingBook) return;
+      const f = $('bookFileInput') && $('bookFileInput').files ? $('bookFileInput').files[0] : null;
+      const rawTxt = ($('bookRawTextInput') ? $('bookRawTextInput').value : '').trim();
+      if (!f && !rawTxt) {
+        showToast('err', 'Hãy chọn file tài liệu (.txt/.docx/.epub/.pdf) hoặc dán nội dung trước.');
+        return;
+      }
+      isCreatingBook = true;
+      const btn = $('btnStartAudiobook');
+      const origHtml = btn.innerHTML;
+      btn.disabled = true;
+      btn.classList.add('btn-is-loading');
+      btn.innerHTML = `<span class="spin-loader"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span> Đang tách chương...`;
+      try {
+        const fd = new FormData();
+        fd.append('title', ($('bookTitleInput') ? $('bookTitleInput').value : '').trim());
+        fd.append('raw_text', rawTxt);
+        fd.append('voice', selectedVoiceName || 'default');
+        fd.append('model', currentEngine);
+        fd.append('speed', speedSlider.value);
+        fd.append('temperature', tempSlider.value);
+        fd.append('top_k', topKSlider.value);
+        fd.append('top_p', topPSlider.value);
+        fd.append('repetition_penalty', repSlider.value);
+        fd.append('output_format', currentExportFormat === 'wav' ? 'mp3' : currentExportFormat);
+        fd.append('normalize_lufs', Boolean($('fxLufsCheckbox') && $('fxLufsCheckbox').checked));
+        fd.append('voice_enhance', Boolean($('fxEnhanceCheckbox') && $('fxEnhanceCheckbox').checked));
+        fd.append('bgm_name', $('bgmSelect') ? $('bgmSelect').value : '');
+        fd.append('bgm_volume', $('bgmVolSlider') ? (parseInt($('bgmVolSlider').value, 10) / 100) : 0.12);
+        if (f) fd.append('file', f);
+
+        const res = await fetch('/v1/audiobooks', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Tạo hàng đợi thất bại.');
+        if ($('bookFileInput')) $('bookFileInput').value = '';
+        if ($('bookRawTextInput')) $('bookRawTextInput').value = '';
+        if ($('bookTitleInput')) $('bookTitleInput').value = '';
+        showToast('ok', `Đã tạo hàng đợi "${data.book.title}" (${data.book.total_chapters} chương) — đang chạy nền!`);
+        await loadAudiobooks();
+      } catch (err) {
+        showToast('err', err.message);
+      } finally {
+        isCreatingBook = false;
+        btn.disabled = false;
+        btn.classList.remove('btn-is-loading');
+        btn.innerHTML = origHtml;
+      }
+    });
+  }
+
+  document.querySelectorAll('[data-copycode]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const target = $(btn.dataset.copycode);
+      if (!target) return;
+      try {
+        await navigator.clipboard.writeText(target.textContent);
+        showToast('ok', 'Đã sao chép đoạn mã mẫu!');
+      } catch {
+        showToast('err', 'Không thể sao chép vào clipboard.');
+      }
+    });
   });
 
   if ($('btnQuickCreateClone')) {
@@ -6200,6 +7145,8 @@
   checkHealth();
   loadVoicesRegistry();
   loadHistoryFromServer();
+  loadBgmTracks();
+  loadLexicon();
   updateTextCounter();
   drawMiniWaveform();
   pollBackendLogs();

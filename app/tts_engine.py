@@ -16,6 +16,7 @@ import numpy as np
 import soundfile as sf
 from vieneu import Vieneu
 
+from .audio_postprocess import FORMAT_META, apply_studio_fx, encode_audio_bytes
 from .config import settings
 from .log_stream import push_log
 from .normalizer import preprocess_text, split_and_normalize
@@ -237,13 +238,23 @@ class TTSEngine:
         use_ref_codes: bool = True,
         ref_text_override: Optional[str] = None,
         voice_manager: Any = None,
+        response_format: str = "wav",
+        normalize_lufs: bool = False,
+        voice_enhance: bool = False,
+        bgm_path: Optional[Path] = None,
+        bgm_volume: float = 0.14,
         progress_cb: Optional[Any] = None,
+        cancel_event: Optional[threading.Event] = None,
     ) -> Tuple[bytes, dict]:
         cleaned = preprocess_text(text)
         if not cleaned:
             raise ValueError("Văn bản đầu vào đang trống.")
         if not (0.5 <= speed <= 2.0):
             raise ValueError("Tham số speed phải nằm trong khoảng 0.5 đến 2.0.")
+
+        fmt_key = (response_format or "wav").lower().strip()
+        if fmt_key not in FORMAT_META:
+            raise ValueError(f"Định dạng '{response_format}' không được hỗ trợ.")
 
         engine_key = model.lower()
         if engine_key not in ("vieneu", "vieneu-v2"):
@@ -263,6 +274,8 @@ class TTSEngine:
                     f"Giọng '{resolved_voice}' chưa có lời thoại mẫu (ref_text). "
                     "Chế độ VieNeu v2 yêu cầu nhập đúng câu nói trong file audio mẫu."
                 )
+
+        bgm_sig = f"{bgm_path.name}:{round(float(bgm_volume), 2)}" if bgm_path else ""
         cache_key = (
             engine_key,
             cleaned,
@@ -276,15 +289,19 @@ class TTSEngine:
             round(top_p, 2),
             round(repetition_penalty, 2),
             bool(use_ref_codes),
+            fmt_key,
+            bool(normalize_lufs),
+            bool(voice_enhance),
+            bgm_sig,
         )
 
         with self._lock:
             if cache_key in self._cache:
                 self._cache.move_to_end(cache_key)
-                wav_bytes, audio_dur, elapsed, sr = self._cache[cache_key]
+                out_bytes, audio_dur, elapsed, sr = self._cache[cache_key]
                 if progress_cb:
                     progress_cb(98, "Trích xuất tức thì từ bộ nhớ đệm (Cache HIT)...", "", 0.2)
-                return wav_bytes, {
+                return out_bytes, {
                     "cached": True,
                     "audio_duration_sec": round(audio_dur, 3),
                     "inference_sec": 0.0,
@@ -292,13 +309,18 @@ class TTSEngine:
                     "rtf": 0.0,
                     "sample_rate": sr,
                     "precision": settings.vieneu_precision if engine_key == "vieneu" else "gguf-q8",
+                    "format": FORMAT_META[fmt_key][1],
+                    "mime": FORMAT_META[fmt_key][0],
                 }
 
-            chunks, _ = split_and_normalize(
-                cleaned,
-                max_chars=min(settings.max_chars_per_chunk, 150) if engine_key == "vieneu-v2" else settings.max_chars_per_chunk,
-            )
-            chunk_count = max(1, len(chunks))
+            from vieneu_utils.core_utils import gaps_to_silence, join_audio_chunks
+
+            max_c = min(settings.max_chars_per_chunk, 150) if engine_key == "vieneu-v2" else settings.max_chars_per_chunk
+            chunks, gaps = split_and_normalize(cleaned, max_chars=max_c)
+            if not chunks:
+                chunks = [cleaned]
+                gaps = []
+            chunk_count = len(chunks)
             if engine_key == "vieneu":
                 est_sec = max(2.2, len(cleaned) * 0.055)
             else:
@@ -307,7 +329,7 @@ class TTSEngine:
 
             if progress_cb:
                 progress_cb(
-                    12,
+                    10,
                     f"Đã tách {chunk_count} đoạn văn bản · Đang chuẩn bị tổng hợp...",
                     f"{len(cleaned)} ký tự",
                     est_sec,
@@ -316,27 +338,47 @@ class TTSEngine:
             t0 = time.perf_counter()
             if engine_key == "vieneu":
                 sr = self.sample_rate
-                if progress_cb:
-                    progress_cb(
-                        24,
-                        f"Đang tổng hợp {chunk_count} đoạn bằng VieNeu v3 Turbo...",
-                        "ONNX CPU 48kHz",
-                        est_sec,
-                    )
-                audio = self.tts.infer(
-                    cleaned,
-                    voice=resolved_voice,
-                    max_chars=settings.max_chars_per_chunk,
-                    use_ref_codes=use_ref_codes,
+                speaker_emb, ref_codes = self.tts._resolve_ref(
+                    resolved_voice, None, True, use_ref_codes
+                )
+                sampling = dict(
                     temperature=temperature,
                     top_k=top_k,
                     top_p=top_p,
+                    max_new_frames=300,
                     repetition_penalty=repetition_penalty,
+                )
+                chunk_wavs = []
+                for ci, ch_text in enumerate(chunks, start=1):
+                    if cancel_event and cancel_event.is_set():
+                        raise RuntimeError("Đã hủy tác vụ theo yêu cầu.")
+                    pct = 14 + int(((ci - 1) / chunk_count) * 72)
+                    if progress_cb:
+                        progress_cb(
+                            pct,
+                            f"Đang tổng hợp đoạn {ci}/{chunk_count} (VieNeu v3 Turbo)...",
+                            ch_text[:45],
+                            est_sec,
+                        )
+                    w = self.tts._infer_chunks(
+                        [ch_text], speaker_emb, ref_codes, use_ref_codes, 1, sampling
+                    )[0]
+                    chunk_wavs.append(w)
+
+                if cancel_event and cancel_event.is_set():
+                    raise RuntimeError("Đã hủy tác vụ theo yêu cầu.")
+                final_wav = join_audio_chunks(
+                    chunk_wavs, sr, silence_ps=gaps_to_silence(gaps)
+                )
+                audio = (
+                    self.tts._apply_watermark(final_wav)
+                    if hasattr(self.tts, "_apply_watermark")
+                    else final_wav
                 )
             else:
                 if self.tts_v2 is None and progress_cb:
                     progress_cb(
-                        16,
+                        14,
                         "Đang nạp mô hình VieNeu v2 GGUF Q8 & NeuCodec lần đầu...",
                         "Quá trình nạp lần đầu mất ~15–25s",
                         est_sec,
@@ -353,60 +395,91 @@ class TTSEngine:
                     "TTS-V2",
                     f"Áp dụng tham số tối ưu GGUF v2: temp={v2_temp}, top_k={v2_top_k}, top_p={v2_top_p}, repeat_penalty={v2_rep}, max_chars={v2_max_chars}.",
                 )
-                if progress_cb:
-                    progress_cb(
-                        30,
-                        f"Đang tổng hợp {chunk_count} đoạn bằng VieNeu v2 GGUF...",
-                        "Bám ngữ điệu qua ref_text",
-                        est_sec,
-                    )
-                if resolved_voice and voice_manager is not None and voice_manager.is_custom_voice(resolved_voice):
+
+                is_custom_v2 = bool(
+                    resolved_voice and voice_manager is not None and voice_manager.is_custom_voice(resolved_voice)
+                )
+                if is_custom_v2:
                     ref_codes, ref_text = voice_manager.get_v2_reference(
                         resolved_voice,
                         self._encode_v2_wav,
                         ref_text_override=ref_text_override,
                     )
-                    audio = tts2.infer(
-                        cleaned,
-                        ref_codes=ref_codes,
-                        ref_text=ref_text,
-                        max_chars=v2_max_chars,
-                        temperature=v2_temp,
-                        top_k=v2_top_k,
-                    )
                 else:
                     v2_voice = tts2.get_preset_voice(resolved_voice)
-                    audio = tts2.infer(
-                        cleaned,
-                        voice=v2_voice,
-                        max_chars=v2_max_chars,
-                        temperature=v2_temp,
-                        top_k=v2_top_k,
-                    )
+
+                chunk_wavs = []
+                for ci, ch_text in enumerate(chunks, start=1):
+                    if cancel_event and cancel_event.is_set():
+                        raise RuntimeError("Đã hủy tác vụ theo yêu cầu.")
+                    pct = 20 + int(((ci - 1) / chunk_count) * 66)
+                    if progress_cb:
+                        progress_cb(
+                            pct,
+                            f"Đang tổng hợp đoạn {ci}/{chunk_count} (VieNeu v2 GGUF)...",
+                            ch_text[:45],
+                            est_sec,
+                        )
+                    if is_custom_v2:
+                        w = tts2.infer(
+                            ch_text,
+                            ref_codes=ref_codes,
+                            ref_text=ref_text,
+                            max_chars=v2_max_chars,
+                            temperature=v2_temp,
+                            top_k=v2_top_k,
+                        )
+                    else:
+                        w = tts2.infer(
+                            ch_text,
+                            voice=v2_voice,
+                            max_chars=v2_max_chars,
+                            temperature=v2_temp,
+                            top_k=v2_top_k,
+                        )
+                    chunk_wavs.append(np.asarray(w, dtype=np.float32))
+
+                if cancel_event and cancel_event.is_set():
+                    raise RuntimeError("Đã hủy tác vụ theo yêu cầu.")
+                audio = join_audio_chunks(chunk_wavs, sr, silence_ps=gaps_to_silence(gaps))
 
             if abs(speed - 1.0) > 0.02 and len(audio) > 0:
                 if progress_cb:
-                    progress_cb(90, f"Đang chỉnh tốc độ {speed:.2f}x bằng FFmpeg atempo...", "", est_sec)
+                    progress_cb(88, f"Đang chỉnh tốc độ {speed:.2f}x bằng FFmpeg atempo...", "", est_sec)
                 audio = _time_stretch_ffmpeg(np.asarray(audio, dtype=np.float32), sr, float(speed))
 
+            if normalize_lufs or voice_enhance or bgm_path is not None:
+                if progress_cb:
+                    progress_cb(92, "Đang xử lý hậu kỳ Studio FFmpeg (-14 LUFS / BGM)...", "", est_sec)
+                audio = apply_studio_fx(
+                    np.asarray(audio, dtype=np.float32),
+                    sr,
+                    normalize_lufs=normalize_lufs,
+                    voice_enhance=voice_enhance,
+                    bgm_path=bgm_path,
+                    bgm_volume=bgm_volume,
+                )
+
             if progress_cb:
-                progress_cb(95, "Đang đóng gói tệp âm thanh WAV...", "", est_sec)
+                progress_cb(96, f"Đang đóng gói tệp âm thanh {FORMAT_META[fmt_key][1].upper()}...", "", est_sec)
             elapsed = time.perf_counter() - t0
             audio_dur = float(len(audio)) / float(sr) if len(audio) else 0.0
-            wav_bytes = encode_wav_bytes(audio, sr)
+            out_bytes, mime, ext = encode_audio_bytes(audio, sr, fmt=fmt_key)
 
-            self._cache[cache_key] = (wav_bytes, audio_dur, elapsed, sr)
+            self._cache[cache_key] = (out_bytes, audio_dur, elapsed, sr)
             while len(self._cache) > self._cache_max:
                 self._cache.popitem(last=False)
 
         rtf = elapsed / audio_dur if audio_dur > 0 else 0.0
-        return wav_bytes, {
+        return out_bytes, {
             "cached": False,
             "audio_duration_sec": round(audio_dur, 3),
             "inference_sec": round(elapsed, 3),
             "rtf": round(rtf, 3),
             "sample_rate": sr,
             "precision": settings.vieneu_precision if engine_key == "vieneu" else "gguf-q8",
+            "format": ext,
+            "mime": mime,
         }
 
     def stream_pcm(

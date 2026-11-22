@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import numpy as np
+import orjson
 import soundfile as sf
 
 from .progress_store import ProgressCallback
@@ -144,14 +145,15 @@ class VoiceManager:
         if not self.registry_path.is_file():
             return {}
         try:
-            return json.loads(self.registry_path.read_text(encoding="utf-8"))
+            data = orjson.loads(self.registry_path.read_bytes())
+            return data if isinstance(data, dict) else {}
         except Exception:
             return {}
 
     def _write_registry(self, data: Dict[str, dict]) -> None:
-        self.registry_path.write_text(
-            json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
-        )
+        tmp = self.registry_path.with_suffix(".json.tmp")
+        tmp.write_bytes(orjson.dumps(data, option=orjson.OPT_INDENT_2))
+        tmp.replace(self.registry_path)
 
     @staticmethod
     def _build_meta(name: str, entry: dict) -> dict:

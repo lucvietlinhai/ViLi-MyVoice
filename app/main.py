@@ -6,41 +6,65 @@ import shutil
 import tempfile
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Literal, Optional
+from typing import Optional
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.responses import FileResponse, Response, StreamingResponse
+from fastapi.responses import FileResponse, ORJSONResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
+from .audiobook_manager import AudiobookManager, extract_text_from_document
+from .audio_postprocess import BgmManager
 from .config import settings
 from .history_manager import HistoryManager
+from .lexicon_manager import STARTER_TEMPLATES, lexicon_manager
 from .log_stream import attach_python_logging, log_store, push_log
-from .normalizer import split_and_normalize
+from .normalizer import preprocess_text, split_and_normalize
 from .progress_store import progress_store
 from .tts_engine import TTSEngine
 from .voice_manager import VoiceManager
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 
+_OPENAI_MODEL_ALIASES = {
+    "tts-1": "vieneu",
+    "tts-1-hd": "vieneu",
+    "gpt-4o-mini-tts": "vieneu",
+    "vieneu": "vieneu",
+    "vieneu-v2": "vieneu-v2",
+}
+
+_OPENAI_VOICE_FALLBACKS = {
+    "alloy": "default",
+    "nova": "default",
+    "shimmer": "default",
+    "echo": "default",
+    "onyx": "default",
+    "fable": "default",
+}
+
 
 class SpeechRequest(BaseModel):
-    model: Literal["vieneu", "vieneu-v2"] = Field(
+    model: str = Field(
         default="vieneu",
-        description="'vieneu' = v3 Turbo 48kHz; 'vieneu-v2' = v2 GGUF Q8 24kHz + ref_text.",
+        description="'vieneu' = v3 Turbo 48kHz; 'vieneu-v2' = v2 GGUF Q8 24kHz (hoặc alias OpenAI tts-1).",
     )
-    voice: str = Field(default="default", description="Tên giọng clone hoặc giọng preset.")
+    voice: str = Field(default="default", description="Tên giọng clone, preset VieNeu hoặc alias OpenAI.")
     input: str = Field(..., min_length=1, description="Văn bản tiếng Việt cần đọc.")
     ref_text: Optional[str] = Field(
         default=None, description="Ghi đè lời thoại mẫu (chỉ dùng cho model='vieneu-v2')."
     )
     speed: float = Field(default=1.0, ge=0.5, le=2.0)
-    response_format: Literal["wav", "pcm"] = Field(default="wav")
+    response_format: str = Field(default="wav", description="wav | mp3 | m4a | aac | pcm")
     temperature: float = Field(default=0.45, ge=0.1, le=1.5)
     top_k: int = Field(default=15, ge=1, le=100)
     top_p: float = Field(default=0.85, ge=0.1, le=1.0)
     repetition_penalty: float = Field(default=1.2, ge=1.0, le=1.8)
     use_ref_codes: bool = Field(default=True)
+    normalize_lufs: bool = Field(default=False, description="Chuẩn hóa âm lượng -14 LUFS.")
+    voice_enhance: bool = Field(default=False, description="Lọc ù <80Hz & làm ấm giọng Studio.")
+    bgm_name: Optional[str] = Field(default=None, description="Tên file nhạc nền trong voices/bgm/ (auto-ducking).")
+    bgm_volume: float = Field(default=0.14, ge=0.02, le=0.6)
     job_id: Optional[str] = Field(default=None, description="ID theo dõi % tiến trình (tùy chọn).")
 
 
@@ -52,9 +76,33 @@ class PreviewTextRequest(BaseModel):
     input: str = Field(..., min_length=1)
 
 
+class LexiconRuleRequest(BaseModel):
+    pattern: str = Field(..., min_length=1)
+    replacement: str = Field(..., min_length=1)
+    whole_word: bool = Field(default=True)
+    case_sensitive: bool = Field(default=False)
+    enabled: bool = Field(default=True)
+    note: str = Field(default="")
+
+
+class LexiconRulePatch(BaseModel):
+    pattern: Optional[str] = None
+    replacement: Optional[str] = None
+    whole_word: Optional[bool] = None
+    case_sensitive: Optional[bool] = None
+    enabled: Optional[bool] = None
+    note: Optional[str] = None
+
+
+class HistoryPatchRequest(BaseModel):
+    label: str = Field(default="")
+
+
 _engine: Optional[TTSEngine] = None
 _voice_mgr: Optional[VoiceManager] = None
 _history_mgr = HistoryManager(settings.history_dir)
+_bgm_mgr = BgmManager(settings.bgm_dir)
+_audiobook_mgr = AudiobookManager(settings.audiobooks_dir, _bgm_mgr)
 
 
 @asynccontextmanager
@@ -65,6 +113,7 @@ async def lifespan(_app: FastAPI):
     _engine = TTSEngine()
     push_log("OK", "TTS", f"Nạp thành công VieNeu v3 Turbo ({_engine.sample_rate} Hz) trong {_engine.load_seconds}s.")
     _voice_mgr = VoiceManager(_engine.tts, settings.voices_dir)
+    _audiobook_mgr.attach_runtime(_engine, _voice_mgr)
     voices = _voice_mgr.list_voices(_engine.tts_v2)
     push_log("OK", "VOICE", f"Đã nạp {len(voices['custom_voices'])} giọng clone & {len(voices['preset_voices'])} giọng mặc định VieNeu.")
     yield
@@ -77,7 +126,8 @@ async def lifespan(_app: FastAPI):
 
 app = FastAPI(
     title="Vietnamese TTS Voice Clone (Local v3 + v2)",
-    version="1.1.0",
+    version="1.2.0",
+    default_response_class=ORJSONResponse,
     lifespan=lifespan,
 )
 
@@ -89,6 +139,17 @@ def _require_ready() -> tuple[TTSEngine, VoiceManager]:
     if _engine is None or _voice_mgr is None:
         raise HTTPException(status_code=503, detail="TTS engine chưa sẵn sàng.")
     return _engine, _voice_mgr
+
+
+def _resolve_openai_compat(model: str, voice: str, voice_mgr: VoiceManager) -> tuple[str, str]:
+    m_key = (model or "vieneu").strip().lower()
+    mapped_model = _OPENAI_MODEL_ALIASES.get(m_key, m_key)
+    v_key = (voice or "default").strip()
+    if v_key.lower() in _OPENAI_VOICE_FALLBACKS and not voice_mgr.is_custom_voice(v_key):
+        mapped_voice = _OPENAI_VOICE_FALLBACKS[v_key.lower()]
+    else:
+        mapped_voice = v_key
+    return mapped_model, mapped_voice
 
 
 @app.get("/")
@@ -105,7 +166,7 @@ async def health():
     voices = voice_mgr.list_voices(engine.tts_v2)
     return {
         "status": "ok",
-        "models": ["vieneu", "vieneu-v2"],
+        "models": ["vieneu", "vieneu-v2", "tts-1", "tts-1-hd"],
         "mode": settings.vieneu_mode,
         "backend": settings.vieneu_backend,
         "precision": settings.vieneu_precision,
@@ -124,19 +185,23 @@ async def health():
 
 @app.get("/v1/logs")
 async def get_logs(since_id: int = 0):
-    """Trả về danh sách log backend mới nhất kể từ since_id cho bảng Terminal Log."""
     return log_store.get_since(since_id)
 
 
 @app.get("/v1/progress/{job_id}")
 async def get_job_progress(job_id: str):
-    """Trả về phần trăm (%) hoàn thành hiện tại cho tác vụ tạo giọng / clone giọng."""
     return progress_store.get(job_id)
+
+
+@app.post("/v1/jobs/{job_id}/cancel")
+async def cancel_job(job_id: str):
+    progress_store.cancel(job_id)
+    push_log("WARN", "TTS", f"Người dùng yêu cầu hủy tác vụ '{job_id}'.")
+    return {"status": "cancelling", "job_id": job_id}
 
 
 @app.delete("/v1/logs")
 async def clear_logs():
-    """Xóa sạch bộ đệm log backend."""
     log_store.clear()
     push_log("INFO", "SERVER", "Đã xóa sạch lịch sử Terminal Log.")
     return {"status": "cleared"}
@@ -150,7 +215,6 @@ async def list_voices():
 
 @app.get("/v1/voices/{voice_id}/audio")
 async def get_voice_audio(voice_id: str):
-    """Trả về file audio gốc đã lưu của giọng clone để người dùng nghe thử mẫu."""
     engine, voice_mgr = _require_ready()
     from .voice_manager import _slugify_voice_name
     safe_name = _slugify_voice_name(voice_id)
@@ -162,7 +226,6 @@ async def get_voice_audio(voice_id: str):
 
 @app.get("/v1/voices/{voice_id}/sample")
 async def get_voice_sample(voice_id: str):
-    """Tổng hợp (kèm LRU cache) câu chào mẫu để nghe thử các giọng mặc định tích hợp sẵn."""
     engine, voice_mgr = _require_ready()
     voices = voice_mgr.list_voices(engine.tts_v2)
     preset_names = {v["name"] for v in voices["preset_voices"]}
@@ -255,20 +318,116 @@ async def delete_voice(voice_id: str):
 @app.post("/v1/text/preview-chunks")
 async def preview_chunks(req: PreviewTextRequest):
     chunks, gaps = split_and_normalize(req.input, max_chars=settings.max_chars_per_chunk)
-    return {"chunks": chunks, "gaps": gaps, "count": len(chunks)}
+    return {"chunks": chunks, "gaps": gaps, "count": len(chunks), "normalized_text": preprocess_text(req.input)}
 
+
+# ── Từ điển phát âm tùy chỉnh (Lexicon) ──────────────────────────────────────
+
+@app.get("/v1/lexicon")
+async def get_lexicon():
+    return {"rules": lexicon_manager.list_rules(), "starter_count": len(STARTER_TEMPLATES)}
+
+
+@app.post("/v1/lexicon")
+async def add_lexicon_rule(req: LexiconRuleRequest):
+    try:
+        rule = lexicon_manager.add_rule(
+            pattern=req.pattern,
+            replacement=req.replacement,
+            whole_word=req.whole_word,
+            case_sensitive=req.case_sensitive,
+            enabled=req.enabled,
+            note=req.note,
+        )
+        push_log("OK", "LEXICON", f"Thêm quy tắc phát âm: '{rule['pattern']}' → '{rule['replacement']}'.")
+        return {"status": "created", "rule": rule}
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/v1/lexicon/starter")
+async def install_starter_lexicon():
+    added = lexicon_manager.install_starter_presets()
+    push_log("OK", "LEXICON", f"Đã nạp {len(added)} quy tắc phát âm gợi ý phổ biến.")
+    return {"status": "ok", "added": len(added), "rules": lexicon_manager.list_rules()}
+
+
+@app.post("/v1/lexicon/test")
+async def test_lexicon(req: PreviewTextRequest):
+    return {"before": req.input, "after": preprocess_text(req.input)}
+
+
+@app.patch("/v1/lexicon/{rule_id}")
+async def patch_lexicon_rule(rule_id: str, req: LexiconRulePatch):
+    try:
+        rule = lexicon_manager.update_rule(rule_id, **req.model_dump())
+        return {"status": "updated", "rule": rule}
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.delete("/v1/lexicon/{rule_id}")
+async def delete_lexicon_rule(rule_id: str):
+    if not lexicon_manager.delete_rule(rule_id):
+        raise HTTPException(status_code=404, detail="Không tìm thấy quy tắc phát âm.")
+    return {"status": "deleted", "id": rule_id}
+
+
+# ── Thư viện nhạc nền BGM (cho Auto-Ducking) ─────────────────────────────────
+
+@app.get("/v1/bgm")
+async def list_bgm():
+    return {"tracks": _bgm_mgr.list_tracks()}
+
+
+@app.post("/v1/bgm")
+async def upload_bgm(file: UploadFile = File(...)):
+    try:
+        raw = await file.read()
+        track = _bgm_mgr.save_track(file.filename or "bgm.mp3", raw)
+        push_log("OK", "BGM", f"Đã tải lên nhạc nền '{track['name']}' ({track['size_kb']} KB).")
+        return {"status": "uploaded", "track": track}
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/v1/bgm/{filename}")
+async def get_bgm_file(filename: str):
+    p = _bgm_mgr.get_path(filename)
+    if p is None:
+        raise HTTPException(status_code=404, detail="Không tìm thấy file nhạc nền.")
+    return FileResponse(str(p))
+
+
+@app.delete("/v1/bgm/{filename}")
+async def delete_bgm(filename: str):
+    if not _bgm_mgr.delete_track(filename):
+        raise HTTPException(status_code=404, detail="Không tìm thấy file nhạc nền.")
+    return {"status": "deleted", "name": filename}
+
+
+# ── Tổng hợp giọng nói (Tương thích OpenAI + FX + Đa định dạng) ─────────────
 
 @app.post("/v1/audio/speech")
 async def create_speech(req: SpeechRequest):
     engine, voice_mgr = _require_ready()
-    push_log("INFO", "TTS", f"Yêu cầu tạo giọng [{req.model}] voice='{req.voice}' ({len(req.input)} ký tự, speed={req.speed}, temp={req.temperature})...")
+    eff_model, eff_voice = _resolve_openai_compat(req.model, req.voice, voice_mgr)
+    push_log(
+        "INFO",
+        "TTS",
+        f"Yêu cầu tạo giọng [{eff_model}] voice='{eff_voice}' ({len(req.input)} ký tự, fmt={req.response_format}, speed={req.speed})...",
+    )
     progress_store.update(req.job_id, 5, "Đang tiếp nhận yêu cầu tạo giọng...", f"{len(req.input)} ký tự")
+    cancel_ev = progress_store.get_cancel_event(req.job_id)
+
     try:
-        if req.response_format == "pcm":
+        if req.response_format.lower() == "pcm":
             sr, gen = engine.stream_pcm(
                 req.input,
-                model=req.model,
-                voice=req.voice,
+                model=eff_model,
+                voice=eff_voice,
                 temperature=req.temperature,
                 top_k=req.top_k,
                 top_p=req.top_p,
@@ -284,14 +443,15 @@ async def create_speech(req: SpeechRequest):
                     "X-Audio-Sample-Rate": str(sr),
                     "X-Audio-Channels": "1",
                     "X-Audio-Sample-Format": "s16le",
-                    "X-TTS-Model": req.model,
+                    "X-TTS-Model": eff_model,
                 },
             )
 
-        wav_bytes, stats = engine.synthesize_wav(
+        bgm_path = _bgm_mgr.get_path(req.bgm_name) if req.bgm_name else None
+        out_bytes, stats = engine.synthesize_wav(
             req.input,
-            model=req.model,
-            voice=req.voice,
+            model=eff_model,
+            voice=eff_voice,
             speed=req.speed,
             temperature=req.temperature,
             top_k=req.top_k,
@@ -300,32 +460,50 @@ async def create_speech(req: SpeechRequest):
             use_ref_codes=req.use_ref_codes,
             ref_text_override=req.ref_text,
             voice_manager=voice_mgr,
+            response_format=req.response_format,
+            normalize_lufs=req.normalize_lufs,
+            voice_enhance=req.voice_enhance,
+            bgm_path=bgm_path,
+            bgm_volume=req.bgm_volume,
             progress_cb=lambda pct, stage, detail="", est=0.0: progress_store.update(
                 req.job_id, pct, stage, detail, estimated_sec=est
             ),
+            cancel_event=cancel_ev,
         )
-        progress_store.update(req.job_id, 98, "Đang lưu tệp WAV vào thư mục history/...", "")
+
+        fx_tags = []
+        if req.normalize_lufs:
+            fx_tags.append("-14 LUFS")
+        if req.voice_enhance:
+            fx_tags.append("Làm ấm giọng")
+        if bgm_path:
+            fx_tags.append(f"BGM: {bgm_path.name}")
+        fx_summary = " · ".join(fx_tags)
+
+        progress_store.update(req.job_id, 98, f"Đang lưu tệp {stats['format'].upper()} vào history/...", "")
         history_entry = _history_mgr.save_item(
-            wav_bytes,
+            out_bytes,
             text=req.input,
-            voice=req.voice,
-            model=req.model,
+            voice=eff_voice,
+            model=eff_model,
             duration_sec=stats["audio_duration_sec"],
             sample_rate=stats["sample_rate"],
             inference_sec=stats["inference_sec"],
             rtf=stats["rtf"],
             speed=req.speed,
             temperature=req.temperature,
+            fmt=stats["format"],
+            fx_summary=fx_summary,
         )
         progress_store.update(req.job_id, 100, "Hoàn tất tạo giọng nói!", history_entry["filename"], done=True)
         push_log(
             "OK",
             "TTS",
-            f"Hoàn tất [{req.model}] voice='{req.voice}': dur={stats['audio_duration_sec']}s, infer={stats['inference_sec']}s, RTF={stats['rtf']}, cache={'HIT' if stats['cached'] else 'MISS'} · Đã lưu history/{history_entry['filename']}.",
+            f"Hoàn tất [{eff_model}] voice='{eff_voice}' ({stats['format'].upper()}): dur={stats['audio_duration_sec']}s, infer={stats['inference_sec']}s, RTF={stats['rtf']}, cache={'HIT' if stats['cached'] else 'MISS'} · Đã lưu history/{history_entry['filename']}.",
         )
         return Response(
-            content=wav_bytes,
-            media_type="audio/wav",
+            content=out_bytes,
+            media_type=stats["mime"],
             headers={
                 "Content-Disposition": f'inline; filename="{history_entry["filename"]}"',
                 "X-Audio-Sample-Rate": str(stats["sample_rate"]),
@@ -334,7 +512,8 @@ async def create_speech(req: SpeechRequest):
                 "X-RTF": str(stats["rtf"]),
                 "X-Cached": str(stats["cached"]).lower(),
                 "X-TTS-Precision": stats["precision"],
-                "X-TTS-Model": req.model,
+                "X-TTS-Model": eff_model,
+                "X-Audio-Format": stats["format"],
                 "X-History-Id": history_entry["id"],
                 "X-History-Audio-Url": history_entry["audio_url"],
                 "X-History-Filename": history_entry["filename"],
@@ -342,35 +521,51 @@ async def create_speech(req: SpeechRequest):
         )
     except ValueError as exc:
         progress_store.update(req.job_id, 100, "Tham số không hợp lệ", str(exc), done=True, error=str(exc))
-        push_log("WARN", "TTS", f"Tham số không hợp lệ [{req.model}] voice='{req.voice}': {exc}")
+        push_log("WARN", "TTS", f"Tham số không hợp lệ [{eff_model}] voice='{eff_voice}': {exc}")
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        if cancel_ev and cancel_ev.is_set():
+            progress_store.update(req.job_id, 100, "Đã hủy tác vụ", str(exc), done=True, error="cancelled")
+            raise HTTPException(status_code=409, detail="Đã hủy tác vụ tạo giọng nói.") from exc
+        progress_store.update(req.job_id, 100, "Lỗi tổng hợp giọng nói", str(exc), done=True, error=str(exc))
+        push_log("ERROR", "TTS", f"Lỗi tổng hợp [{eff_model}] voice='{eff_voice}': {exc}")
+        raise HTTPException(status_code=500, detail=f"Lỗi tổng hợp giọng nói: {exc}") from exc
     except Exception as exc:
         progress_store.update(req.job_id, 100, "Lỗi tổng hợp giọng nói", str(exc), done=True, error=str(exc))
-        push_log("ERROR", "TTS", f"Lỗi tổng hợp [{req.model}] voice='{req.voice}': {exc}")
+        push_log("ERROR", "TTS", f"Lỗi tổng hợp [{eff_model}] voice='{eff_voice}': {exc}")
         raise HTTPException(status_code=500, detail=f"Lỗi tổng hợp giọng nói: {exc}") from exc
 
 
+# ── Lịch sử phát lại tức thì (WAV / MP3 / M4A + Đổi nhãn) ─────────────────────
+
 @app.get("/v1/history")
 async def list_history():
-    """Trả về danh sách các bản audio đã tạo và lưu trong thư mục history/."""
     return {
         "items": _history_mgr.list_items(),
         "history_dir": str(settings.history_dir),
     }
 
 
+@app.patch("/v1/history/{item_id}")
+async def patch_history_item(item_id: str, req: HistoryPatchRequest):
+    try:
+        updated = _history_mgr.update_label(item_id, req.label)
+        return {"status": "updated", "item": updated}
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
 @app.get("/v1/history/{item_id}/audio")
 async def get_history_audio(item_id: str):
-    """Phát trực tiếp file WAV đã lưu trong thư mục history/ (không cần tổng hợp lại)."""
-    wav_path = _history_mgr.get_audio_path(item_id)
-    if wav_path is None:
+    info = _history_mgr.get_audio_info(item_id)
+    if info is None:
         raise HTTPException(status_code=404, detail=f"Không tìm thấy file audio lịch sử '{item_id}'.")
-    return FileResponse(str(wav_path), media_type="audio/wav", filename=wav_path.name)
+    audio_path, mime = info
+    return FileResponse(str(audio_path), media_type=mime, filename=audio_path.name)
 
 
 @app.delete("/v1/history/{item_id}")
 async def delete_history_item(item_id: str):
-    """Xóa một bản ghi lịch sử cùng file WAV tương ứng trong thư mục history/."""
     removed = _history_mgr.delete_item(item_id)
     if not removed:
         raise HTTPException(status_code=404, detail=f"Không tìm thấy bản ghi lịch sử '{item_id}'.")
@@ -380,15 +575,147 @@ async def delete_history_item(item_id: str):
 
 @app.delete("/v1/history")
 async def clear_history():
-    """Xóa toàn bộ file audio trong thư mục history/."""
     count = _history_mgr.clear_all()
     push_log("INFO", "HISTORY", f"Đã xóa toàn bộ {count} bản ghi trong thư mục history/.")
     return {"status": "cleared", "deleted": count}
 
 
+# ── Đọc sách nói / Tài liệu dài theo hàng đợi ────────────────────────────────
+
+@app.get("/v1/audiobooks")
+async def list_audiobooks():
+    return {"books": _audiobook_mgr.list_books()}
+
+
+@app.post("/v1/audiobooks")
+async def create_audiobook(
+    title: str = Form(default=""),
+    raw_text: str = Form(default=""),
+    voice: str = Form(default="default"),
+    model: str = Form(default="vieneu"),
+    speed: float = Form(default=1.0),
+    temperature: float = Form(default=0.40),
+    top_k: int = Form(default=12),
+    top_p: float = Form(default=0.80),
+    repetition_penalty: float = Form(default=1.2),
+    output_format: str = Form(default="mp3"),
+    normalize_lufs: bool = Form(default=True),
+    voice_enhance: bool = Form(default=False),
+    bgm_name: str = Form(default=""),
+    bgm_volume: float = Form(default=0.12),
+    file: Optional[UploadFile] = File(default=None),
+):
+    _require_ready()
+    extracted = raw_text.strip()
+    doc_title = title.strip()
+
+    if file is not None and file.filename:
+        suffix = Path(file.filename).suffix or ".txt"
+        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+            shutil.copyfileobj(file.file, tmp)
+            tmp_path = Path(tmp.name)
+        try:
+            extracted = extract_text_from_document(tmp_path, file.filename)
+            if not doc_title:
+                doc_title = Path(file.filename).stem
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"Không đọc được file tài liệu: {exc}") from exc
+        finally:
+            tmp_path.unlink(missing_ok=True)
+
+    if not extracted:
+        raise HTTPException(status_code=400, detail="Vui lòng tải lên tài liệu (.txt, .docx, .epub, .pdf) hoặc dán văn bản dài.")
+
+    try:
+        book = _audiobook_mgr.create_book(
+            title=doc_title or "Sách nói mới",
+            raw_text=extracted,
+            voice=voice,
+            model=model,
+            speed=speed,
+            temperature=temperature,
+            top_k=top_k,
+            top_p=top_p,
+            repetition_penalty=repetition_penalty,
+            output_format=output_format,
+            normalize_lufs=normalize_lufs,
+            voice_enhance=voice_enhance,
+            bgm_name=bgm_name,
+            bgm_volume=bgm_volume,
+        )
+        push_log("OK", "AUDIOBOOK", f"Tạo hàng đợi sách nói '{book['title']}' ({book['total_chapters']} chương, định dạng {book['format'].upper()}).")
+        return {"status": "created", "book": book}
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/v1/audiobooks/{book_id}")
+async def get_audiobook(book_id: str):
+    book = _audiobook_mgr.get_book(book_id)
+    if not book:
+        raise HTTPException(status_code=404, detail="Không tìm thấy sách nói.")
+    return {"book": book}
+
+
+@app.post("/v1/audiobooks/{book_id}/pause")
+async def pause_audiobook(book_id: str):
+    try:
+        return {"book": _audiobook_mgr.pause_book(book_id)}
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.post("/v1/audiobooks/{book_id}/resume")
+async def resume_audiobook(book_id: str):
+    try:
+        return {"book": _audiobook_mgr.resume_book(book_id)}
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.post("/v1/audiobooks/{book_id}/cancel")
+async def cancel_audiobook(book_id: str):
+    try:
+        return {"book": _audiobook_mgr.cancel_book(book_id)}
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.get("/v1/audiobooks/{book_id}/chapters/{chapter_idx}/audio")
+async def get_audiobook_chapter_audio(book_id: str, chapter_idx: int):
+    info = _audiobook_mgr.get_chapter_audio(book_id, chapter_idx)
+    if info is None:
+        raise HTTPException(status_code=404, detail="Chương này chưa được tạo hoặc không tồn tại.")
+    p, mime = info
+    return FileResponse(str(p), media_type=mime, filename=p.name)
+
+
+@app.get("/v1/audiobooks/{book_id}/zip")
+async def download_audiobook_zip(book_id: str):
+    try:
+        zip_bytes = _audiobook_mgr.build_zip_bytes(book_id)
+        return Response(
+            content=zip_bytes,
+            media_type="application/zip",
+            headers={"Content-Disposition": f'attachment; filename="{book_id}.zip"'},
+        )
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.delete("/v1/audiobooks/{book_id}")
+async def delete_audiobook(book_id: str):
+    if not _audiobook_mgr.delete_book(book_id):
+        raise HTTPException(status_code=404, detail="Không tìm thấy sách nói.")
+    return {"status": "deleted", "id": book_id}
+
+
+# ── Nhận diện lời thoại mẫu tiếng Việt (PhoWhisper-base) ─────────────────────
+
 @app.post("/v1/audio/transcribe")
 async def transcribe_audio(file: UploadFile = File(...)):
-    """Tự động nhận diện lời thoại tiếng Việt từ file audio (WAV, MP3, M4A...)."""
     from .stt_engine import STTEngine
 
     suffix = Path(file.filename or "sample.wav").suffix or ".wav"
@@ -407,4 +734,3 @@ async def transcribe_audio(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=f"Lỗi nhận diện âm thanh: {exc}") from exc
     finally:
         tmp_path.unlink(missing_ok=True)
-
