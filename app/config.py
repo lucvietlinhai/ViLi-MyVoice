@@ -41,6 +41,7 @@ class Settings:
     max_chars_per_chunk: int = int(os.getenv("MAX_CHARS_PER_CHUNK", "220"))
     voices_dir: Path = BASE_DIR / os.getenv("VOICES_DIR", "voices")
     outputs_dir: Path = BASE_DIR / os.getenv("OUTPUTS_DIR", "outputs")
+    history_dir: Path = BASE_DIR / os.getenv("HISTORY_DIR", "history")
     host: str = os.getenv("HOST", "127.0.0.1")
     port: int = int(os.getenv("PORT", "8000"))
 
@@ -48,3 +49,4 @@ class Settings:
 settings = Settings()
 settings.voices_dir.mkdir(parents=True, exist_ok=True)
 settings.outputs_dir.mkdir(parents=True, exist_ok=True)
+settings.history_dir.mkdir(parents=True, exist_ok=True)

@@ -7,5 +7,7 @@ outputs/*
 !outputs/.gitkeep
 voices/*
 !voices/.gitkeep
+history/*
+!history/.gitkeep
 *.log
 .pytest_cache/

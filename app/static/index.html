@@ -3237,7 +3237,7 @@
         <div>
           <div class="view-hero-title">Lịch sử kết quả giọng nói đã tạo</div>
           <div class="view-hero-desc">
-            Toàn bộ các bản âm thanh được tổng hợp (từ giọng clone và giọng mặc định) được lưu tại đây để nghe lại, tải xuống hoặc nạp lại văn bản.
+            Toàn bộ các bản âm thanh sau khi tạo xong được tự động lưu thành file WAV trong thư mục <code>history/</code>. Nhấn <b>▶</b> để nghe lại ngay lập tức mà không cần tổng hợp lại.
           </div>
         </div>
         <button type="button" class="btn-pill-outline" id="btnClearHistory" style="color: var(--coral-dark); border-color: rgba(235, 107, 99, 0.35);">Xóa tất cả</button>
@@ -3625,7 +3625,8 @@
   let currentTab = 'all'; // 'all', 'custom', 'fav'
   let voicesRegistry = { custom_voices: [], preset_voices: [] };
   let favoritesList = JSON.parse(localStorage.getItem('luatu_favs') || '[]');
-  let generationHistory = JSON.parse(localStorage.getItem('luatu_history') || '[]');
+  let generationHistory = [];
+  let activePlayingHistoryId = null;
   let activeAudioBlobUrl = null;
 
   // Trimmer State
@@ -4974,16 +4975,22 @@
         throw new Error(err.detail || 'Tổng hợp tiếng nói thất bại.');
       }
 
+      const historyId       = res.headers.get('X-History-Id') || '';
+      const historyAudioUrl = res.headers.get('X-History-Audio-Url') || '';
+      const historyFilename = res.headers.get('X-History-Filename') || `luatu_${selectedVoiceName}_${Date.now()}.wav`;
+
       const blob = await res.blob();
       if (activeAudioBlobUrl) URL.revokeObjectURL(activeAudioBlobUrl);
       activeAudioBlobUrl = URL.createObjectURL(blob);
+      const playbackUrl = historyAudioUrl || activeAudioBlobUrl;
 
       if (!previewAudio.paused) previewAudio.pause();
       activeMiniAudio = audioPlayer;
-      audioPlayer.src = activeAudioBlobUrl;
+      activePlayingHistoryId = historyId || null;
+      audioPlayer.src = playbackUrl;
       audioPlayer.volume = parseInt(volSlider.value, 10) / 100;
-      btnDownloadWav.href = activeAudioBlobUrl;
-      btnDownloadWav.download = `luatu_${selectedVoiceName}_${Date.now()}.wav`;
+      btnDownloadWav.href = playbackUrl;
+      btnDownloadWav.download = historyFilename;
 
       if (playerVoiceTag) {
         playerVoiceTag.textContent = `${selectedVoiceName || 'Mặc định'} · ${currentEngine}`;
@@ -4991,8 +4998,8 @@
 
       miniWaveDownloadBtn.onclick = () => {
         const a = document.createElement('a');
-        a.href = activeAudioBlobUrl;
-        a.download = `luatu_${selectedVoiceName}_${Date.now()}.wav`;
+        a.href = playbackUrl;
+        a.download = historyFilename;
         a.click();
       };
 
@@ -5017,15 +5024,17 @@
         <div class="benchmark-pill">Cache: <b>${cached === 'true' ? 'HIT' : 'MISS'}</b></div>
       `;
 
-      showToast('ok', `Hoàn tất tạo giọng! Thời lượng: ${dur}s · RTF: ${rtf}`);
+      showToast('ok', `Hoàn tất tạo giọng! Đã lưu vào history/${historyFilename} (${dur}s · RTF: ${rtf})`);
       saveToHistory({
+        id: historyId,
+        filename: historyFilename,
+        audio_url: playbackUrl,
         text,
         voice: selectedVoiceName || 'Mặc định',
         engine: currentEngine,
         duration: dur,
         timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
         dateStr: new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' }),
-        audioUrl: activeAudioBlobUrl,
       });
 
       checkHealth();
@@ -5053,22 +5062,109 @@
     }
   });
 
-  /* ── History Persistence & Management (Formatted to match screenshot!) ── */
+  /* ── History Persistence & Instant Playback (Backed by server history/ folder) ── */
+  function escapeHtmlSafe(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  async function loadHistoryFromServer() {
+    try {
+      const res = await fetch('/v1/history');
+      if (!res.ok) return;
+      const data = await res.json();
+      generationHistory = Array.isArray(data.items) ? data.items : [];
+      renderHistory();
+      updateStats();
+    } catch {
+      // Keep current list on transient error
+    }
+  }
+
   function saveToHistory(item) {
+    if (item.id) {
+      generationHistory = generationHistory.filter(h => h.id !== item.id);
+    }
     generationHistory.unshift(item);
-    if (generationHistory.length > 20) generationHistory.pop();
-    localStorage.setItem('luatu_history', JSON.stringify(generationHistory.map(h => ({
-      ...h,
-      audioUrl: null
-    }))));
+    if (generationHistory.length > 200) generationHistory.pop();
     renderHistory();
     updateStats();
+  }
+
+  function syncHistoryPlayStates() {
+    if (!historyList) return;
+    historyList.querySelectorAll('.recent-play-btn[data-historyid]').forEach(btn => {
+      const hid = btn.dataset.historyid;
+      const isPlayingThis = activePlayingHistoryId && hid === activePlayingHistoryId && !audioPlayer.paused;
+      btn.textContent = isPlayingThis ? '⏸' : '▶';
+      btn.title = isPlayingThis ? 'Tạm dừng' : 'Phát ngay file âm thanh đã lưu';
+    });
+    if (activePlayingHistoryId && audioPlayer.duration > 0) {
+      const pct = Math.max(0, Math.min(100, (audioPlayer.currentTime / audioPlayer.duration) * 100));
+      const fill = historyList.querySelector(`.recent-scrub-fill[data-fillid="${CSS.escape(activePlayingHistoryId)}"]`);
+      if (fill) fill.style.width = `${pct.toFixed(1)}%`;
+    }
+  }
+
+  audioPlayer.addEventListener('play', syncHistoryPlayStates);
+  audioPlayer.addEventListener('pause', syncHistoryPlayStates);
+  audioPlayer.addEventListener('ended', () => {
+    if (activePlayingHistoryId && historyList) {
+      const fill = historyList.querySelector(`.recent-scrub-fill[data-fillid="${CSS.escape(activePlayingHistoryId)}"]`);
+      if (fill) fill.style.width = '100%';
+    }
+    syncHistoryPlayStates();
+  });
+  audioPlayer.addEventListener('timeupdate', syncHistoryPlayStates);
+
+  function playHistoryItem(item) {
+    const audioUrl = item.audio_url || (item.id ? `/v1/history/${encodeURIComponent(item.id)}/audio` : '');
+    if (!audioUrl) {
+      showToast('err', 'Không tìm thấy file âm thanh đã lưu cho bản ghi này.');
+      return;
+    }
+
+    // Nếu đang phát chính bản ghi này -> toggle Pause/Play
+    if (activePlayingHistoryId && activePlayingHistoryId === item.id && audioPlayer.src.includes(audioUrl)) {
+      if (audioPlayer.paused) {
+        if (!previewAudio.paused) previewAudio.pause();
+        audioPlayer.play().catch(() => {});
+      } else {
+        audioPlayer.pause();
+      }
+      return;
+    }
+
+    if (!previewAudio.paused) previewAudio.pause();
+    activeMiniAudio = audioPlayer;
+    activePlayingHistoryId = item.id || null;
+    audioPlayer.src = audioUrl;
+    audioPlayer.volume = parseInt(volSlider.value, 10) / 100;
+    btnDownloadWav.href = audioUrl;
+    btnDownloadWav.download = item.filename || `luatu_${item.voice || 'voice'}.wav`;
+    if (playerVoiceTag) playerVoiceTag.textContent = `${item.voice || 'Mặc định'} · ${item.engine || 'vieneu'}`;
+
+    miniWaveDownloadBtn.onclick = () => {
+      const a = document.createElement('a');
+      a.href = audioUrl;
+      a.download = item.filename || `luatu_${item.voice || 'voice'}.wav`;
+      a.click();
+    };
+
+    playerShowcase.classList.remove('generating');
+    playerShowcase.classList.add('active');
+    audioPlayer.play().catch(() => {});
+    syncHistoryPlayStates();
+    showToast('ok', `Đang phát trực tiếp bản đọc đã lưu (${item.voice || 'Mặc định'}).`);
   }
 
   function renderHistory() {
     if (!historyList) return;
     if (generationHistory.length === 0) {
-      historyList.innerHTML = `<div style="text-align:center; padding: 32px 16px; background:#FAF8FA; border:1px dashed var(--border-card); border-radius:var(--radius-lg); color: var(--text-muted); font-size: 13px;">Chưa có kết quả âm thanh nào được tạo. Hãy chọn giọng ở bảng bên phải và nhấn <b>TẠO GIỌNG NÓI NGAY</b>.</div>`;
+      historyList.innerHTML = `<div style="text-align:center; padding: 32px 16px; background:#FAF8FA; border:1px dashed var(--border-card); border-radius:var(--radius-lg); color: var(--text-muted); font-size: 13px;">Chưa có file âm thanh nào trong thư mục <code>history/</code>. Hãy chọn giọng ở bảng bên phải và nhấn <b>TẠO GIỌNG NÓI NGAY</b>.</div>`;
       return;
     }
 
@@ -5085,34 +5181,37 @@
 
       const timeLabel = item.timestamp || '00:00';
       const dateLabel = item.dateStr ? `${item.dateStr} · ${timeLabel}` : `Hôm nay · ${timeLabel}`;
-      const voiceBadge = `<span class="badge-micro red">${item.voice || 'Mặc định'}</span> <span class="badge-micro gray">${item.engine || 'vieneu'}</span>`;
-      const textSnippet = item.text ? `<div class="history-text-snippet">${item.text}</div>` : '';
+      const voiceBadge = `<span class="badge-micro red">${escapeHtmlSafe(item.voice || 'Mặc định')}</span> <span class="badge-micro gray">${escapeHtmlSafe(item.engine || 'vieneu')}</span>`;
+      const textSnippet = item.text ? `<div class="history-text-snippet">${escapeHtmlSafe(item.text)}</div>` : '';
+      const hid = item.id || String(idx);
+      const isPlayingThis = activePlayingHistoryId && hid === activePlayingHistoryId && !audioPlayer.paused;
 
       el.innerHTML = `
         <div class="recent-card-topline">
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-            <span class="recent-card-title">Bản đọc ${timeLabel}</span>
+            <span class="recent-card-title">Bản đọc ${escapeHtmlSafe(timeLabel)}</span>
             ${voiceBadge}
           </div>
           <span class="recent-card-dur">${durFormatted}</span>
         </div>
         ${textSnippet}
         <div class="recent-card-meta">
-          <span>${dateLabel}</span>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <button type="button" class="recent-dl-pill" style="background:var(--coral-subtle);color:var(--coral-dark);" data-historyreuse="${idx}" title="Nạp lại vào trình tạo">Nạp vào trình tạo</button>
-            <button type="button" class="recent-dl-pill" data-historydl="${idx}" title="Tải về file âm thanh">
+          <span>${escapeHtmlSafe(dateLabel)}${item.filename ? ` · <span style="font-family:var(--font-mono);font-size:10.5px;opacity:0.8;">${escapeHtmlSafe(item.filename)}</span>` : ''}</span>
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+            <button type="button" class="recent-dl-pill" style="background:var(--coral-subtle);color:var(--coral-dark);" data-historyreuse="${idx}" title="Nạp văn bản & giọng vào trình tạo">Nạp vào trình tạo</button>
+            <button type="button" class="recent-dl-pill" data-historydl="${idx}" title="Tải về file WAV đã lưu">
               <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Tải về
             </button>
+            <button type="button" class="recent-dl-pill" style="background:#FEE2E2;color:#B91C1C;" data-historydel="${idx}" title="Xóa file khỏi thư mục history">Xóa</button>
           </div>
         </div>
         <div class="recent-player-bar">
-          <button type="button" class="recent-play-btn" data-historyspeak="${idx}" title="${item.audioUrl ? 'Phát kết quả vừa tạo' : 'Tạo lại và phát đoạn này'}">
-            ▶
+          <button type="button" class="recent-play-btn" data-historyspeak="${idx}" data-historyid="${escapeHtmlSafe(hid)}" title="Phát ngay file âm thanh đã lưu">
+            ${isPlayingThis ? '⏸' : '▶'}
           </button>
-          <div class="recent-scrub-track" data-historytrack="${idx}">
-            <div class="recent-scrub-fill" style="width: ${item.audioUrl ? '100%' : '35%'};"></div>
+          <div class="recent-scrub-track" data-historytrack="${idx}" title="Nhấn để tua nhanh">
+            <div class="recent-scrub-fill" data-fillid="${escapeHtmlSafe(hid)}" style="width: ${isPlayingThis ? '0%' : '100%'};"></div>
           </div>
           <span class="recent-time-tag">${durFormatted}</span>
         </div>
@@ -5123,23 +5222,25 @@
     historyList.querySelectorAll('[data-historyspeak]').forEach(btn => {
       btn.addEventListener('click', () => {
         const item = generationHistory[parseInt(btn.dataset.historyspeak, 10)];
-        if (item.audioUrl) {
-          if (!previewAudio.paused) previewAudio.pause();
-          activeMiniAudio = audioPlayer;
-          audioPlayer.src = item.audioUrl;
-          btnDownloadWav.href = item.audioUrl;
-          btnDownloadWav.download = `luatu_${item.voice}_${Date.now()}.wav`;
-          if (playerVoiceTag) playerVoiceTag.textContent = `${item.voice || 'Mặc định'} · ${item.engine || 'vieneu'}`;
-          playerShowcase.classList.add('active');
-          audioPlayer.play().catch(() => {});
-          showToast('ok', `Đang phát lại bản đọc (${item.voice}).`);
+        if (item) playHistoryItem(item);
+      });
+    });
+
+    historyList.querySelectorAll('[data-historytrack]').forEach(track => {
+      track.addEventListener('click', (e) => {
+        const item = generationHistory[parseInt(track.dataset.historytrack, 10)];
+        if (!item) return;
+        const rect = track.getBoundingClientRect();
+        const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        if (activePlayingHistoryId === item.id && audioPlayer.duration > 0) {
+          audioPlayer.currentTime = ratio * audioPlayer.duration;
+          if (audioPlayer.paused) audioPlayer.play().catch(() => {});
         } else {
-          textInput.value = item.text;
-          updateTextCounter();
-          selectVoice(item.voice);
-          setEngine(item.engine);
-          switchWorkspaceView('viewWorkspace', 'navWorkspace');
-          generateSpeech();
+          playHistoryItem(item);
+          audioPlayer.addEventListener('loadedmetadata', function seekOnce() {
+            if (audioPlayer.duration > 0) audioPlayer.currentTime = ratio * audioPlayer.duration;
+            audioPlayer.removeEventListener('loadedmetadata', seekOnce);
+          });
         }
       });
     });
@@ -5147,6 +5248,7 @@
     historyList.querySelectorAll('[data-historyreuse]').forEach(btn => {
       btn.addEventListener('click', () => {
         const item = generationHistory[parseInt(btn.dataset.historyreuse, 10)];
+        if (!item) return;
         textInput.value = item.text || '';
         updateTextCounter();
         if (item.voice) selectVoice(item.voice);
@@ -5159,30 +5261,56 @@
     historyList.querySelectorAll('[data-historydl]').forEach(btn => {
       btn.addEventListener('click', () => {
         const item = generationHistory[parseInt(btn.dataset.historydl, 10)];
-        if (item.audioUrl) {
-          const a = document.createElement('a');
-          a.href = item.audioUrl;
-          a.download = `luatu_${item.voice}_${Date.now()}.wav`;
-          a.click();
-        } else {
-          textInput.value = item.text;
-          updateTextCounter();
-          selectVoice(item.voice);
-          setEngine(item.engine);
-          switchWorkspaceView('viewWorkspace', 'navWorkspace');
-          generateSpeech();
+        if (!item) return;
+        const audioUrl = item.audio_url || (item.id ? `/v1/history/${encodeURIComponent(item.id)}/audio` : '');
+        if (!audioUrl) {
+          showToast('err', 'Không tìm thấy file WAV để tải về.');
+          return;
+        }
+        const a = document.createElement('a');
+        a.href = audioUrl;
+        a.download = item.filename || `luatu_${item.voice || 'voice'}.wav`;
+        a.click();
+      });
+    });
+
+    historyList.querySelectorAll('[data-historydel]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const item = generationHistory[parseInt(btn.dataset.historydel, 10)];
+        if (!item || !item.id) return;
+        if (!confirm(`Xóa bản đọc "${item.filename || item.id}" khỏi thư mục history?`)) return;
+        try {
+          const res = await fetch(`/v1/history/${encodeURIComponent(item.id)}`, { method: 'DELETE' });
+          if (!res.ok) throw new Error('Không xóa được file lịch sử.');
+          if (activePlayingHistoryId === item.id) {
+            audioPlayer.pause();
+            activePlayingHistoryId = null;
+          }
+          generationHistory = generationHistory.filter(h => h.id !== item.id);
+          renderHistory();
+          updateStats();
+          showToast('info', 'Đã xóa bản ghi khỏi thư mục history.');
+        } catch (err) {
+          showToast('err', err.message);
         }
       });
     });
   }
 
-  $('btnClearHistory').addEventListener('click', () => {
-    if (!confirm('Bạn có chắc muốn xóa sạch lịch sử đã tạo?')) return;
-    generationHistory = [];
-    localStorage.removeItem('luatu_history');
-    renderHistory();
-    updateStats();
-    showToast('info', 'Đã dọn dẹp lịch sử.');
+  $('btnClearHistory').addEventListener('click', async () => {
+    if (!confirm('Bạn có chắc muốn xóa toàn bộ file audio trong thư mục history/?')) return;
+    try {
+      const res = await fetch('/v1/history', { method: 'DELETE' });
+      if (!res.ok) throw new Error('Không thể xóa lịch sử trên server.');
+      generationHistory = [];
+      activePlayingHistoryId = null;
+      localStorage.removeItem('luatu_history');
+      renderHistory();
+      updateStats();
+      showToast('info', 'Đã xóa sạch toàn bộ file trong thư mục history/.');
+    } catch (err) {
+      showToast('err', err.message);
+    }
   });
 
   /* ── Sidebar Navigation & View Switching ── */
@@ -5212,7 +5340,7 @@
 
   $('navHistory').addEventListener('click', () => {
     switchWorkspaceView('viewHistory', 'navHistory');
-    renderHistory();
+    loadHistoryFromServer();
   });
 
   if ($('btnQuickCreateClone')) {
@@ -5469,7 +5597,7 @@
   updateGreetingAndDate();
   checkHealth();
   loadVoicesRegistry();
-  renderHistory();
+  loadHistoryFromServer();
   updateTextCounter();
   drawMiniWaveform();
   pollBackendLogs();

@@ -14,6 +14,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from .config import settings
+from .history_manager import HistoryManager
 from .log_stream import attach_python_logging, log_store, push_log
 from .normalizer import split_and_normalize
 from .tts_engine import TTSEngine
@@ -51,6 +52,7 @@ class PreviewTextRequest(BaseModel):
 
 _engine: Optional[TTSEngine] = None
 _voice_mgr: Optional[VoiceManager] = None
+_history_mgr = HistoryManager(settings.history_dir)
 
 
 @asynccontextmanager
@@ -278,16 +280,28 @@ async def create_speech(req: SpeechRequest):
             ref_text_override=req.ref_text,
             voice_manager=voice_mgr,
         )
+        history_entry = _history_mgr.save_item(
+            wav_bytes,
+            text=req.input,
+            voice=req.voice,
+            model=req.model,
+            duration_sec=stats["audio_duration_sec"],
+            sample_rate=stats["sample_rate"],
+            inference_sec=stats["inference_sec"],
+            rtf=stats["rtf"],
+            speed=req.speed,
+            temperature=req.temperature,
+        )
         push_log(
             "OK",
             "TTS",
-            f"Hoàn tất [{req.model}] voice='{req.voice}': dur={stats['audio_duration_sec']}s, infer={stats['inference_sec']}s, RTF={stats['rtf']}, cache={'HIT' if stats['cached'] else 'MISS'}.",
+            f"Hoàn tất [{req.model}] voice='{req.voice}': dur={stats['audio_duration_sec']}s, infer={stats['inference_sec']}s, RTF={stats['rtf']}, cache={'HIT' if stats['cached'] else 'MISS'} · Đã lưu history/{history_entry['filename']}.",
         )
         return Response(
             content=wav_bytes,
             media_type="audio/wav",
             headers={
-                "Content-Disposition": 'inline; filename="speech.wav"',
+                "Content-Disposition": f'inline; filename="{history_entry["filename"]}"',
                 "X-Audio-Sample-Rate": str(stats["sample_rate"]),
                 "X-Audio-Duration-Sec": str(stats["audio_duration_sec"]),
                 "X-Inference-Sec": str(stats["inference_sec"]),
@@ -295,6 +309,9 @@ async def create_speech(req: SpeechRequest):
                 "X-Cached": str(stats["cached"]).lower(),
                 "X-TTS-Precision": stats["precision"],
                 "X-TTS-Model": req.model,
+                "X-History-Id": history_entry["id"],
+                "X-History-Audio-Url": history_entry["audio_url"],
+                "X-History-Filename": history_entry["filename"],
             },
         )
     except ValueError as exc:
@@ -303,6 +320,42 @@ async def create_speech(req: SpeechRequest):
     except Exception as exc:
         push_log("ERROR", "TTS", f"Lỗi tổng hợp [{req.model}] voice='{req.voice}': {exc}")
         raise HTTPException(status_code=500, detail=f"Lỗi tổng hợp giọng nói: {exc}") from exc
+
+
+@app.get("/v1/history")
+async def list_history():
+    """Trả về danh sách các bản audio đã tạo và lưu trong thư mục history/."""
+    return {
+        "items": _history_mgr.list_items(),
+        "history_dir": str(settings.history_dir),
+    }
+
+
+@app.get("/v1/history/{item_id}/audio")
+async def get_history_audio(item_id: str):
+    """Phát trực tiếp file WAV đã lưu trong thư mục history/ (không cần tổng hợp lại)."""
+    wav_path = _history_mgr.get_audio_path(item_id)
+    if wav_path is None:
+        raise HTTPException(status_code=404, detail=f"Không tìm thấy file audio lịch sử '{item_id}'.")
+    return FileResponse(str(wav_path), media_type="audio/wav", filename=wav_path.name)
+
+
+@app.delete("/v1/history/{item_id}")
+async def delete_history_item(item_id: str):
+    """Xóa một bản ghi lịch sử cùng file WAV tương ứng trong thư mục history/."""
+    removed = _history_mgr.delete_item(item_id)
+    if not removed:
+        raise HTTPException(status_code=404, detail=f"Không tìm thấy bản ghi lịch sử '{item_id}'.")
+    push_log("INFO", "HISTORY", f"Đã xóa bản ghi lịch sử '{item_id}'.")
+    return {"status": "deleted", "id": item_id}
+
+
+@app.delete("/v1/history")
+async def clear_history():
+    """Xóa toàn bộ file audio trong thư mục history/."""
+    count = _history_mgr.clear_all()
+    push_log("INFO", "HISTORY", f"Đã xóa toàn bộ {count} bản ghi trong thư mục history/.")
+    return {"status": "cleared", "deleted": count}
 
 
 @app.post("/v1/audio/transcribe")
