@@ -4,6 +4,9 @@ setlocal EnableExtensions
 
 cd /d "%~dp0"
 
+set "HF_HOME=%~dp0.hf_cache"
+set "HF_HUB_CACHE=%~dp0.hf_cache\hub"
+set "TORCH_HOME=%~dp0.hf_cache\torch"
 set "APP_URL=http://127.0.0.1:8000"
 set "VENV_PY=.venv\Scripts\python.exe"
 set "VENV_PIP=.venv\Scripts\pip.exe"

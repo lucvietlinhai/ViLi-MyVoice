@@ -2240,6 +2240,166 @@
       cursor: not-allowed;
     }
 
+    /* ── Direct 8.0s Mic Recorder in Voice Clone ── */
+    .clone-source-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background: #F4ECE8;
+      padding: 4px;
+      border-radius: var(--radius-md);
+    }
+    .clone-mode-pill {
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .clone-mode-pill.active {
+      background: #FFFFFF;
+      color: var(--plum-dark);
+      box-shadow: 0 2px 8px rgba(42, 29, 43, 0.08);
+    }
+    .mic-recorder-panel {
+      display: none;
+      background: #FDF8F6;
+      border: 1px solid #EADAD2;
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .mic-recorder-panel.active {
+      display: flex;
+    }
+    .mic-script-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .mic-script-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--plum-dark);
+    }
+    .btn-next-script {
+      background: #FFFFFF;
+      border: 1px solid #DFD2CC;
+      border-radius: var(--radius-pill);
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--plum-dark);
+      cursor: pointer;
+    }
+    .btn-next-script:hover {
+      border-color: var(--coral-primary);
+      color: var(--coral-dark);
+    }
+    .mic-script-input {
+      width: 100%;
+      background: #FFFFFF;
+      border: 1px solid #E5D6CE;
+      border-radius: var(--radius-sm);
+      padding: 9px 12px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.5;
+      color: var(--plum-dark);
+      resize: vertical;
+      min-height: 58px;
+      outline: none;
+    }
+    .mic-script-input:focus {
+      border-color: var(--coral-primary);
+    }
+    .mic-controls-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn-mic-record {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      border: none;
+      background: var(--plum-dark);
+      color: #FFFFFF;
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-mic-record:hover {
+      background: var(--coral-primary);
+    }
+    .btn-mic-record.recording {
+      background: #DC2626;
+      animation: micPulse 1.1s infinite ease-in-out;
+    }
+    @keyframes micPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.45); }
+      50%      { box-shadow: 0 0 0 8px rgba(220, 38, 38, 0); }
+    }
+    .mic-meter-box {
+      flex: 1;
+      min-width: 180px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .mic-timer-line {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      color: var(--text-secondary);
+    }
+    .mic-progress-track {
+      width: 100%;
+      height: 6px;
+      background: #EAE0DC;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .mic-progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #EB6B63, #DC2626);
+      transition: width 0.08s linear;
+    }
+    .mic-vu-track {
+      width: 100%;
+      height: 4px;
+      background: #EAE0DC;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .mic-vu-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #22C55E 0%, #F59E0B 75%, #EF4444 100%);
+      transition: width 0.05s linear;
+    }
+
     /* ════════════════════════════════════════════════════════════
        4. AUDIO TRIMMER MODAL (MP3Cut Studio — Light & Clean)
     ════════════════════════════════════════════════════════════ */
@@ -3155,14 +3315,45 @@
             <input type="text" class="input-compact" id="uploadVoiceDesc" placeholder="Mô tả (vd: Giọng nữ Hà Nội truyền cảm)"/>
           </div>
 
+          <div class="clone-source-tabs" id="cloneSourceTabs">
+            <button type="button" class="clone-mode-pill active" id="btnModeUpload" data-clonemode="upload">
+              📁 Tải tệp âm thanh lên
+            </button>
+            <button type="button" class="clone-mode-pill" id="btnModeMic" data-clonemode="mic">
+              🎙️ Thu âm trực tiếp 8.0s (kèm câu mẫu)
+            </button>
+          </div>
+
           <div class="dropzone-compact" id="uploadDropzone">
-            <input type="file" id="uploadFileInput" accept="audio/*" required/>
+            <input type="file" id="uploadFileInput" accept="audio/*"/>
             <div class="dropzone-text">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.6;display:block;margin:0 auto 4px"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
               Kéo thả hoặc nhấn chọn tệp âm thanh mẫu<br/>
               <span style="color: var(--text-muted); font-size: 11.5px;">Hỗ trợ WAV / MP3 / M4A · Tự động mở bảng cắt 8.0s chuẩn nếu dài hơn 8 giây</span>
             </div>
             <div class="dropzone-selected-name" id="dropzoneFileName"></div>
+          </div>
+
+          <div class="mic-recorder-panel" id="micRecorderPanel">
+            <div class="mic-script-header">
+              <span class="mic-script-label">Đọc tự nhiên câu tiếng Việt mẫu bên dưới trong 8.0s (lời thoại sẽ khớp 100%):</span>
+              <button type="button" class="btn-next-script" id="btnNextMicScript">🔄 Đổi câu mẫu</button>
+            </div>
+            <textarea class="mic-script-input" id="micScriptInput" rows="2"></textarea>
+            <div class="mic-controls-row">
+              <button type="button" class="btn-mic-record" id="btnMicRecord">
+                <span id="micBtnIcon">🎙️</span>
+                <span id="micBtnText">Bắt đầu thu 8.0s</span>
+              </button>
+              <div class="mic-meter-box">
+                <div class="mic-timer-line">
+                  <span id="micStatusLabel">Sẵn sàng thu âm</span>
+                  <span id="micCountdown">0.0s / 8.0s</span>
+                </div>
+                <div class="mic-progress-track"><div class="mic-progress-fill" id="micProgressFill"></div></div>
+                <div class="mic-vu-track" title="Mức âm lượng micro (xanh = tốt, đỏ = quá to dễ rè)"><div class="mic-vu-fill" id="micVuFill"></div></div>
+              </div>
+            </div>
           </div>
 
           <div class="audio-file-summary-card" id="audioFileSummaryCard">
@@ -3995,6 +4186,12 @@
         chips += voice.has_ref_text
           ? `<span class="badge-micro green">✓ v2 chuẩn</span>`
           : `<span class="badge-micro gray">Thiếu ref_text</span>`;
+        if (voice.quality && voice.quality.label) {
+          const qCls = voice.quality.status === 'good' ? 'green' : (voice.quality.status === 'warn' ? 'gold' : 'red');
+          const qTip = `SNR: ${voice.quality.snr_db} dB · RMS: ${voice.quality.speech_rms_db} dBFS · Rè đỉnh: ${voice.quality.clipping_pct}%` +
+            (voice.quality.warnings && voice.quality.warnings.length ? ` | ${voice.quality.warnings.join('; ')}` : '');
+          chips += `<span class="badge-micro ${qCls}" title="${qTip}">${voice.quality.label}</span>`;
+        }
       } else {
         chips += `<span class="badge-micro gray">Mặc định VieNeu</span>`;
         if (voice.description && voice.description.includes('Bắc')) chips += `<span class="badge-micro gold">Miền Bắc</span>`;
@@ -4087,12 +4284,15 @@
       const badge = isCustom
         ? `<span class="badge-micro red">Clone · ${v.duration_sec}s</span>`
         : `<span class="badge-micro gold">Mặc định VieNeu</span>`;
+      const qBadge = isCustom && v.quality && v.quality.label
+        ? ` <span class="badge-micro ${v.quality.status === 'good' ? 'green' : (v.quality.status === 'warn' ? 'gold' : 'red')}">${v.quality.label}</span>`
+        : '';
       const desc = v.description || (isCustom ? 'Giọng clone do bạn tạo' : 'Giọng đọc tích hợp sẵn');
       return `
         <div class="lib-voice-card${sel}" data-libcard="${v.name}">
           <div class="lib-card-top">
             <div class="lib-card-name">${v.name}</div>
-            ${badge}
+            <div>${badge}${qBadge}</div>
           </div>
           <div class="lib-card-desc">${desc}</div>
           <div class="lib-card-footer">
@@ -4856,19 +5056,193 @@
     }
   });
 
+  /* ── Direct 8.0s Microphone Recorder with Sample Vietnamese Scripts ── */
+  const MIC_SAMPLE_SCRIPTS = [
+    'Chào mừng bạn đến với phòng thu giọng nói thông minh. Hôm nay trời Hà Nội dịu mát, nắng vàng nhè nhẹ trên từng con phố nhỏ.',
+    'Việt Nam có phong cảnh thiên nhiên tươi đẹp trải dài từ núi cao phía Bắc tới vùng biển xanh nắng ấm ở miền Trung và miền Nam.',
+    'Buổi sáng thức dậy thật sớm, pha một tách trà nóng, mở cửa sổ đón làn gió mát lành và bắt đầu ngày mới tràn đầy năng lượng.',
+    'Công nghệ trí tuệ nhân tạo đang giúp chúng ta giao tiếp tự nhiên hơn, hỗ trợ đọc sách nói và sản xuất nội dung nhanh chóng.',
+    'Những giọt sương mai đọng trên lá xanh thẫm, tiếng chim hót ríu rít ngoài hiên nhà khiến lòng người bỗng nhẹ nhõm, bình yên.',
+    'Xin cảm ơn quý khách đã tin tưởng đồng hành cùng dịch vụ của chúng tôi trong suốt thời gian vừa qua. Chúc bạn một ngày tốt lành.'
+  ];
+  let micScriptIdx = 0;
+  let micStream = null;
+  let micRecorder = null;
+  let micChunks = [];
+  let micTimerId = null;
+  let micAnalyserId = null;
+  let micStartedAt = 0;
+  let isMicRecording = false;
+  const MIC_MAX_SEC = 8.0;
+
+  if ($('micScriptInput')) {
+    $('micScriptInput').value = MIC_SAMPLE_SCRIPTS[0];
+  }
+  if ($('btnNextMicScript')) {
+    $('btnNextMicScript').addEventListener('click', () => {
+      micScriptIdx = (micScriptIdx + 1) % MIC_SAMPLE_SCRIPTS.length;
+      if ($('micScriptInput')) $('micScriptInput').value = MIC_SAMPLE_SCRIPTS[micScriptIdx];
+    });
+  }
+
+  function setCloneInputMode(mode) {
+    const isMic = mode === 'mic';
+    if ($('btnModeUpload')) $('btnModeUpload').classList.toggle('active', !isMic);
+    if ($('btnModeMic')) $('btnModeMic').classList.toggle('active', isMic);
+    if (uploadDropzone) uploadDropzone.style.display = isMic ? 'none' : 'block';
+    if ($('micRecorderPanel')) $('micRecorderPanel').classList.toggle('active', isMic);
+  }
+  if ($('btnModeUpload')) $('btnModeUpload').addEventListener('click', () => setCloneInputMode('upload'));
+  if ($('btnModeMic')) $('btnModeMic').addEventListener('click', () => setCloneInputMode('mic'));
+
+  function stopMicStream() {
+    clearInterval(micTimerId);
+    cancelAnimationFrame(micAnalyserId);
+    if (micStream) {
+      micStream.getTracks().forEach(t => t.stop());
+      micStream = null;
+    }
+    if ($('micVuFill')) $('micVuFill').style.width = '0%';
+    if ($('btnMicRecord')) $('btnMicRecord').classList.remove('recording');
+    if ($('micBtnIcon')) $('micBtnIcon').textContent = '🎙️';
+    if ($('micBtnText')) $('micBtnText').textContent = 'Bắt đầu thu 8.0s';
+    isMicRecording = false;
+  }
+
+  async function toggleMicRecording() {
+    if (isMicRecording) {
+      if (micRecorder && micRecorder.state === 'recording') {
+        micRecorder.stop();
+      }
+      return;
+    }
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      showToast('err', 'Trình duyệt không hỗ trợ thu âm trực tiếp từ Micro.');
+      return;
+    }
+
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') await audioCtx.resume();
+
+      micStream = await navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: false }
+      });
+
+      const sourceNode = audioCtx.createMediaStreamSource(micStream);
+      const analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 256;
+      sourceNode.connect(analyser);
+      const timeData = new Uint8Array(analyser.fftSize);
+
+      function updateVu() {
+        if (!isMicRecording) return;
+        analyser.getByteTimeDomainData(timeData);
+        let maxDev = 0;
+        for (let i = 0; i < timeData.length; i++) {
+          const dev = Math.abs(timeData[i] - 128) / 128;
+          if (dev > maxDev) maxDev = dev;
+        }
+        if ($('micVuFill')) $('micVuFill').style.width = `${Math.min(100, Math.round(maxDev * 140))}%`;
+        micAnalyserId = requestAnimationFrame(updateVu);
+      }
+
+      micChunks = [];
+      micRecorder = new MediaRecorder(micStream);
+      micRecorder.ondataavailable = (ev) => {
+        if (ev.data && ev.data.size > 0) micChunks.push(ev.data);
+      };
+
+      micRecorder.onstop = async () => {
+        const recDuration = Math.min(MIC_MAX_SEC, (performance.now() - micStartedAt) / 1000);
+        stopMicStream();
+
+        if (!micChunks.length || recDuration < 1.5) {
+          if ($('micStatusLabel')) $('micStatusLabel').textContent = 'Đoạn thu quá ngắn (< 1.5s)';
+          showToast('err', 'Đoạn thu âm quá ngắn. Hãy đọc tối thiểu 3–8 giây.');
+          return;
+        }
+
+        try {
+          if ($('micStatusLabel')) $('micStatusLabel').textContent = 'Đang chuyển đổi WAV...';
+          const recBlob = new Blob(micChunks, { type: micRecorder.mimeType || 'audio/webm' });
+          const ab = await recBlob.arrayBuffer();
+          rawAudioBuffer = await audioCtx.decodeAudioData(ab);
+          const actualDur = Math.min(FIXED_TRIM_DURATION, rawAudioBuffer.duration);
+          const wavBlob = audioBufferToWav(rawAudioBuffer, 0, actualDur);
+          const wavFile = new File([wavBlob], `mic_clone_${Date.now()}.wav`, { type: 'audio/wav' });
+
+          currentFileObj = wavFile;
+          activeAudioFile = wavFile;
+          trimStartSec = 0;
+          trimEndSec = actualDur;
+          cachedModalPeaks = null;
+          cachedPeakKey = '';
+
+          summaryFileName.textContent = wavFile.name;
+          summaryDurationBadge.className = 'summary-duration-badge';
+          summaryDurationBadge.textContent = `${actualDur.toFixed(1)}s (Thu trực tiếp)`;
+          summaryStatusHint.textContent = 'Đã thu qua Micro · Sẵn sàng lưu vào thư viện';
+          audioFileSummaryCard.style.display = 'block';
+
+          const scriptTxt = ($('micScriptInput') ? $('micScriptInput').value : '').trim();
+          if (scriptTxt) {
+            uploadRefText.value = scriptTxt;
+            uploadRefText.classList.remove('auto-filled-glow');
+            void uploadRefText.offsetWidth;
+            uploadRefText.classList.add('auto-filled-glow');
+          }
+
+          if ($('micStatusLabel')) $('micStatusLabel').textContent = `Đã thu xong (${actualDur.toFixed(1)}s)`;
+          showToast('ok', `Thu âm hoàn tất (${actualDur.toFixed(1)}s) và đã điền sẵn lời thoại mẫu chuẩn 100%!`);
+        } catch (err) {
+          if ($('micStatusLabel')) $('micStatusLabel').textContent = 'Lỗi xử lý bản thu';
+          showToast('err', `Không giải mã được âm thanh thu từ micro: ${err.message}`);
+        }
+      };
+
+      isMicRecording = true;
+      micStartedAt = performance.now();
+      if ($('btnMicRecord')) $('btnMicRecord').classList.add('recording');
+      if ($('micBtnIcon')) $('micBtnIcon').textContent = '⏹️';
+      if ($('micBtnText')) $('micBtnText').textContent = 'Dừng thu';
+      if ($('micStatusLabel')) $('micStatusLabel').textContent = 'Đang thu âm — hãy đọc câu mẫu...';
+      if ($('micProgressFill')) $('micProgressFill').style.width = '0%';
+      if ($('micCountdown')) $('micCountdown').textContent = `0.0s / ${MIC_MAX_SEC.toFixed(1)}s`;
+
+      micRecorder.start(100);
+      micAnalyserId = requestAnimationFrame(updateVu);
+
+      micTimerId = setInterval(() => {
+        const elapsed = (performance.now() - micStartedAt) / 1000;
+        const clamped = Math.min(MIC_MAX_SEC, elapsed);
+        if ($('micCountdown')) $('micCountdown').textContent = `${clamped.toFixed(1)}s / ${MIC_MAX_SEC.toFixed(1)}s`;
+        if ($('micProgressFill')) $('micProgressFill').style.width = `${(clamped / MIC_MAX_SEC) * 100}%`;
+        if (elapsed >= MIC_MAX_SEC && micRecorder && micRecorder.state === 'recording') {
+          micRecorder.stop();
+        }
+      }, 60);
+    } catch (err) {
+      stopMicStream();
+      showToast('err', `Không truy cập được Micro: ${err.message || err}`);
+    }
+  }
+  if ($('btnMicRecord')) $('btnMicRecord').addEventListener('click', toggleMicRecording);
+
   /* ── Form Submission ── */
   uploadForm.addEventListener('submit', async e => {
     e.preventDefault();
     const finalFile = activeAudioFile || (uploadFileInput.files ? uploadFileInput.files[0] : null);
     if (!finalFile) {
-      showToast('err', 'Vui lòng chọn hoặc kéo thả tệp âm thanh mẫu.');
+      showToast('err', 'Vui lòng chọn tệp âm thanh hoặc thu âm trực tiếp 8.0s trước khi lưu.');
       return;
     }
 
     btnSubmitVoice.disabled = true;
     btnSubmitVoice.classList.add('loading');
     btnSubmitVoice.innerHTML = `<span class="spin-loader"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span> Đang phân tích &amp; lưu giọng clone vào thư viện...`;
-    showToast('info', 'Đang phân tích và trích xuất đặc trưng âm thanh mẫu...');
+    showToast('info', 'Đang phân tích chất lượng mẫu và trích xuất đặc trưng giọng...');
 
     try {
       const fd = new FormData();
@@ -4883,8 +5257,16 @@
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail || 'Đăng ký giọng thất bại.');
 
-      showToast('ok', `Đã lưu giọng clone "${data.voice.name}" vào thư viện (${data.voice.duration_sec}s)! Hãy chuyển sang "Tạo giọng đọc" để sử dụng.`);
+      const q = data.voice.quality;
+      const qMsg = q
+        ? ` · Chất lượng: ${q.label} (SNR ${q.snr_db}dB${q.warnings && q.warnings.length ? ' · ' + q.warnings[0] : ''})`
+        : '';
+      showToast('ok', `Đã lưu giọng clone "${data.voice.name}" (${data.voice.duration_sec}s)${qMsg}`);
       uploadForm.reset();
+      if ($('micScriptInput')) $('micScriptInput').value = MIC_SAMPLE_SCRIPTS[micScriptIdx];
+      if ($('micStatusLabel')) $('micStatusLabel').textContent = 'Sẵn sàng thu âm';
+      if ($('micProgressFill')) $('micProgressFill').style.width = '0%';
+      if ($('micCountdown')) $('micCountdown').textContent = '0.0s / 8.0s';
       dropzoneFileName.style.display = 'none';
       audioFileSummaryCard.style.display = 'none';
       closeTrimmerModal();

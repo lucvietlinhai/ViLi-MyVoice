@@ -61,6 +61,72 @@ def _convert_to_wav_if_needed(src_path: Path, dst_wav_path: Path) -> float:
         return float(info.duration)
 
 
+def _analyze_and_trim_sample(wav_path: Path) -> Tuple[float, dict]:
+    """Đo chất lượng file mẫu và cắt gọn khoảng lặng đầu/cuối an toàn (giữ đệm 180ms bảo vệ thanh điệu tiếng Việt)."""
+    data, sr = sf.read(str(wav_path), dtype="float32", always_2d=False)
+    if getattr(data, "ndim", 1) > 1:
+        data = data.mean(axis=1)
+    data = np.asarray(data, dtype=np.float32).reshape(-1)
+    if len(data) == 0:
+        raise ValueError("File âm thanh mẫu trống.")
+
+    win = max(1, int(sr * 0.02))
+    trimmed_ms = 0
+
+    def _frame_dbs(samples: np.ndarray) -> np.ndarray:
+        n_frames = len(samples) // win
+        if n_frames <= 0:
+            rms = float(np.sqrt(np.mean(samples * samples) + 1e-12))
+            return np.asarray([20.0 * np.log10(max(rms, 1e-7))], dtype=np.float32)
+        blocks = samples[: n_frames * win].reshape(n_frames, win)
+        rms = np.sqrt(np.mean(blocks * blocks, axis=1) + 1e-12)
+        return (20.0 * np.log10(np.maximum(rms, 1e-7))).astype(np.float32)
+
+    fdb = _frame_dbs(data)
+    active = np.where(fdb > -45.0)[0]
+    if len(active) > 0:
+        pad = int(0.18 * sr)
+        start_s = max(0, int(active[0] * win) - pad)
+        end_s = min(len(data), int((active[-1] + 1) * win) + pad)
+        removed_ms = int(round(((len(data) - (end_s - start_s)) / float(sr)) * 1000))
+        if removed_ms >= 250 and (end_s - start_s) / float(sr) >= 1.5:
+            data = data[start_s:end_s]
+            sf.write(str(wav_path), data, sr, subtype="PCM_16")
+            trimmed_ms = removed_ms
+            fdb = _frame_dbs(data)
+
+    duration = float(len(data)) / float(sr)
+    clipping_pct = round(float(np.mean(np.abs(data) >= 0.985) * 100.0), 2)
+    speech_rms_db = round(float(np.percentile(fdb, 85)), 1)
+    noise_floor_db = round(float(np.percentile(fdb, 15)), 1)
+    snr_db = round(max(0.0, speech_rms_db - noise_floor_db), 1)
+
+    warnings: List[str] = []
+    if clipping_pct >= 0.5:
+        warnings.append(f"Âm thanh chạm đỉnh/vỡ tiếng ({clipping_pct}% mẫu)")
+    if snr_db < 14.0:
+        warnings.append(f"Nhiễu nền hơi cao (SNR {snr_db} dB)")
+    if speech_rms_db < -34.0:
+        warnings.append(f"Giọng thu hơi nhỏ ({speech_rms_db} dBFS)")
+
+    if clipping_pct >= 2.0 or snr_db < 9.0:
+        status, label = "poor", "Cần lưu ý"
+    elif warnings:
+        status, label = "warn", "Đạt chuẩn"
+    else:
+        status, label = "good", "Âm sạch"
+
+    return duration, {
+        "status": status,
+        "label": label,
+        "snr_db": snr_db,
+        "speech_rms_db": speech_rms_db,
+        "clipping_pct": clipping_pct,
+        "trimmed_silence_ms": trimmed_ms,
+        "warnings": warnings,
+    }
+
+
 class VoiceManager:
     """Lưu giữ các giọng clone đã đăng ký cho cả VieNeu v3 Turbo và v2 GGUF."""
 
@@ -99,6 +165,7 @@ class VoiceManager:
             "consent_confirmed": entry.get("consent_confirmed", False),
             "created_at": entry.get("created_at", ""),
             "audio_file": entry.get("audio_file", ""),
+            "quality": entry.get("quality"),
         }
 
     def load_saved_voices(self) -> int:
@@ -170,6 +237,8 @@ class VoiceManager:
                 f"File giọng mẫu quá ngắn ({duration:.2f}s). Cần tối thiểu 3–8 giây để clone ổn định."
             )
 
+        duration, quality = _analyze_and_trim_sample(target_wav)
+
         self.tts.add_voice(
             safe_name,
             str(target_wav),
@@ -194,6 +263,7 @@ class VoiceManager:
             "consent_confirmed": True,
             "created_at": now_iso,
             "audio_file": target_wav.name,
+            "quality": quality,
             "speaker_emb": [round(float(x), 6) for x in np.asarray(emb).reshape(-1)],
             "codes": None if codes is None else np.asarray(codes, dtype=int).tolist(),
             "v2_codes": None,

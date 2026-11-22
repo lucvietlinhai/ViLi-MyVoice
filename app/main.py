@@ -112,6 +112,9 @@ async def health():
         "v2_loaded": engine.tts_v2 is not None,
         "v2_sample_rate": engine.v2_sample_rate,
         "v2_load_seconds": engine.v2_load_seconds,
+        "stt_model": settings.stt_model_id,
+        "hf_home": str(settings.hf_home_dir),
+        "threads": settings.vieneu_threads,
         "custom_voice_count": len(voices["custom_voices"]),
         "preset_voice_count": len(voices["preset_voices"]),
     }
@@ -197,7 +200,9 @@ async def upload_voice(
             consent_confirmed=consent_confirmed,
         )
         engine.bump_voice_revision()
-        push_log("OK", "CLONE", f"Đã lưu giọng clone '{meta['name']}' ({meta['duration_sec']}s, ref_text={'có' if meta['has_ref_text'] else 'trống'}).")
+        q = meta.get("quality") or {}
+        q_note = f", chất lượng={q.get('label', 'OK')} (SNR {q.get('snr_db', 0)} dB, cắt lặng {q.get('trimmed_silence_ms', 0)}ms)" if q else ""
+        push_log("OK", "CLONE", f"Đã lưu giọng clone '{meta['name']}' ({meta['duration_sec']}s, ref_text={'có' if meta['has_ref_text'] else 'trống'}{q_note}).")
         return {"status": "registered", "voice": meta}
     except ValueError as exc:
         push_log("WARN", "CLONE", f"Từ chối đăng ký giọng '{name}': {exc}")

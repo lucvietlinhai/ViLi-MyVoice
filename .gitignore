@@ -9,5 +9,6 @@ voices/*
 !voices/.gitkeep
 history/*
 !history/.gitkeep
+.hf_cache/
 *.log
 .pytest_cache/

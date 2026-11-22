@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import io
 import os
+import shutil
+import subprocess
 import threading
 import time
 from collections import OrderedDict
@@ -29,6 +31,59 @@ def encode_wav_bytes(audio_f32: np.ndarray, sample_rate: int) -> bytes:
     clipped = np.clip(np.asarray(audio_f32, dtype=np.float32), -1.0, 1.0)
     sf.write(buf, clipped, sample_rate, format="WAV", subtype="PCM_16")
     return buf.getvalue()
+
+
+def _time_stretch_ffmpeg(audio_f32: np.ndarray, sample_rate: int, speed: float) -> np.ndarray:
+    """Chỉnh tốc độ đọc bằng FFmpeg atempo để giữ cao độ và thanh điệu tiếng Việt tự nhiên."""
+    arr = np.asarray(audio_f32, dtype=np.float32).reshape(-1)
+    if len(arr) == 0 or abs(speed - 1.0) <= 0.02:
+        return arr
+
+    ffmpeg_bin = shutil.which("ffmpeg")
+    if ffmpeg_bin:
+        # Chuỗi atempo chuẩn [0.5..2.0] an toàn với mọi phiên bản FFmpeg
+        factors = []
+        rem = float(speed)
+        while rem > 2.0:
+            factors.append("atempo=2.0")
+            rem /= 2.0
+        while rem < 0.5:
+            factors.append("atempo=0.5")
+            rem /= 0.5
+        factors.append(f"atempo={rem:.4f}")
+        filter_str = ",".join(factors)
+
+        cmd = [
+            ffmpeg_bin,
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-f",
+            "f32le",
+            "-ar",
+            str(int(sample_rate)),
+            "-ac",
+            "1",
+            "-i",
+            "pipe:0",
+            "-filter:a",
+            filter_str,
+            "-f",
+            "f32le",
+            "pipe:1",
+        ]
+        try:
+            proc = subprocess.run(cmd, input=arr.tobytes(), capture_output=True, check=False)
+            if proc.returncode == 0 and len(proc.stdout) >= 4:
+                out = np.frombuffer(proc.stdout, dtype=np.float32).copy()
+                if len(out) > 0:
+                    return out
+        except Exception:
+            pass
+
+    import librosa
+
+    return np.asarray(librosa.effects.time_stretch(arr, rate=float(speed)), dtype=np.float32)
 
 
 def _create_public_v2_tts() -> Any:
@@ -286,11 +341,7 @@ class TTSEngine:
                     )
 
             if abs(speed - 1.0) > 0.02 and len(audio) > 0:
-                import librosa
-
-                audio = librosa.effects.time_stretch(
-                    np.asarray(audio, dtype=np.float32), rate=float(speed)
-                )
+                audio = _time_stretch_ffmpeg(np.asarray(audio, dtype=np.float32), sr, float(speed))
 
             elapsed = time.perf_counter() - t0
             audio_dur = float(len(audio)) / float(sr) if len(audio) else 0.0
