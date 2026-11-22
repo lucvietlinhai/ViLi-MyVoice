@@ -17,6 +17,7 @@ from .config import settings
 from .history_manager import HistoryManager
 from .log_stream import attach_python_logging, log_store, push_log
 from .normalizer import split_and_normalize
+from .progress_store import progress_store
 from .tts_engine import TTSEngine
 from .voice_manager import VoiceManager
 
@@ -40,6 +41,7 @@ class SpeechRequest(BaseModel):
     top_p: float = Field(default=0.85, ge=0.1, le=1.0)
     repetition_penalty: float = Field(default=1.2, ge=1.0, le=1.8)
     use_ref_codes: bool = Field(default=True)
+    job_id: Optional[str] = Field(default=None, description="ID theo dõi % tiến trình (tùy chọn).")
 
 
 class UpdateRefTextRequest(BaseModel):
@@ -126,6 +128,12 @@ async def get_logs(since_id: int = 0):
     return log_store.get_since(since_id)
 
 
+@app.get("/v1/progress/{job_id}")
+async def get_job_progress(job_id: str):
+    """Trả về phần trăm (%) hoàn thành hiện tại cho tác vụ tạo giọng / clone giọng."""
+    return progress_store.get(job_id)
+
+
 @app.delete("/v1/logs")
 async def clear_logs():
     """Xóa sạch bộ đệm log backend."""
@@ -181,10 +189,12 @@ async def upload_voice(
     ref_text: str = Form(default=""),
     denoise: bool = Form(default=False),
     consent_confirmed: bool = Form(default=False),
+    job_id: str = Form(default=""),
     file: UploadFile = File(...),
 ):
     engine, voice_mgr = _require_ready()
     suffix = Path(file.filename or "sample.wav").suffix or ".wav"
+    progress_store.update(job_id, 5, "Đang tải tệp âm thanh mẫu lên server...", file.filename or "", estimated_sec=8.0)
     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
         shutil.copyfileobj(file.file, tmp)
         tmp_path = Path(tmp.name)
@@ -198,6 +208,9 @@ async def upload_voice(
             ref_text=ref_text,
             denoise=denoise,
             consent_confirmed=consent_confirmed,
+            progress_cb=lambda pct, stage, detail="": progress_store.update(
+                job_id, pct, stage, detail, estimated_sec=8.0, done=(pct >= 100)
+            ),
         )
         engine.bump_voice_revision()
         q = meta.get("quality") or {}
@@ -205,9 +218,11 @@ async def upload_voice(
         push_log("OK", "CLONE", f"Đã lưu giọng clone '{meta['name']}' ({meta['duration_sec']}s, ref_text={'có' if meta['has_ref_text'] else 'trống'}{q_note}).")
         return {"status": "registered", "voice": meta}
     except ValueError as exc:
+        progress_store.update(job_id, 100, "Từ chối tạo giọng clone", str(exc), done=True, error=str(exc))
         push_log("WARN", "CLONE", f"Từ chối đăng ký giọng '{name}': {exc}")
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
+        progress_store.update(job_id, 100, "Lỗi xử lý giọng mẫu", str(exc), done=True, error=str(exc))
         push_log("ERROR", "CLONE", f"Lỗi xử lý giọng mẫu '{name}': {exc}")
         raise HTTPException(status_code=500, detail=f"Lỗi xử lý giọng mẫu: {exc}") from exc
     finally:
@@ -247,6 +262,7 @@ async def preview_chunks(req: PreviewTextRequest):
 async def create_speech(req: SpeechRequest):
     engine, voice_mgr = _require_ready()
     push_log("INFO", "TTS", f"Yêu cầu tạo giọng [{req.model}] voice='{req.voice}' ({len(req.input)} ký tự, speed={req.speed}, temp={req.temperature})...")
+    progress_store.update(req.job_id, 5, "Đang tiếp nhận yêu cầu tạo giọng...", f"{len(req.input)} ký tự")
     try:
         if req.response_format == "pcm":
             sr, gen = engine.stream_pcm(
@@ -284,7 +300,11 @@ async def create_speech(req: SpeechRequest):
             use_ref_codes=req.use_ref_codes,
             ref_text_override=req.ref_text,
             voice_manager=voice_mgr,
+            progress_cb=lambda pct, stage, detail="", est=0.0: progress_store.update(
+                req.job_id, pct, stage, detail, estimated_sec=est
+            ),
         )
+        progress_store.update(req.job_id, 98, "Đang lưu tệp WAV vào thư mục history/...", "")
         history_entry = _history_mgr.save_item(
             wav_bytes,
             text=req.input,
@@ -297,6 +317,7 @@ async def create_speech(req: SpeechRequest):
             speed=req.speed,
             temperature=req.temperature,
         )
+        progress_store.update(req.job_id, 100, "Hoàn tất tạo giọng nói!", history_entry["filename"], done=True)
         push_log(
             "OK",
             "TTS",
@@ -320,9 +341,11 @@ async def create_speech(req: SpeechRequest):
             },
         )
     except ValueError as exc:
+        progress_store.update(req.job_id, 100, "Tham số không hợp lệ", str(exc), done=True, error=str(exc))
         push_log("WARN", "TTS", f"Tham số không hợp lệ [{req.model}] voice='{req.voice}': {exc}")
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
+        progress_store.update(req.job_id, 100, "Lỗi tổng hợp giọng nói", str(exc), done=True, error=str(exc))
         push_log("ERROR", "TTS", f"Lỗi tổng hợp [{req.model}] voice='{req.voice}': {exc}")
         raise HTTPException(status_code=500, detail=f"Lỗi tổng hợp giọng nói: {exc}") from exc
 

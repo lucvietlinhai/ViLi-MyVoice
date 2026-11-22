@@ -1300,26 +1300,106 @@
       border-radius: var(--radius-pill);
       flex-shrink: 0;
     }
+    .gen-meta-pills {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .gen-pct-pill {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      font-weight: 900;
+      color: #FFFFFF;
+      background: var(--coral-gradient);
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 2px 8px rgba(235, 107, 99, 0.35);
+      min-width: 48px;
+      text-align: center;
+    }
     .gen-progress-track {
       width: 100%;
-      height: 5px;
+      height: 7px;
       border-radius: 99px;
       background: rgba(235, 107, 99, 0.18);
       overflow: hidden;
       position: relative;
     }
     .gen-progress-bar {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 42%;
+      position: relative;
+      height: 100%;
+      width: 0%;
       border-radius: 99px;
-      background: linear-gradient(90deg, var(--coral-primary), var(--yellow-bright), var(--coral-primary));
-      animation: genIndeterminate 1.25s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      background: linear-gradient(90deg, var(--coral-primary), #F59E0B, var(--coral-primary));
+      background-size: 200% 100%;
+      transition: width 0.28s ease-out;
+      animation: genFlow 1.4s linear infinite;
     }
-    @keyframes genIndeterminate {
-      0%   { left: -45%; }
-      100% { left: 105%; }
+    @keyframes genFlow {
+      0%   { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+    .btn-is-loading,
+    button:disabled {
+      cursor: progress !important;
+    }
+    .btn-is-loading {
+      pointer-events: none;
+      opacity: 0.82;
+    }
+
+    /* Clone Voice Progress Box */
+    .clone-progress-box {
+      display: none;
+      flex-direction: column;
+      gap: 7px;
+      padding: 11px 14px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, #FFF5F4 0%, #FFF9EE 100%);
+      border: 1.5px solid rgba(235, 107, 99, 0.42);
+      box-shadow: 0 4px 14px rgba(235, 107, 99, 0.12);
+    }
+    .clone-progress-box.active {
+      display: flex;
+    }
+    .clone-progress-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .clone-progress-stage {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--plum-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .clone-progress-stats {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .clone-progress-pct {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 900;
+      color: #FFFFFF;
+      background: var(--coral-gradient);
+      padding: 2px 9px;
+      border-radius: var(--radius-pill);
+    }
+    .clone-progress-timer {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--plum-dark);
+      background: rgba(42, 29, 43, 0.08);
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
     }
     .player-showcase.generating #audioPlayer,
     .player-showcase.generating #benchmarkStrip {
@@ -3399,6 +3479,20 @@
             </label>
           </div>
 
+          <div class="clone-progress-box" id="cloneProgressBox">
+            <div class="clone-progress-top">
+              <div class="clone-progress-stage">
+                <span class="spin-loader"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span>
+                <span id="cloneProgressStage">Đang chuẩn bị tạo giọng clone...</span>
+              </div>
+              <div class="clone-progress-stats">
+                <span class="clone-progress-pct" id="cloneProgressPct">0%</span>
+                <span class="clone-progress-timer" id="cloneProgressTimer">0.0s</span>
+              </div>
+            </div>
+            <div class="gen-progress-track"><div class="gen-progress-bar" id="cloneProgressBar"></div></div>
+          </div>
+
           <button type="submit" class="btn-submit-clone" id="btnSubmitVoice" style="padding: 12px; font-size: 13.5px;">
             Tạo &amp; Lưu giọng clone vào thư viện (8.0s)
           </button>
@@ -3505,9 +3599,12 @@
             <div class="gen-loader-sub" id="playerGenSub">Đang xử lý văn bản và tổng hợp âm thanh</div>
           </div>
         </div>
-        <span class="gen-timer-pill" id="playerGenTimer">0.0s</span>
+        <div class="gen-meta-pills">
+          <span class="gen-pct-pill" id="playerGenPct">0%</span>
+          <span class="gen-timer-pill" id="playerGenTimer">0.0s</span>
+        </div>
       </div>
-      <div class="gen-progress-track"><div class="gen-progress-bar"></div></div>
+      <div class="gen-progress-track"><div class="gen-progress-bar" id="playerGenProgressBar"></div></div>
     </div>
     <audio id="audioPlayer" controls></audio>
     <div class="benchmark-strip" id="benchmarkStrip"></div>
@@ -3945,12 +4042,20 @@
     showToast('info', `Đã nạp mẫu: "${script.title}"`);
   });
 
+  let isPreviewingChunks = false;
   $('btnChunks').addEventListener('click', async () => {
+    if (isPreviewingChunks) return;
     const text = textInput.value.trim();
     if (!text) {
       showToast('err', 'Vui lòng nhập văn bản trước khi xem tách đoạn.');
       return;
     }
+    const btn = $('btnChunks');
+    const origHtml = btn.innerHTML;
+    isPreviewingChunks = true;
+    btn.disabled = true;
+    btn.classList.add('btn-is-loading');
+    btn.innerHTML = `<span class="spin-loader"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span> Đang tách đoạn...`;
     try {
       const res = await fetch('/v1/text/preview-chunks', {
         method: 'POST',
@@ -3965,6 +4070,11 @@
       }
     } catch {
       showToast('err', 'Lỗi kiểm tra tách đoạn.');
+    } finally {
+      isPreviewingChunks = false;
+      btn.disabled = false;
+      btn.classList.remove('btn-is-loading');
+      btn.innerHTML = origHtml;
     }
   });
 
@@ -4354,7 +4464,10 @@
     renderVoiceRoster();
   }
 
+  let activePreviewVoice = null;
   async function playVoicePreview(voiceName) {
+    if (activePreviewVoice) return;
+    activePreviewVoice = voiceName;
     const isCustom = voicesRegistry.custom_voices.some(v => v.name === voiceName);
     const encoded = encodeURIComponent(voiceName);
     const url = isCustom ? `/v1/voices/${encoded}/audio` : `/v1/voices/${encoded}/sample`;
@@ -4362,6 +4475,7 @@
     const origHtmlMap = new Map(previewBtns.map(b => [b, b.innerHTML]));
     previewBtns.forEach(b => {
       b.disabled = true;
+      b.classList.add('btn-is-loading');
       b.innerHTML = '<span class="spin-loader"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span>';
     });
     try {
@@ -4378,8 +4492,10 @@
       if (miniWaveVoiceTitle) miniWaveVoiceTitle.textContent = voiceName;
       showToast('err', 'Không tải được file âm thanh mẫu.');
     } finally {
+      activePreviewVoice = null;
       previewBtns.forEach(b => {
         b.disabled = false;
+        b.classList.remove('btn-is-loading');
         if (origHtmlMap.has(b)) b.innerHTML = origHtmlMap.get(b);
       });
     }
@@ -4888,34 +5004,47 @@
     }
   });
 
+  let isApplyingTrim = false;
   btnModalApplyTrim.addEventListener('click', async () => {
-    if (!rawAudioBuffer) return;
-    const dur = rawAudioBuffer.duration;
-    const isLong = dur > FIXED_TRIM_DURATION;
-    const startSec = isLong ? trimStartSec : 0;
-    const endSec = isLong ? Math.min(dur, trimStartSec + FIXED_TRIM_DURATION) : dur;
-    const selDur = endSec - startSec;
+    if (!rawAudioBuffer || isApplyingTrim) return;
+    isApplyingTrim = true;
+    const origTrimHtml = btnModalApplyTrim.innerHTML;
+    btnModalApplyTrim.disabled = true;
+    btnModalApplyTrim.classList.add('btn-is-loading');
+    btnModalApplyTrim.innerHTML = `<span class="spin-loader"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span> Đang cắt âm thanh...`;
+    try {
+      const dur = rawAudioBuffer.duration;
+      const isLong = dur > FIXED_TRIM_DURATION;
+      const startSec = isLong ? trimStartSec : 0;
+      const endSec = isLong ? Math.min(dur, trimStartSec + FIXED_TRIM_DURATION) : dur;
+      const selDur = endSec - startSec;
 
-    stopModalPlayTrim();
-    closeTrimmerModal();
+      stopModalPlayTrim();
+      closeTrimmerModal();
 
-    showToast('info', `Đang cắt đoạn âm thanh chuẩn ${selDur.toFixed(1)}s...`);
-    const blob = audioBufferToWav(rawAudioBuffer, startSec, endSec);
-    const origName = (currentFileObj ? currentFileObj.name : 'voice').replace(/\.[^/.]+$/, "");
-    activeAudioFile = new File([blob], `${origName}_cut_8s.wav`, { type: 'audio/wav' });
+      showToast('info', `Đang cắt đoạn âm thanh chuẩn ${selDur.toFixed(1)}s...`);
+      const blob = audioBufferToWav(rawAudioBuffer, startSec, endSec);
+      const origName = (currentFileObj ? currentFileObj.name : 'voice').replace(/\.[^/.]+$/, "");
+      activeAudioFile = new File([blob], `${origName}_cut_8s.wav`, { type: 'audio/wav' });
 
-    summaryFileName.textContent = activeAudioFile.name;
-    summaryDurationBadge.className = 'summary-duration-badge';
-    summaryDurationBadge.textContent = `${selDur.toFixed(1)}s (Chuẩn 8.0s)`;
-    summaryStatusHint.textContent = `Đoạn đã chọn: ${startSec.toFixed(1)}s - ${endSec.toFixed(1)}s`;
-    audioFileSummaryCard.style.display = 'block';
+      summaryFileName.textContent = activeAudioFile.name;
+      summaryDurationBadge.className = 'summary-duration-badge';
+      summaryDurationBadge.textContent = `${selDur.toFixed(1)}s (Chuẩn 8.0s)`;
+      summaryStatusHint.textContent = `Đoạn đã chọn: ${startSec.toFixed(1)}s - ${endSec.toFixed(1)}s`;
+      audioFileSummaryCard.style.display = 'block';
 
-    dropzoneFileName.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:4px"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>${activeAudioFile.name} (${(activeAudioFile.size / 1024).toFixed(0)} KB · ${selDur.toFixed(1)}s)`;
-    dropzoneFileName.style.display = 'block';
+      dropzoneFileName.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:4px"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>${activeAudioFile.name} (${(activeAudioFile.size / 1024).toFixed(0)} KB · ${selDur.toFixed(1)}s)`;
+      dropzoneFileName.style.display = 'block';
 
-    showToast('ok', `Đã cắt đoạn chuẩn ${selDur.toFixed(1)}s thành công!`);
+      showToast('ok', `Đã cắt đoạn chuẩn ${selDur.toFixed(1)}s thành công!`);
 
-    await triggerAutoSTT(activeAudioFile);
+      await triggerAutoSTT(activeAudioFile);
+    } finally {
+      isApplyingTrim = false;
+      btnModalApplyTrim.disabled = false;
+      btnModalApplyTrim.classList.remove('btn-is-loading');
+      btnModalApplyTrim.innerHTML = origTrimHtml;
+    }
   });
 
   /* ── Auto Speech-to-Text (STT) via Whisper Pipeline ── */
@@ -4931,8 +5060,10 @@
 
     sttIndicator.classList.add('active');
     sttIndicatorText.innerHTML = '<span class="spin"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-1px"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span> AI đang nghe và nhận diện lời thoại tiếng Việt...';
+    const origSttBtnHtml = btnAutoSTT.innerHTML;
     btnAutoSTT.disabled = true;
-    btnAutoSTT.style.opacity = '0.6';
+    btnAutoSTT.classList.add('btn-is-loading');
+    btnAutoSTT.innerHTML = '<span class="spin-loader"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span> Đang nhận diện...';
 
     try {
       const fd = new FormData();
@@ -4963,7 +5094,8 @@
     } finally {
       isProcessingSTT = false;
       btnAutoSTT.disabled = false;
-      btnAutoSTT.style.opacity = '1';
+      btnAutoSTT.classList.remove('btn-is-loading');
+      btnAutoSTT.innerHTML = origSttBtnHtml;
       setTimeout(() => {
         sttIndicator.classList.remove('active');
       }, 5000);
@@ -5230,19 +5362,87 @@
   }
   if ($('btnMicRecord')) $('btnMicRecord').addEventListener('click', toggleMicRecording);
 
-  /* ── Form Submission ── */
+  /* ── Shared Real-Time Progress Poller + Smooth Interpolation (Anti-Double-Click) ── */
+  function startJobProgressTracker(jobId, initialEstSec, onUpdate) {
+    const startedAt = performance.now();
+    let backendPct = 5;
+    let backendStage = 'Đang khởi tạo...';
+    let estSec = Math.max(2.0, Number(initialEstSec) || 6.0);
+    let stopped = false;
+    let lastPct = 0;
+
+    async function pollOnce() {
+      if (stopped) return;
+      try {
+        const res = await fetch(`/v1/progress/${encodeURIComponent(jobId)}`);
+        if (!res.ok) return;
+        const p = await res.json();
+        if (typeof p.percent === 'number' && p.percent > backendPct) backendPct = p.percent;
+        if (p.stage) backendStage = p.stage;
+        if (typeof p.estimated_sec === 'number' && p.estimated_sec > 0.5) estSec = p.estimated_sec;
+      } catch {
+        // Ignore transient poll error
+      }
+    }
+
+    const tick = () => {
+      if (stopped) return;
+      const elapsedSec = (performance.now() - startedAt) / 1000;
+      // Đường cong ước lượng tiệm cận tới 94% trong khi chờ step backend hoàn tất
+      const smoothCurve = Math.round(94 * (1 - Math.exp(-elapsedSec / Math.max(2.0, estSec * 0.45))));
+      const nextPct = Math.min(97, Math.max(lastPct, backendPct, smoothCurve));
+      lastPct = nextPct;
+      onUpdate(nextPct, backendStage, elapsedSec);
+    };
+
+    tick();
+    const uiTimer = setInterval(tick, 120);
+    const netTimer = setInterval(pollOnce, 400);
+    pollOnce();
+
+    return {
+      finish(finalStage) {
+        stopped = true;
+        clearInterval(uiTimer);
+        clearInterval(netTimer);
+        const elapsedSec = (performance.now() - startedAt) / 1000;
+        onUpdate(100, finalStage || 'Hoàn tất!', elapsedSec);
+      },
+      stop() {
+        stopped = true;
+        clearInterval(uiTimer);
+        clearInterval(netTimer);
+      },
+    };
+  }
+
+  /* ── Form Submission (Anti-Double-Click + Progress %) ── */
+  let isSubmittingVoice = false;
   uploadForm.addEventListener('submit', async e => {
     e.preventDefault();
+    if (isSubmittingVoice) return;
     const finalFile = activeAudioFile || (uploadFileInput.files ? uploadFileInput.files[0] : null);
     if (!finalFile) {
       showToast('err', 'Vui lòng chọn tệp âm thanh hoặc thu âm trực tiếp 8.0s trước khi lưu.');
       return;
     }
 
+    isSubmittingVoice = true;
+    const jobId = `clone_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+    const spinnerSvg = `<span class="spin-loader"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span>`;
     btnSubmitVoice.disabled = true;
-    btnSubmitVoice.classList.add('loading');
-    btnSubmitVoice.innerHTML = `<span class="spin-loader"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span> Đang phân tích &amp; lưu giọng clone vào thư viện...`;
+    btnSubmitVoice.classList.add('loading', 'btn-is-loading');
+    btnSubmitVoice.innerHTML = `${spinnerSvg} Đang xử lý giọng clone... (0%)`;
+    if ($('cloneProgressBox')) $('cloneProgressBox').classList.add('active');
     showToast('info', 'Đang phân tích chất lượng mẫu và trích xuất đặc trưng giọng...');
+
+    const tracker = startJobProgressTracker(jobId, 8.0, (pct, stage, sec) => {
+      if ($('cloneProgressStage')) $('cloneProgressStage').textContent = stage;
+      if ($('cloneProgressPct')) $('cloneProgressPct').textContent = `${pct}%`;
+      if ($('cloneProgressTimer')) $('cloneProgressTimer').textContent = `${sec.toFixed(1)}s`;
+      if ($('cloneProgressBar')) $('cloneProgressBar').style.width = `${pct}%`;
+      btnSubmitVoice.innerHTML = `${spinnerSvg} Đang xử lý giọng clone... (${pct}% · ${sec.toFixed(1)}s)`;
+    });
 
     try {
       const fd = new FormData();
@@ -5251,12 +5451,14 @@
       fd.append('ref_text', uploadRefText.value.trim());
       fd.append('denoise', uploadDenoiseCheckbox.checked);
       fd.append('consent_confirmed', uploadConsentCheckbox.checked);
+      fd.append('job_id', jobId);
       fd.append('file', finalFile);
 
       const res = await fetch('/v1/voices', { method: 'POST', body: fd });
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail || 'Đăng ký giọng thất bại.');
 
+      tracker.finish('Đã lưu giọng clone thành công!');
       const q = data.voice.quality;
       const qMsg = q
         ? ` · Chất lượng: ${q.label} (SNR ${q.snr_db}dB${q.warnings && q.warnings.length ? ' · ' + q.warnings[0] : ''})`
@@ -5278,17 +5480,25 @@
       switchTab('custom');
       selectVoice(data.voice.name);
     } catch (err) {
+      tracker.stop();
       showToast('err', err.message);
     } finally {
+      isSubmittingVoice = false;
       btnSubmitVoice.disabled = false;
-      btnSubmitVoice.classList.remove('loading');
+      btnSubmitVoice.classList.remove('loading', 'btn-is-loading');
       btnSubmitVoice.innerHTML = 'Tạo &amp; Lưu giọng clone vào thư viện (8.0s)';
+      setTimeout(() => {
+        if (!isSubmittingVoice && $('cloneProgressBox')) {
+          $('cloneProgressBox').classList.remove('active');
+        }
+      }, 900);
     }
   });
 
-  /* ── Generate Speech (TTS Core) ── */
-  let genTimerInterval = null;
+  /* ── Generate Speech (TTS Core — Anti-Double-Click + Progress %) ── */
+  let isGeneratingSpeech = false;
   async function generateSpeech() {
+    if (isGeneratingSpeech) return;
     const text = textInput.value.trim();
     if (!text) {
       showToast('err', 'Vui lòng nhập văn bản tiếng Việt cần đọc.');
@@ -5296,16 +5506,17 @@
       return;
     }
 
-    const genStartedAt = performance.now();
+    isGeneratingSpeech = true;
+    const jobId = `tts_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
     const activeVoiceLabel = selectedVoiceName && selectedVoiceName !== 'default' ? selectedVoiceName : 'Mặc định VieNeu';
     const spinnerSvg = '<span class="spin-loader"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span>';
 
     btnGenerateSpeech.disabled = true;
-    btnGenerateSpeech.classList.add('loading');
+    btnGenerateSpeech.classList.add('loading', 'btn-is-loading');
     const baseBtnLabel = currentEngine === 'vieneu-v2'
-      ? 'ĐANG TỔNG HỢP VỚI v2 GGUF Q8'
+      ? 'ĐANG TỔNG HỢP v2 GGUF'
       : 'ĐANG TỔNG HỢP GIỌNG NÓI';
-    btnGenerateSpeech.innerHTML = `${spinnerSvg} ${baseBtnLabel}... (0.0s)`;
+    btnGenerateSpeech.innerHTML = `${spinnerSvg} ${baseBtnLabel}... 0% (0.0s)`;
 
     playerShowcase.classList.add('generating');
     if (playerWaitingBadge) playerWaitingBadge.textContent = 'Đang tạo kết quả...';
@@ -5315,18 +5526,24 @@
         : `Đang tổng hợp giọng "${activeVoiceLabel}" với VieNeu v3 Turbo...`;
     }
     if ($('playerGenSub')) {
-      $('playerGenSub').textContent = currentEngine === 'vieneu-v2'
-        ? 'Đang bám ngữ điệu qua ref_text (lần đầu nạp v2 có thể mất vài chục giây)'
-        : 'Đang tách đoạn thông minh & tạo âm thanh 48kHz chất lượng cao';
+      $('playerGenSub').textContent = 'Đang chuẩn bị tách đoạn & tổng hợp âm thanh...';
     }
+    if ($('playerGenPct')) $('playerGenPct').textContent = '0%';
     if ($('playerGenTimer')) $('playerGenTimer').textContent = '0.0s';
+    if ($('playerGenProgressBar')) $('playerGenProgressBar').style.width = '0%';
 
-    clearInterval(genTimerInterval);
-    genTimerInterval = setInterval(() => {
-      const sec = ((performance.now() - genStartedAt) / 1000).toFixed(1);
-      if ($('playerGenTimer')) $('playerGenTimer').textContent = `${sec}s`;
-      btnGenerateSpeech.innerHTML = `${spinnerSvg} ${baseBtnLabel}... (${sec}s)`;
-    }, 100);
+    const initialEstSec = currentEngine === 'vieneu-v2'
+      ? Math.max(15.0, text.length * 0.6)
+      : Math.max(2.5, text.length * 0.055);
+
+    const tracker = startJobProgressTracker(jobId, initialEstSec, (pct, stage, sec) => {
+      const s = sec.toFixed(1);
+      if ($('playerGenPct')) $('playerGenPct').textContent = `${pct}%`;
+      if ($('playerGenTimer')) $('playerGenTimer').textContent = `${s}s`;
+      if ($('playerGenSub') && stage) $('playerGenSub').textContent = stage;
+      if ($('playerGenProgressBar')) $('playerGenProgressBar').style.width = `${pct}%`;
+      btnGenerateSpeech.innerHTML = `${spinnerSvg} ${baseBtnLabel}... ${pct}% (${s}s)`;
+    });
 
     showToast('info', currentEngine === 'vieneu-v2'
       ? 'Đang chạy mô hình VieNeu v2 GGUF Q8 (bám ngữ điệu Bắc bằng ref_text)...'
@@ -5344,6 +5561,7 @@
         repetition_penalty: parseFloat(repSlider.value),
         use_ref_codes: refCodesCheckbox.checked,
         response_format: 'wav',
+        job_id: jobId,
       };
 
       const res = await fetch('/v1/audio/speech', {
@@ -5362,6 +5580,7 @@
       const historyFilename = res.headers.get('X-History-Filename') || `luatu_${selectedVoiceName}_${Date.now()}.wav`;
 
       const blob = await res.blob();
+      tracker.finish('Hoàn tất 100% — Đang phát âm thanh!');
       if (activeAudioBlobUrl) URL.revokeObjectURL(activeAudioBlobUrl);
       activeAudioBlobUrl = URL.createObjectURL(blob);
       const playbackUrl = historyAudioUrl || activeAudioBlobUrl;
@@ -5421,11 +5640,12 @@
 
       checkHealth();
     } catch (err) {
+      tracker.stop();
       showToast('err', err.message);
     } finally {
-      clearInterval(genTimerInterval);
+      isGeneratingSpeech = false;
       btnGenerateSpeech.disabled = false;
-      btnGenerateSpeech.classList.remove('loading');
+      btnGenerateSpeech.classList.remove('loading', 'btn-is-loading');
       btnGenerateSpeech.innerHTML = '<span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg></span> TẠO GIỌNG NÓI NGAY (Ctrl + Enter)';
       playerShowcase.classList.remove('generating');
       if (playerWaitingBadge) playerWaitingBadge.textContent = 'Đang chờ kết quả';

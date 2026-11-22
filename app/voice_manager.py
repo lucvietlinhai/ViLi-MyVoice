@@ -13,6 +13,8 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 import numpy as np
 import soundfile as sf
 
+from .progress_store import ProgressCallback
+
 _SAFE_ID_RE = re.compile(r"[^a-zA-Z0-9_\-\u00C0-\u1EF9 ]+")
 
 
@@ -222,11 +224,17 @@ class VoiceManager:
         ref_text: str = "",
         denoise: bool = False,
         consent_confirmed: bool = False,
+        progress_cb: ProgressCallback = None,
     ) -> dict:
         """Chuẩn hoá file audio upload, trích xuất đặc trưng v3 và lưu metadata/ref_text."""
         if not consent_confirmed:
             raise ValueError("Cần xác nhận quyền sử dụng / sự đồng ý của chủ giọng mẫu.")
 
+        def _report(pct: int, stage: str, detail: str = "") -> None:
+            if progress_cb:
+                progress_cb(pct, stage, detail)
+
+        _report(12, "Đang chuyển đổi & chuẩn hóa WAV 48kHz...", "")
         safe_name = _slugify_voice_name(name)
         target_wav = self.voices_dir / f"{safe_name}.wav"
         duration = _convert_to_wav_if_needed(uploaded_file_path, target_wav)
@@ -237,8 +245,10 @@ class VoiceManager:
                 f"File giọng mẫu quá ngắn ({duration:.2f}s). Cần tối thiểu 3–8 giây để clone ổn định."
             )
 
+        _report(38, "Đang đo chất lượng âm & cắt khoảng lặng an toàn...", f"Thời lượng: {duration:.1f}s")
         duration, quality = _analyze_and_trim_sample(target_wav)
 
+        _report(62, "Đang trích xuất đặc trưng giọng nói (Speaker Embedding)...", "VieNeu Voice Encoder")
         self.tts.add_voice(
             safe_name,
             str(target_wav),
@@ -248,6 +258,7 @@ class VoiceManager:
             save=False,
         )
 
+        _report(90, "Đang lưu giọng clone vào thư viện...", safe_name)
         voice_data = self.tts._preset_voices[safe_name]
         emb = voice_data.get("speaker_emb")
         codes = voice_data.get("codes")
@@ -272,6 +283,7 @@ class VoiceManager:
         self._write_registry(registry)
         meta = self._build_meta(safe_name, entry)
         self._custom_meta[safe_name] = meta
+        _report(100, "Đã lưu giọng clone vào thư viện!", safe_name)
         return meta
 
     def update_ref_text(self, name: str, ref_text: str) -> dict:

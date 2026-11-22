@@ -58,8 +58,10 @@ class _PythonLogBridge(logging.Handler):
         try:
             if record.levelno < logging.WARNING:
                 return
-            lvl = "ERROR" if record.levelno >= logging.ERROR else "WARN"
             msg = self.format(record)
+            if "unauthenticated requests to the HF Hub" in msg:
+                return
+            lvl = "ERROR" if record.levelno >= logging.ERROR else "WARN"
             log_store.push(lvl, record.name.split(".")[0][:12], msg)
         except Exception:
             pass

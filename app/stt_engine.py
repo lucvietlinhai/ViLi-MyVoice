@@ -45,11 +45,19 @@ class STTEngine:
             f"Đang nạp mô hình nhận diện tiếng Việt '{self.model_id}' (cache tại {settings.hf_home_dir})...",
         )
         logger.info(f"Đang nạp mô hình STT {self.model_id} trên CPU...")
+        from huggingface_hub import snapshot_download
         from transformers import pipeline
+
+        # Ưu tiên lấy đường dẫn snapshot offline trong .hf_cache để không gửi request thừa lên mạng
+        model_source = self.model_id
+        try:
+            model_source = snapshot_download(self.model_id, local_files_only=True)
+        except Exception:
+            model_source = self.model_id
 
         self._pipe = pipeline(
             "automatic-speech-recognition",
-            model=self.model_id,
+            model=model_source,
             device="cpu",
         )
         self._load_seconds = round(time.perf_counter() - t0, 2)

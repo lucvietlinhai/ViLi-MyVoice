@@ -18,7 +18,8 @@ from vieneu import Vieneu
 
 from .config import settings
 from .log_stream import push_log
-from .normalizer import preprocess_text
+from .normalizer import preprocess_text, split_and_normalize
+from .progress_store import ProgressCallback
 
 
 def _to_pcm16_bytes(audio_f32: np.ndarray) -> bytes:
@@ -236,6 +237,7 @@ class TTSEngine:
         use_ref_codes: bool = True,
         ref_text_override: Optional[str] = None,
         voice_manager: Any = None,
+        progress_cb: Optional[Any] = None,
     ) -> Tuple[bytes, dict]:
         cleaned = preprocess_text(text)
         if not cleaned:
@@ -280,6 +282,8 @@ class TTSEngine:
             if cache_key in self._cache:
                 self._cache.move_to_end(cache_key)
                 wav_bytes, audio_dur, elapsed, sr = self._cache[cache_key]
+                if progress_cb:
+                    progress_cb(98, "Trích xuất tức thì từ bộ nhớ đệm (Cache HIT)...", "", 0.2)
                 return wav_bytes, {
                     "cached": True,
                     "audio_duration_sec": round(audio_dur, 3),
@@ -290,9 +294,35 @@ class TTSEngine:
                     "precision": settings.vieneu_precision if engine_key == "vieneu" else "gguf-q8",
                 }
 
+            chunks, _ = split_and_normalize(
+                cleaned,
+                max_chars=min(settings.max_chars_per_chunk, 150) if engine_key == "vieneu-v2" else settings.max_chars_per_chunk,
+            )
+            chunk_count = max(1, len(chunks))
+            if engine_key == "vieneu":
+                est_sec = max(2.2, len(cleaned) * 0.055)
+            else:
+                v2_boot = 22.0 if self.tts_v2 is None else 0.0
+                est_sec = v2_boot + max(10.0, len(cleaned) * 0.65)
+
+            if progress_cb:
+                progress_cb(
+                    12,
+                    f"Đã tách {chunk_count} đoạn văn bản · Đang chuẩn bị tổng hợp...",
+                    f"{len(cleaned)} ký tự",
+                    est_sec,
+                )
+
             t0 = time.perf_counter()
             if engine_key == "vieneu":
                 sr = self.sample_rate
+                if progress_cb:
+                    progress_cb(
+                        24,
+                        f"Đang tổng hợp {chunk_count} đoạn bằng VieNeu v3 Turbo...",
+                        "ONNX CPU 48kHz",
+                        est_sec,
+                    )
                 audio = self.tts.infer(
                     cleaned,
                     voice=resolved_voice,
@@ -304,6 +334,13 @@ class TTSEngine:
                     repetition_penalty=repetition_penalty,
                 )
             else:
+                if self.tts_v2 is None and progress_cb:
+                    progress_cb(
+                        16,
+                        "Đang nạp mô hình VieNeu v2 GGUF Q8 & NeuCodec lần đầu...",
+                        "Quá trình nạp lần đầu mất ~15–25s",
+                        est_sec,
+                    )
                 tts2 = self.ensure_v2()
                 sr = self.v2_sample_rate
                 v2_temp, v2_top_k, v2_top_p, v2_rep, v2_max_chars = self._resolve_v2_params(
@@ -316,6 +353,13 @@ class TTSEngine:
                     "TTS-V2",
                     f"Áp dụng tham số tối ưu GGUF v2: temp={v2_temp}, top_k={v2_top_k}, top_p={v2_top_p}, repeat_penalty={v2_rep}, max_chars={v2_max_chars}.",
                 )
+                if progress_cb:
+                    progress_cb(
+                        30,
+                        f"Đang tổng hợp {chunk_count} đoạn bằng VieNeu v2 GGUF...",
+                        "Bám ngữ điệu qua ref_text",
+                        est_sec,
+                    )
                 if resolved_voice and voice_manager is not None and voice_manager.is_custom_voice(resolved_voice):
                     ref_codes, ref_text = voice_manager.get_v2_reference(
                         resolved_voice,
@@ -341,8 +385,12 @@ class TTSEngine:
                     )
 
             if abs(speed - 1.0) > 0.02 and len(audio) > 0:
+                if progress_cb:
+                    progress_cb(90, f"Đang chỉnh tốc độ {speed:.2f}x bằng FFmpeg atempo...", "", est_sec)
                 audio = _time_stretch_ffmpeg(np.asarray(audio, dtype=np.float32), sr, float(speed))
 
+            if progress_cb:
+                progress_cb(95, "Đang đóng gói tệp âm thanh WAV...", "", est_sec)
             elapsed = time.perf_counter() - t0
             audio_dur = float(len(audio)) / float(sr) if len(audio) else 0.0
             wav_bytes = encode_wav_bytes(audio, sr)
