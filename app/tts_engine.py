@@ -15,6 +15,7 @@ import soundfile as sf
 from vieneu import Vieneu
 
 from .config import settings
+from .log_stream import push_log
 from .normalizer import preprocess_text
 
 
@@ -53,6 +54,39 @@ def _create_public_v2_tts() -> Any:
             # GGUF VieNeu-TTS-q8-gguf dùng chat format; bỏ qua warmup mặc định trước khi set flag
             return
 
+        def _build_ggml_prompt(self, ref_codes: Any, ref_phonemes: str, chunk_phonemes: str, emotion_tag: Optional[str] = None) -> tuple[str, list]:
+            ref_codes_list = self.to_list(ref_codes)
+            codes_str = "".join([f"<|speech_{idx}|>" for idx in ref_codes_list])
+            # Chat-format GGUF không dùng <|emotion_0|>; tránh chèn token lạ gây lệch alignment
+            emotion_prefix = "" if self.use_chat_format else (emotion_tag or "")
+            if self.use_chat_format:
+                prompt = (
+                    f"user: Convert the text to speech:<|TEXT_PROMPT_START|>{emotion_prefix}{ref_phonemes} {chunk_phonemes}"
+                    f"<|TEXT_PROMPT_END|>\nassistant:<|SPEECH_GENERATION_START|>{codes_str}"
+                )
+            else:
+                prompt = (
+                    f"<|TEXT_PROMPT_START|>{emotion_prefix}{ref_phonemes} {chunk_phonemes}"
+                    f"<|TEXT_PROMPT_END|><|SPEECH_GENERATION_START|>{codes_str}"
+                )
+            return prompt, ref_codes_list
+
+        def _infer_ggml(self, ref_codes: Any, ref_phonemes: str, chunk_phonemes: str, temperature: float = 0.85, top_k: int = 50, emotion_tag: Optional[str] = None) -> str:
+            prompt, _ = self._build_ggml_prompt(ref_codes, ref_phonemes, chunk_phonemes, emotion_tag=emotion_tag)
+            rep_pen = float(getattr(self, "_repeat_penalty", 1.15))
+            top_p = float(getattr(self, "_top_p", 0.90))
+            max_gen_tokens = min(self.max_context - 512, max(260, int(len(chunk_phonemes) * 7.5)))
+            output = self.backbone(
+                prompt,
+                max_tokens=max_gen_tokens,
+                temperature=temperature,
+                top_k=top_k,
+                top_p=top_p,
+                repeat_penalty=rep_pen,
+                stop=["<|SPEECH_GENERATION_END|>"],
+            )
+            return output["choices"][0]["text"]
+
     tts2 = PublicV2VieNeuTTS(
         backbone_repo=settings.v2_backbone_repo,
         gguf_filename=settings.v2_gguf_filename,
@@ -61,6 +95,9 @@ def _create_public_v2_tts() -> Any:
         codec_device="cpu",
     )
     tts2.use_chat_format = True
+    tts2.default_emotion = None
+    tts2._repeat_penalty = 1.15
+    tts2._top_p = 0.90
     return tts2
 
 
@@ -101,6 +138,22 @@ class TTSEngine:
 
     def bump_voice_revision(self) -> None:
         self.voice_revision += 1
+
+    def _resolve_v2_params(
+        self,
+        temperature: float,
+        top_k: int,
+        top_p: float,
+        repetition_penalty: float,
+    ) -> Tuple[float, int, float, float, int]:
+        """Chuẩn hóa tham số sampling phù hợp riêng cho GGUF v2 để tránh vòng lặp rè/è."""
+        clamped_t = max(0.15, min(1.20, float(temperature)))
+        v2_temp = round(0.75 + (clamped_t - 0.15) * (0.30 / 1.05), 2)
+        v2_top_k = max(40, int(top_k))
+        v2_top_p = round(max(0.85, min(0.95, float(top_p))), 2)
+        v2_rep = round(max(1.08, min(1.25, float(repetition_penalty))), 2)
+        v2_max_chars = min(settings.max_chars_per_chunk, 150)
+        return v2_temp, v2_top_k, v2_top_p, v2_rep, v2_max_chars
 
     def _resolve_voice_arg(self, voice: Optional[str]) -> Optional[str]:
         if not voice or voice == "default":
@@ -198,6 +251,16 @@ class TTSEngine:
             else:
                 tts2 = self.ensure_v2()
                 sr = self.v2_sample_rate
+                v2_temp, v2_top_k, v2_top_p, v2_rep, v2_max_chars = self._resolve_v2_params(
+                    temperature, top_k, top_p, repetition_penalty
+                )
+                tts2._repeat_penalty = v2_rep
+                tts2._top_p = v2_top_p
+                push_log(
+                    "INFO",
+                    "TTS-V2",
+                    f"Áp dụng tham số tối ưu GGUF v2: temp={v2_temp}, top_k={v2_top_k}, top_p={v2_top_p}, repeat_penalty={v2_rep}, max_chars={v2_max_chars}.",
+                )
                 if resolved_voice and voice_manager is not None and voice_manager.is_custom_voice(resolved_voice):
                     ref_codes, ref_text = voice_manager.get_v2_reference(
                         resolved_voice,
@@ -208,18 +271,18 @@ class TTSEngine:
                         cleaned,
                         ref_codes=ref_codes,
                         ref_text=ref_text,
-                        max_chars=settings.max_chars_per_chunk,
-                        temperature=temperature,
-                        top_k=top_k,
+                        max_chars=v2_max_chars,
+                        temperature=v2_temp,
+                        top_k=v2_top_k,
                     )
                 else:
                     v2_voice = tts2.get_preset_voice(resolved_voice)
                     audio = tts2.infer(
                         cleaned,
                         voice=v2_voice,
-                        max_chars=settings.max_chars_per_chunk,
-                        temperature=temperature,
-                        top_k=top_k,
+                        max_chars=v2_max_chars,
+                        temperature=v2_temp,
+                        top_k=v2_top_k,
                     )
 
             if abs(speed - 1.0) > 0.02 and len(audio) > 0:
@@ -304,9 +367,14 @@ class TTSEngine:
 
         tts2 = self.ensure_v2()
         sr = self.v2_sample_rate
+        v2_temp, v2_top_k, v2_top_p, v2_rep, v2_max_chars = self._resolve_v2_params(
+            temperature, top_k, top_p, repetition_penalty
+        )
 
         def _gen_v2() -> Generator[bytes, None, None]:
             with self._lock:
+                tts2._repeat_penalty = v2_rep
+                tts2._top_p = v2_top_p
                 if resolved_voice and voice_manager is not None and voice_manager.is_custom_voice(resolved_voice):
                     ref_codes, ref_text = voice_manager.get_v2_reference(
                         resolved_voice,
@@ -317,18 +385,18 @@ class TTSEngine:
                         cleaned,
                         ref_codes=ref_codes,
                         ref_text=ref_text,
-                        max_chars=settings.max_chars_per_chunk,
-                        temperature=temperature,
-                        top_k=top_k,
+                        max_chars=v2_max_chars,
+                        temperature=v2_temp,
+                        top_k=v2_top_k,
                     )
                 else:
                     v2_voice = tts2.get_preset_voice(resolved_voice)
                     gen = tts2.infer_stream(
                         cleaned,
                         voice=v2_voice,
-                        max_chars=settings.max_chars_per_chunk,
-                        temperature=temperature,
-                        top_k=top_k,
+                        max_chars=v2_max_chars,
+                        temperature=v2_temp,
+                        top_k=v2_top_k,
                     )
                 for chunk in gen:
                     if chunk is not None and len(chunk) > 0:
