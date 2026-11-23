@@ -5725,10 +5725,10 @@
             <div class="view-hero-title">Từ điển phát âm tùy chỉnh (Pronunciation Dictionary)</div>
             <div class="view-hero-desc">
               Tự động chuyển đổi từ viết tắt, tên thương hiệu hoặc tiếng Anh sang phiên âm tiếng Việt chuẩn trước khi
-              đọc (ví dụ: <code>AI → ây ai</code>, <code>KOC → cây ô xi</code>).
+              đọc (ví dụ: <code>AI → ây ai</code>, <code>TikTok → Tích Tóc</code>, <code>CEO → Xi I Ô</code>, <code>VNĐ → Việt Nam đồng</code>). Đã nạp sẵn danh sách tham chiếu mặc định phổ biến.
             </div>
           </div>
-          <button type="button" class="btn-pill-primary" id="btnInstallStarterLexicon">+ Nạp 8 mẫu phổ biến</button>
+          <button type="button" class="btn-pill-primary" id="btnInstallStarterLexicon">+ Nạp lại danh sách mẫu chuẩn</button>
         </div>
 
         <div class="view-section-card">
@@ -5759,6 +5759,16 @@
           </div>
           <div id="lexTestOutput"
             style="display:none;padding:8px 12px;border-radius:var(--radius-sm);background:#FFFFFF;border:1px solid var(--border-card);font-size:12.5px;">
+          </div>
+        </div>
+
+        <div class="view-section-card" style="padding:10px 14px;margin-bottom:8px;">
+          <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;">
+            <div style="position:relative;flex:1;min-width:240px;">
+              <input type="text" class="input-compact" id="lexSearchFilter" placeholder="Tìm kiếm quy tắc (vd: AI, TikTok, TP.HCM, Shopee, Bác sĩ...)..." style="width:100%;padding-left:30px;" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <div id="lexRulesCountBadge" style="font-size:12px;font-weight:700;color:var(--coral-primary);">Đang tải quy tắc...</div>
           </div>
         </div>
 
@@ -8939,21 +8949,36 @@
       function renderLexicon() {
         const container = $('lexiconRulesList');
         if (!container) return;
-        if (!lexiconRules.length) {
-          container.innerHTML = `<div style="text-align:center;color:var(--text-muted);font-size:12.5px;padding:18px;">Chưa có quy tắc phát âm nào. Bạn có thể thêm quy tắc mới hoặc bấm <b>+ Nạp 8 mẫu phổ biến</b> ở trên.</div>`;
+        const q = ($('lexSearchFilter') ? $('lexSearchFilter').value : '').trim().toLowerCase();
+        const filtered = q
+          ? lexiconRules.filter(r => (r.pattern && r.pattern.toLowerCase().includes(q)) || (r.replacement && r.replacement.toLowerCase().includes(q)) || (r.note && r.note.toLowerCase().includes(q)))
+          : lexiconRules;
+
+        if ($('lexRulesCountBadge')) {
+          const activeCount = lexiconRules.filter(r => r.enabled).length;
+          $('lexRulesCountBadge').textContent = `Đang bật ${activeCount}/${lexiconRules.length} quy tắc chuẩn`;
+        }
+
+        if (!filtered.length) {
+          if (q) {
+            container.innerHTML = `<div style="text-align:center;color:var(--text-muted);font-size:12.5px;padding:24px;">Không tìm thấy quy tắc phát âm nào khớp với "<b>${escapeHtmlSafe(q)}</b>".</div>`;
+          } else {
+            container.innerHTML = `<div style="text-align:center;color:var(--text-muted);font-size:12.5px;padding:24px;">Chưa có quy tắc phát âm nào. Bấm <b>+ Nạp lại danh sách mẫu chuẩn</b> ở trên để nạp lại toàn bộ danh sách mặc định.</div>`;
+          }
           return;
         }
-        container.innerHTML = lexiconRules.map(r => `
+
+        container.innerHTML = filtered.map(r => `
       <div class="lexicon-rule-row">
         <div style="min-width:0;flex:1;">
-          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;">
-            <b>${escapeHtmlSafe(r.pattern)}</b>
-            <span class="lexicon-arrow">→</span>
-            <span style="color:#2E7D32;font-weight:700;">${escapeHtmlSafe(r.replacement)}</span>
-            ${r.whole_word ? '<span class="badge-micro gray">Nguyên từ</span>' : ''}
-            ${r.case_sensitive ? '<span class="badge-micro gold">Đúng HOA/thường</span>' : ''}
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:5px;">
+            <b style="font-size:13px;color:var(--text-primary);">${escapeHtmlSafe(r.pattern)}</b>
+            <span class="lexicon-arrow" style="color:var(--coral-primary);">→</span>
+            <span style="color:#2E7D32;font-weight:700;font-size:13px;">${escapeHtmlSafe(r.replacement)}</span>
+            ${r.whole_word ? '<span class="badge-micro gray" title="Chỉ thay thế khi đứng độc lập dưới dạng nguyên từ">Nguyên từ</span>' : ''}
+            ${r.case_sensitive ? '<span class="badge-micro gold" title="Chỉ thay thế khi viết đúng chữ HOA/thường">Đúng HOA/thường</span>' : ''}
           </div>
-          ${r.note ? `<div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${escapeHtmlSafe(r.note)}</div>` : ''}
+          ${r.note ? `<div style="font-size:11.5px;color:var(--text-muted);margin-top:3px;">${escapeHtmlSafe(r.note)}</div>` : ''}
         </div>
         <div style="display:flex;gap:6px;align-items:center;">
           <button type="button" class="recent-dl-pill" style="background:${r.enabled ? '#E8F5E9' : '#F3EEF3'};color:${r.enabled ? '#2E7D32' : '#6E5F70'};" data-lextoggle="${escapeHtmlSafe(r.id)}">${r.enabled ? 'Đang bật' : 'Đã tắt'}</button>
@@ -9024,6 +9049,10 @@
         });
       }
 
+      if ($('lexSearchFilter')) {
+        $('lexSearchFilter').addEventListener('input', renderLexicon);
+      }
+
       if ($('btnInstallStarterLexicon')) {
         $('btnInstallStarterLexicon').addEventListener('click', async () => {
           const btn = $('btnInstallStarterLexicon');
@@ -9032,7 +9061,7 @@
             const res = await fetch('/v1/lexicon/starter', { method: 'POST' });
             const data = await res.json();
             await loadLexicon();
-            showToast('ok', `Đã nạp ${data.added || 0} quy tắc mẫu phổ biến.`);
+            showToast('ok', `Đã nạp ${data.added || 0} quy tắc mẫu chuẩn vào từ điển.`);
           } finally { btn.disabled = false; }
         });
       }
