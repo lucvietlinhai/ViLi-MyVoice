@@ -3940,10 +3940,24 @@
       stroke-linejoin: round;
       transition: transform 0.25s var(--ease-spring);
     }
-    .ic.sm { width: 0.95em; height: 0.95em; }
-    .ic.lg { width: 1.4em; height: 1.4em; }
+
+    .ic.sm {
+      width: 0.95em;
+      height: 0.95em;
+    }
+
+    .ic.lg {
+      width: 1.4em;
+      height: 1.4em;
+    }
+
     .badge-micro .ic,
-    .voice-selected-badge .ic { width: 1.05em; height: 1.05em; stroke-width: 3; vertical-align: -0.18em; }
+    .voice-selected-badge .ic {
+      width: 1.05em;
+      height: 1.05em;
+      stroke-width: 3;
+      vertical-align: -0.18em;
+    }
 
     /* ── Base interaction for every clickable control ── */
     button,
@@ -3991,8 +4005,12 @@
       letter-spacing: 0.01em;
       transition: transform 0.18s var(--ease-out), box-shadow 0.22s ease, background 0.22s ease, filter 0.2s ease;
     }
+
     .btn-submit-clone,
-    .btn-luxury-generate { display: flex; width: 100%; }
+    .btn-luxury-generate {
+      display: flex;
+      width: 100%;
+    }
 
     .btn-pill-primary:hover:not(:disabled),
     .btn-submit-clone:hover:not(:disabled),
@@ -4025,18 +4043,24 @@
       transition: transform 0.75s var(--ease-out);
       pointer-events: none;
     }
+
     .btn-submit-clone:hover:not(:disabled)::after,
-    .btn-luxury-generate:hover:not(:disabled)::after { transform: translateX(120%); }
+    .btn-luxury-generate:hover:not(:disabled)::after {
+      transform: translateX(120%);
+    }
 
     .btn-pill-primary:hover .ic,
     .btn-submit-clone:hover .ic,
-    .btn-luxury-generate:hover .ic { transform: scale(1.12) rotate(-6deg); }
+    .btn-luxury-generate:hover .ic {
+      transform: scale(1.12) rotate(-6deg);
+    }
 
     /* Commit / save button: emerald variant */
     #btnSubmitVoice {
       background: linear-gradient(180deg, #34A853 0%, #1E7B34 100%) !important;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 2px rgba(20, 83, 45, 0.35), 0 8px 18px -8px rgba(30, 123, 52, 0.7) !important;
     }
+
     #btnSubmitVoice:hover:not(:disabled) {
       background: linear-gradient(180deg, #3DB85E 0%, #1B6F2F 100%) !important;
     }
@@ -4093,15 +4117,58 @@
     .btn-pill-outline:hover .ic,
     .btn-next-script:hover .ic,
     .tool-btn:hover .ic,
-    .recent-dl-pill:hover .ic { transform: scale(1.12); }
+    .recent-dl-pill:hover .ic {
+      transform: scale(1.12);
+    }
+
     #btnRetryPreviewClone:hover .ic,
-    .btn-next-script:hover .ic { transform: rotate(-180deg); transition-duration: 0.5s; }
-    #btnBackToStudioFromClone:hover .ic { transform: translateX(-3px); }
+    .btn-next-script:hover .ic {
+      transform: rotate(-180deg);
+      transition-duration: 0.5s;
+    }
+
+    #btnBackToStudioFromClone:hover .ic {
+      transform: translateX(-3px);
+    }
 
     .tool-btn.highlight {
       background: linear-gradient(180deg, #FFF8E6 0%, #FFEFC7 100%);
       border-color: var(--yellow-border);
       color: #8A6405;
+    }
+
+    .tool-btn.ai-prosody {
+      background: linear-gradient(180deg, #FFF0EF 0%, #FFE2DF 100%);
+      border-color: rgba(235, 107, 99, 0.45);
+      color: var(--coral-dark);
+      font-weight: 700;
+    }
+    .tool-btn.ai-prosody:hover:not(:disabled) {
+      background: linear-gradient(180deg, #F07A72 0%, #E5594F 100%);
+      border-color: transparent;
+      color: #FFFFFF;
+      box-shadow: var(--btn-shadow-primary);
+    }
+    .tool-btn.ai-prosody:hover:not(:disabled) .ic {
+      color: #FFFFFF;
+      transform: scale(1.14) rotate(-8deg);
+    }
+
+    .prosody-status-banner {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 6px 11px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #FFF5F4 0%, #FFFBF2 100%);
+      border: 1px solid rgba(235, 107, 99, 0.28);
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--plum-dark);
+    }
+    .prosody-status-banner.active {
+      display: flex;
     }
 
     .btn-auto-stt {
@@ -4110,6 +4177,7 @@
       color: #8A6405;
       padding: 3px 10px;
     }
+
     .btn-auto-stt:hover:not(:disabled) {
       border-color: var(--yellow-dark);
       color: #6B4D02;
@@ -4123,12 +4191,14 @@
       border-color: rgba(198, 40, 40, 0.25) !important;
       background: #FFFFFF !important;
     }
+
     [data-variant="danger"]:hover:not(:disabled) {
       background: #FEF2F2 !important;
       border-color: rgba(198, 40, 40, 0.55) !important;
       color: #B71C1C !important;
       box-shadow: 0 8px 18px -8px rgba(198, 40, 40, 0.45) !important;
     }
+
     .recent-dl-pill[data-historydel],
     .recent-dl-pill[data-bookdel] {
       border-color: rgba(198, 40, 40, 0.2);
@@ -4145,6 +4215,7 @@
       box-shadow: var(--btn-shadow-soft);
       transition: transform 0.2s var(--ease-spring), background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
+
     .btn-action-icon:hover {
       background: #FFFFFF;
       border-color: rgba(108, 85, 40, 0.28);
@@ -4152,7 +4223,11 @@
       transform: translateY(-1px) scale(1.06);
       box-shadow: var(--btn-shadow-soft-hover);
     }
-    .btn-action-icon:active { transform: scale(0.92); }
+
+    .btn-action-icon:active {
+      transform: scale(0.92);
+    }
+
     .btn-action-icon.play-preview {
       border-radius: 50%;
       border: none;
@@ -4160,21 +4235,33 @@
       color: #FFFFFF;
       box-shadow: var(--btn-shadow-primary);
     }
+
     .btn-action-icon.play-preview:hover {
       background: linear-gradient(180deg, #F3857D 0%, #E14F45 100%);
       transform: scale(1.1);
       box-shadow: var(--btn-shadow-primary-hover);
     }
+
     .btn-action-icon.favorite.loved {
       background: #FFF0EF;
       border-color: rgba(235, 107, 99, 0.35);
       animation: heartPop 0.35s var(--ease-spring);
     }
+
     @keyframes heartPop {
-      0% { transform: scale(0.8); }
-      60% { transform: scale(1.18); }
-      100% { transform: scale(1); }
+      0% {
+        transform: scale(0.8);
+      }
+
+      60% {
+        transform: scale(1.18);
+      }
+
+      100% {
+        transform: scale(1);
+      }
     }
+
     .btn-action-icon[data-del]:hover {
       background: #FEF2F2;
       border-color: rgba(198, 40, 40, 0.35);
@@ -4188,21 +4275,32 @@
       box-shadow: 0 4px 10px -4px rgba(42, 29, 43, 0.6);
       transition: transform 0.2s var(--ease-spring), background 0.2s ease;
     }
+
     .recent-play-btn:hover {
       background: linear-gradient(180deg, #F07A72 0%, #E5594F 100%);
       transform: scale(1.1);
     }
-    .recent-play-btn .ic { width: 12px; height: 12px; }
+
+    .recent-play-btn .ic {
+      width: 12px;
+      height: 12px;
+    }
+
     .btn-mini-play {
       background: linear-gradient(180deg, #4E3B4E 0%, #2A1D2B 100%);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 6px 14px -4px rgba(42, 29, 43, 0.55);
     }
+
     .btn-mini-tool {
       border-radius: 8px;
       box-shadow: var(--btn-shadow-soft);
       transition: transform 0.18s var(--ease-out), background 0.2s ease, box-shadow 0.2s ease;
     }
-    .btn-mini-tool:hover { transform: translateY(-1px); box-shadow: var(--btn-shadow-soft-hover); }
+
+    .btn-mini-tool:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--btn-shadow-soft-hover);
+    }
 
     /* ── Segmented controls / tabs ── */
     .clone-source-tabs,
@@ -4210,27 +4308,47 @@
       background: linear-gradient(180deg, #F2E9E5 0%, #F6EFEC 100%);
       box-shadow: inset 0 1px 2px rgba(42, 29, 43, 0.06);
     }
+
     .clone-mode-pill,
     .tab-pill,
     .fmt-pill {
       transition: background 0.22s ease, color 0.2s ease, box-shadow 0.22s ease, transform 0.18s var(--ease-out);
     }
+
     .clone-mode-pill:hover:not(.active),
-    .tab-pill:hover:not(.active) { color: var(--plum-dark); background: rgba(255, 255, 255, 0.55); }
+    .tab-pill:hover:not(.active) {
+      color: var(--plum-dark);
+      background: rgba(255, 255, 255, 0.55);
+    }
+
     .clone-mode-pill.active,
     .tab-pill.active,
     .fmt-pill.active {
       box-shadow: 0 1px 2px rgba(42, 29, 43, 0.08), 0 4px 12px -4px rgba(42, 29, 43, 0.18);
     }
-    .clone-mode-pill.active .ic { color: var(--coral-primary); }
+
+    .clone-mode-pill.active .ic {
+      color: var(--coral-primary);
+    }
 
     /* ── Engine selector cards ── */
     .engine-card {
       transition: transform 0.2s var(--ease-out), box-shadow 0.22s ease, background 0.2s ease, border-color 0.2s ease;
     }
-    .engine-card:hover:not(.active) { transform: translateY(-1px); }
-    .engine-card-name { display: inline-flex; align-items: center; gap: 6px; }
-    .engine-card.active .engine-card-name .ic { color: var(--yellow-dark); }
+
+    .engine-card:hover:not(.active) {
+      transform: translateY(-1px);
+    }
+
+    .engine-card-name {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .engine-card.active .engine-card-name .ic {
+      color: var(--yellow-dark);
+    }
 
     /* ── Expression cue chips ── */
     .cue-chip {
@@ -4243,13 +4361,20 @@
       box-shadow: var(--btn-shadow-soft);
       transition: transform 0.18s var(--ease-out), box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
     }
-    .cue-chip .ic { color: var(--coral-primary); }
+
+    .cue-chip .ic {
+      color: var(--coral-primary);
+    }
+
     .cue-chip:hover {
       transform: translateY(-1px);
       box-shadow: 0 6px 14px -6px rgba(235, 107, 99, 0.45);
       color: var(--coral-dark);
     }
-    .cue-chip:active { transform: scale(0.95); }
+
+    .cue-chip:active {
+      transform: scale(0.95);
+    }
 
     /* ── FX toggles as modern switch pills ── */
     .fx-toggle-pill {
@@ -4258,7 +4383,13 @@
       gap: 8px;
       transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
     }
-    .fx-toggle-pill > span { display: inline-flex; align-items: center; gap: 5px; }
+
+    .fx-toggle-pill>span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
     .fx-toggle-pill::before {
       content: '';
       width: 26px;
@@ -4272,11 +4403,15 @@
       background-repeat: no-repeat;
       background-position: 0 0;
     }
+
     .fx-toggle-pill:has(input:checked)::before {
       background-color: var(--coral-primary);
       background-position: 11px 0;
     }
-    .fx-toggle-pill:focus-within { box-shadow: var(--ring-coral); }
+
+    .fx-toggle-pill:focus-within {
+      box-shadow: var(--ring-coral);
+    }
 
     /* ── Custom checkbox ── */
     .checkbox-box {
@@ -4287,7 +4422,11 @@
       box-shadow: inset 0 1px 2px rgba(42, 29, 43, 0.06);
       transition: background 0.18s ease, border-color 0.18s ease, transform 0.2s var(--ease-spring), box-shadow 0.2s ease;
     }
-    .checkbox-compact:hover .checkbox-box { border-color: var(--coral-primary); }
+
+    .checkbox-compact:hover .checkbox-box {
+      border-color: var(--coral-primary);
+    }
+
     .checkbox-box::after {
       content: '';
       width: 5px;
@@ -4300,17 +4439,22 @@
       opacity: 0;
       transition: transform 0.22s var(--ease-spring), opacity 0.15s ease;
     }
+
     .checkbox-compact:has(input:checked) .checkbox-box {
       background: linear-gradient(180deg, #F07A72 0%, #E5594F 100%);
       border-color: #E5594F;
       transform: scale(1.04);
       box-shadow: 0 4px 10px -4px rgba(235, 107, 99, 0.7);
     }
+
     .checkbox-compact:has(input:checked) .checkbox-box::after {
       opacity: 1;
       transform: rotate(45deg) scale(1);
     }
-    .checkbox-compact:focus-within .checkbox-box { box-shadow: var(--ring-coral); }
+
+    .checkbox-compact:focus-within .checkbox-box {
+      box-shadow: var(--ring-coral);
+    }
 
     /* ── Inputs, textareas, selects ── */
     .input-compact,
@@ -4320,9 +4464,13 @@
     #clonePreviewModelSelect {
       transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     }
+
     .input-compact:hover:not(:focus),
     .mic-script-input:hover:not(:focus),
-    .bgm-select:hover:not(:focus) { border-color: #CDBFCE; }
+    .bgm-select:hover:not(:focus) {
+      border-color: #CDBFCE;
+    }
+
     .input-compact:focus,
     .mic-script-input:focus,
     .bgm-select:focus,
@@ -4332,6 +4480,7 @@
       box-shadow: var(--ring-coral);
       background: #FFFFFF;
     }
+
     select.input-compact,
     .bgm-select {
       appearance: none;
@@ -4348,15 +4497,27 @@
       border-style: dashed;
       transition: border-color 0.2s ease, background 0.25s ease, transform 0.2s var(--ease-out), box-shadow 0.2s ease;
     }
+
     .dropzone-compact:hover,
     .dropzone-compact.drag-active {
       transform: translateY(-1px);
       box-shadow: 0 10px 24px -14px rgba(235, 107, 99, 0.6);
     }
-    .dropzone-compact.drag-active { animation: dropPulse 1.2s ease-in-out infinite; }
+
+    .dropzone-compact.drag-active {
+      animation: dropPulse 1.2s ease-in-out infinite;
+    }
+
     @keyframes dropPulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(235, 107, 99, 0.3); }
-      50% { box-shadow: 0 0 0 6px rgba(235, 107, 99, 0); }
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(235, 107, 99, 0.3);
+      }
+
+      50% {
+        box-shadow: 0 0 0 6px rgba(235, 107, 99, 0);
+      }
     }
 
     /* ── Mic record button ── */
@@ -4365,12 +4526,19 @@
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 6px 14px -6px rgba(42, 29, 43, 0.6);
       transition: transform 0.18s var(--ease-out), background 0.2s ease, box-shadow 0.2s ease;
     }
+
     .btn-mic-record:hover {
       background: linear-gradient(180deg, #F07A72 0%, #E5594F 100%);
       transform: translateY(-1px);
     }
-    .btn-mic-record.recording { background: linear-gradient(180deg, #EF4444 0%, #B91C1C 100%); }
-    #micBtnIcon { display: inline-flex; }
+
+    .btn-mic-record.recording {
+      background: linear-gradient(180deg, #EF4444 0%, #B91C1C 100%);
+    }
+
+    #micBtnIcon {
+      display: inline-flex;
+    }
 
     /* ── Badges ── */
     .badge-micro {
@@ -4382,7 +4550,12 @@
       letter-spacing: 0.01em;
       box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
     }
-    .voice-entry.active-selected .voice-selected-badge { display: inline-flex; align-items: center; gap: 3px; }
+
+    .voice-entry.active-selected .voice-selected-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
 
     /* ── Preset chips, range sliders, filter selects, quick actions ── */
     .preset-chip {
@@ -4390,6 +4563,7 @@
       box-shadow: var(--btn-shadow-soft);
       transition: transform 0.18s var(--ease-out), background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
     }
+
     .preset-chip:hover:not(.active) {
       transform: translateY(-1px);
       background: #FFF9F8;
@@ -4397,6 +4571,7 @@
       color: var(--plum-dark);
       box-shadow: var(--btn-shadow-soft-hover);
     }
+
     .preset-chip.active {
       background: linear-gradient(180deg, #F07A72 0%, #E5594F 100%);
       border-color: transparent;
@@ -4416,15 +4591,29 @@
       box-shadow: var(--btn-shadow-soft);
       transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
     }
-    .filter-select:hover { border-color: rgba(42, 29, 43, 0.22); background-color: #FFFFFF; }
-    .filter-select:focus { border-color: var(--coral-primary); box-shadow: var(--ring-coral); background-color: #FFFFFF; }
+
+    .filter-select:hover {
+      border-color: rgba(42, 29, 43, 0.22);
+      background-color: #FFFFFF;
+    }
+
+    .filter-select:focus {
+      border-color: var(--coral-primary);
+      box-shadow: var(--ring-coral);
+      background-color: #FFFFFF;
+    }
 
     #inputSearchVoice {
       background: rgba(255, 255, 255, 0.94);
       box-shadow: var(--btn-shadow-soft);
       transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
     }
-    #inputSearchVoice:focus { border-color: var(--coral-primary); box-shadow: var(--ring-coral); background: #FFFFFF; }
+
+    #inputSearchVoice:focus {
+      border-color: var(--coral-primary);
+      box-shadow: var(--ring-coral);
+      background: #FFFFFF;
+    }
 
     .btn-quick-clone-jump {
       padding: 6px 13px;
@@ -4433,12 +4622,16 @@
       gap: 5px;
       transition: transform 0.18s var(--ease-out), background 0.2s ease, box-shadow 0.2s ease;
     }
+
     .btn-quick-clone-jump:hover {
       background: linear-gradient(180deg, #F07A72 0%, #E5594F 100%);
       box-shadow: var(--btn-shadow-primary-hover);
       transform: translateY(-1px);
     }
-    .btn-quick-clone-jump:active { transform: scale(0.96); }
+
+    .btn-quick-clone-jump:active {
+      transform: scale(0.96);
+    }
 
     .meta-tag.term-toggle {
       background: linear-gradient(180deg, #3D2E3F 0%, #2A1D2B 100%);
@@ -4449,6 +4642,7 @@
       box-shadow: 0 4px 12px -4px rgba(42, 29, 43, 0.45);
       transition: transform 0.18s var(--ease-out), background 0.2s ease, box-shadow 0.2s ease;
     }
+
     .meta-tag.term-toggle:hover {
       background: linear-gradient(180deg, #F07A72 0%, #E5594F 100%);
       transform: translateY(-1px);
@@ -4465,6 +4659,7 @@
       border: 1px solid transparent;
       transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
     }
+
     .advanced-toggle-btn:hover {
       background: #FAF6FA;
       border-color: var(--border-card);
@@ -4477,20 +4672,28 @@
     .btn-term-filter {
       transition: transform 0.18s var(--ease-out), box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
     }
+
     .btn-download-wav:hover,
     .btn-close-player:hover,
-    .btn-term-act:hover { transform: translateY(-1px); }
+    .btn-term-act:hover {
+      transform: translateY(-1px);
+    }
 
     /* ── Sidebar navigation ── */
     .nav-btn {
       position: relative;
       transition: background 0.2s ease, color 0.2s ease, transform 0.2s var(--ease-out), border-color 0.2s ease;
     }
-    .nav-btn:hover:not(.active) { transform: translateX(2px); }
+
+    .nav-btn:hover:not(.active) {
+      transform: translateX(2px);
+    }
+
     .nav-btn.active {
       background: linear-gradient(90deg, rgba(250, 203, 84, 0.2) 0%, rgba(250, 203, 84, 0.08) 100%);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
+
     .nav-btn.active::before {
       content: '';
       position: absolute;
@@ -4503,87 +4706,259 @@
       background: var(--yellow-sun);
       box-shadow: 0 0 12px rgba(250, 203, 84, 0.6);
     }
-    .nav-btn.active .icon { color: var(--yellow-sun); }
+
+    .nav-btn.active .icon {
+      color: var(--yellow-sun);
+    }
 
     /* ── Voice roster cards ── */
-    .voice-entry { transition: transform 0.2s var(--ease-out), box-shadow 0.22s ease, background 0.2s ease, border-color 0.2s ease; }
-    .voice-entry:hover:not(.active-selected) { transform: translateY(-1px); box-shadow: 0 8px 18px -12px rgba(42, 29, 43, 0.35); }
+    .voice-entry {
+      transition: transform 0.2s var(--ease-out), box-shadow 0.22s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .voice-entry:hover:not(.active-selected) {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px -12px rgba(42, 29, 43, 0.35);
+    }
 
     /* ── Library cards ── */
-    .lib-voice-card { transition: transform 0.22s var(--ease-out), box-shadow 0.22s ease, border-color 0.2s ease; }
-    .lib-voice-card:hover { transform: translateY(-2px); box-shadow: 0 14px 28px -16px rgba(42, 29, 43, 0.35); }
+    .lib-voice-card {
+      transition: transform 0.22s var(--ease-out), box-shadow 0.22s ease, border-color 0.2s ease;
+    }
+
+    .lib-voice-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px -16px rgba(42, 29, 43, 0.35);
+    }
 
     /* ── Hero bars & cards: softer depth ── */
     .view-hero-bar,
     .upload-drawer-card,
     .studio-panel,
-    .view-section-card { box-shadow: 0 1px 2px rgba(42, 29, 43, 0.04), 0 8px 24px -18px rgba(42, 29, 43, 0.25); }
-    .view-hero-desc .ic { color: var(--coral-primary); }
+    .view-section-card {
+      box-shadow: 0 1px 2px rgba(42, 29, 43, 0.04), 0 8px 24px -18px rgba(42, 29, 43, 0.25);
+    }
+
+    .view-hero-desc .ic {
+      color: var(--coral-primary);
+    }
 
     /* Clone audition card tweaks */
-    .clone-audition-card { border-color: rgba(235, 107, 99, 0.55); }
-    .clone-audition-title .ic { color: var(--coral-primary); width: 1.25em; height: 1.25em; }
-    .ref-text-header label { display: inline-flex; align-items: center; gap: 6px; }
-    .ref-text-header label .ic { color: var(--coral-primary); }
-    #cloneDraftAudioPlayer { border-radius: 999px; }
+    .clone-audition-card {
+      border-color: rgba(235, 107, 99, 0.55);
+    }
+
+    .clone-audition-title .ic {
+      color: var(--coral-primary);
+      width: 1.25em;
+      height: 1.25em;
+    }
+
+    .ref-text-header label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ref-text-header label .ic {
+      color: var(--coral-primary);
+    }
+
+    #cloneDraftAudioPlayer {
+      border-radius: 999px;
+    }
 
     /* ── Thin modern scrollbars ── */
-    * { scrollbar-width: thin; scrollbar-color: rgba(42, 29, 43, 0.22) transparent; }
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: transparent; }
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(42, 29, 43, 0.22) transparent;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
     ::-webkit-scrollbar-thumb {
       background: rgba(42, 29, 43, 0.2);
       border-radius: 999px;
       border: 2px solid transparent;
       background-clip: padding-box;
     }
-    ::-webkit-scrollbar-thumb:hover { background-color: rgba(42, 29, 43, 0.35); }
 
-    ::selection { background: rgba(235, 107, 99, 0.22); }
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: rgba(42, 29, 43, 0.35);
+    }
+
+    ::selection {
+      background: rgba(235, 107, 99, 0.22);
+    }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
+
+      *,
+      *::before,
+      *::after {
         transition-duration: 0.01ms !important;
         animation-duration: 0.01ms !important;
       }
     }
-
   </style>
 </head>
 
 <body>
-<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
-  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol>
-  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></symbol>
-  <symbol id="i-smile" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></symbol>
-  <symbol id="i-wind" viewBox="0 0 24 24"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></symbol>
-  <symbol id="i-message" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></symbol>
-  <symbol id="i-pause-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="10" y1="15" x2="10" y2="9"/><line x1="14" y1="15" x2="14" y2="9"/></symbol>
-  <symbol id="i-sliders" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></symbol>
-  <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/><path d="M5 3v4"/><path d="M3 5h4"/><path d="M19 17v4"/><path d="M17 19h4"/></symbol>
-  <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></symbol>
-  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol>
-  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
-  <symbol id="i-arrow-left" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></symbol>
-  <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></symbol>
-  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></symbol>
-  <symbol id="i-rotate" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></symbol>
-  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></symbol>
-  <symbol id="i-headphones" viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></symbol>
-  <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
-  <symbol id="i-x" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
-  <symbol id="i-trash" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></symbol>
-  <symbol id="i-save" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></symbol>
-  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
-  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.6v14.8a1 1 0 0 0 1.52.85l11.9-7.4a1 1 0 0 0 0-1.7L8.52 3.75A1 1 0 0 0 7 4.6z" fill="currentColor" stroke="none"/></symbol>
-  <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1.3" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" rx="1.3" fill="currentColor" stroke="none"/></symbol>
-  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3" fill="currentColor" stroke="none"/></symbol>
-  <symbol id="i-compare" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><line x1="12" y1="4" x2="12" y2="20"/><path d="M7 10h2"/><path d="M15 10h2"/></symbol>
-  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/></symbol>
-  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
-  <symbol id="i-archive" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></symbol>
-  <symbol id="i-plus" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
-</svg>
+  <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+    <symbol id="i-zap" viewBox="0 0 24 24">
+      <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" />
+    </symbol>
+    <symbol id="i-star" viewBox="0 0 24 24">
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+    </symbol>
+    <symbol id="i-smile" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+      <line x1="9" y1="9" x2="9.01" y2="9" />
+      <line x1="15" y1="9" x2="15.01" y2="9" />
+    </symbol>
+    <symbol id="i-wind" viewBox="0 0 24 24">
+      <path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2" />
+      <path d="M9.6 4.6A2 2 0 1 1 11 8H2" />
+      <path d="M12.6 19.4A2 2 0 1 0 14 16H2" />
+    </symbol>
+    <symbol id="i-message" viewBox="0 0 24 24">
+      <path
+        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+    </symbol>
+    <symbol id="i-pause-circle" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="10" y1="15" x2="10" y2="9" />
+      <line x1="14" y1="15" x2="14" y2="9" />
+    </symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24">
+      <line x1="4" y1="21" x2="4" y2="14" />
+      <line x1="4" y1="10" x2="4" y2="3" />
+      <line x1="12" y1="21" x2="12" y2="12" />
+      <line x1="12" y1="8" x2="12" y2="3" />
+      <line x1="20" y1="21" x2="20" y2="16" />
+      <line x1="20" y1="12" x2="20" y2="3" />
+      <line x1="1" y1="14" x2="7" y2="14" />
+      <line x1="9" y1="8" x2="15" y2="8" />
+      <line x1="17" y1="16" x2="23" y2="16" />
+    </symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24">
+      <path
+        d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
+      <path d="M5 3v4" />
+      <path d="M3 5h4" />
+      <path d="M19 17v4" />
+      <path d="M17 19h4" />
+    </symbol>
+    <symbol id="i-music" viewBox="0 0 24 24">
+      <path d="M9 18V5l12-2v13" />
+      <circle cx="6" cy="18" r="3" />
+      <circle cx="18" cy="16" r="3" />
+    </symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="17 8 12 3 7 8" />
+      <line x1="12" y1="3" x2="12" y2="15" />
+    </symbol>
+    <symbol id="i-download" viewBox="0 0 24 24">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
+    </symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24">
+      <line x1="19" y1="12" x2="5" y2="12" />
+      <polyline points="12 19 5 12 12 5" />
+    </symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24">
+      <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+      <line x1="12" y1="19" x2="12" y2="22" />
+    </symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24">
+      <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+      <path d="M3 3v5h5" />
+      <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+      <path d="M16 16h5v5" />
+    </symbol>
+    <symbol id="i-rotate" viewBox="0 0 24 24">
+      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+      <path d="M3 3v5h5" />
+    </symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24">
+      <path d="M12 20h9" />
+      <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+    </symbol>
+    <symbol id="i-headphones" viewBox="0 0 24 24">
+      <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+      <path
+        d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+    </symbol>
+    <symbol id="i-check" viewBox="0 0 24 24">
+      <polyline points="20 6 9 17 4 12" />
+    </symbol>
+    <symbol id="i-x" viewBox="0 0 24 24">
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24">
+      <polyline points="3 6 5 6 21 6" />
+      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+      <line x1="10" y1="11" x2="10" y2="17" />
+      <line x1="14" y1="11" x2="14" y2="17" />
+    </symbol>
+    <symbol id="i-save" viewBox="0 0 24 24">
+      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+      <polyline points="17 21 17 13 7 13 7 21" />
+      <polyline points="7 3 7 8 15 8" />
+    </symbol>
+    <symbol id="i-book" viewBox="0 0 24 24">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+    </symbol>
+    <symbol id="i-play" viewBox="0 0 24 24">
+      <path d="M7 4.6v14.8a1 1 0 0 0 1.52.85l11.9-7.4a1 1 0 0 0 0-1.7L8.52 3.75A1 1 0 0 0 7 4.6z" fill="currentColor"
+        stroke="none" />
+    </symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24">
+      <rect x="6" y="4" width="4" height="16" rx="1.3" fill="currentColor" stroke="none" />
+      <rect x="14" y="4" width="4" height="16" rx="1.3" fill="currentColor" stroke="none" />
+    </symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24">
+      <rect x="5" y="5" width="14" height="14" rx="3" fill="currentColor" stroke="none" />
+    </symbol>
+    <symbol id="i-compare" viewBox="0 0 24 24">
+      <rect x="3" y="4" width="18" height="16" rx="2.5" />
+      <line x1="12" y1="4" x2="12" y2="20" />
+      <path d="M7 10h2" />
+      <path d="M15 10h2" />
+    </symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24">
+      <path d="M9 18h6" />
+      <path d="M10 22h4" />
+      <path
+        d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5" />
+    </symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </symbol>
+    <symbol id="i-archive" viewBox="0 0 24 24">
+      <rect x="2" y="3" width="20" height="5" rx="1" />
+      <path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" />
+      <path d="M10 12h4" />
+    </symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24">
+      <line x1="12" y1="5" x2="12" y2="19" />
+      <line x1="5" y1="12" x2="19" y2="12" />
+    </symbol>
+  </svg>
 
   <!-- ════════════════════════════════════════════════════════════
      1. SIDEBAR (Deep Aubergine Plum #3E2E3E)
@@ -4754,14 +5129,18 @@
           <div class="engine-card active" data-engine="vieneu" id="engineV3Card"
             title="Mô hình v3 Turbo 48kHz không yêu cầu ref_text, siêu tốc trên máy">
             <span class="engine-indicator"></span>
-            <span class="engine-card-name"><svg class="ic" aria-hidden="true"><use href="#i-zap"/></svg> VieNeu v3 Turbo</span>
+            <span class="engine-card-name"><svg class="ic" aria-hidden="true">
+                <use href="#i-zap" />
+              </svg> VieNeu v3 Turbo</span>
             <span class="engine-card-desc">48kHz · Siêu tốc RTF ~0.7x</span>
           </div>
 
           <div class="engine-card" data-engine="vieneu-v2" id="engineV2Card"
             title="Mô hình v2 GGUF Q8 24kHz bám sát ngữ điệu thông qua ref_text">
             <span class="engine-indicator"></span>
-            <span class="engine-card-name"><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg> VieNeu v2 GGUF</span>
+            <span class="engine-card-name"><svg class="ic" aria-hidden="true">
+                <use href="#i-star" />
+              </svg> VieNeu v2 GGUF</span>
             <span class="engine-card-desc">24kHz · Chuẩn ngữ điệu ref_text</span>
           </div>
         </div>
@@ -4829,17 +5208,40 @@
                   </svg>
                   Kiểm tra tách đoạn
                 </button>
+                <button type="button" class="tool-btn ai-prosody" id="btnAutoProsody"
+                  title="AI tự động phân tích văn bản, chèn ngắt hơi, dấu phẩy và thẻ biểu cảm giống người thật trong 1 click">
+                  <svg class="ic" aria-hidden="true"><use href="#i-sparkles"/></svg>
+                  AI Ngắt hơi &amp; Biểu cảm
+                </button>
+                <button type="button" class="tool-btn" id="btnUndoProsody" style="display:none;"
+                  title="Khôi phục lại nguyên văn trước khi AI chèn ngắt nghỉ">
+                  <svg class="ic" aria-hidden="true"><use href="#i-rotate"/></svg>
+                  Hoàn tác AI
+                </button>
               </div>
             </div>
           </div>
+          <div class="prosody-status-banner" id="prosodyStatusBanner"></div>
           <div class="cue-chips-bar">
             <span class="cue-bar-label">Chèn nhanh thẻ biểu cảm &amp; ngắt nghỉ:</span>
-            <button type="button" class="cue-chip" data-cuetag="[cười]"><svg class="ic" aria-hidden="true"><use href="#i-smile"/></svg> [cười]</button>
-            <button type="button" class="cue-chip" data-cuetag="[thở dài]"><svg class="ic" aria-hidden="true"><use href="#i-wind"/></svg> [thở dài]</button>
-            <button type="button" class="cue-chip" data-cuetag="[hắng giọng]"><svg class="ic" aria-hidden="true"><use href="#i-message"/></svg> [hắng giọng]</button>
-            <button type="button" class="cue-chip" data-cuetag="[nghỉ 0.5]"><svg class="ic" aria-hidden="true"><use href="#i-pause-circle"/></svg> [nghỉ 0.5s]</button>
-            <button type="button" class="cue-chip" data-cuetag="[nghỉ 1]"><svg class="ic" aria-hidden="true"><use href="#i-pause-circle"/></svg> [nghỉ 1s]</button>
-            <button type="button" class="cue-chip" data-cuetag="[nghỉ 2]"><svg class="ic" aria-hidden="true"><use href="#i-pause-circle"/></svg> [nghỉ 2s]</button>
+            <button type="button" class="cue-chip" data-cuetag="[cười]"><svg class="ic" aria-hidden="true">
+                <use href="#i-smile" />
+              </svg> [cười]</button>
+            <button type="button" class="cue-chip" data-cuetag="[thở dài]"><svg class="ic" aria-hidden="true">
+                <use href="#i-wind" />
+              </svg> [thở dài]</button>
+            <button type="button" class="cue-chip" data-cuetag="[hắng giọng]"><svg class="ic" aria-hidden="true">
+                <use href="#i-message" />
+              </svg> [hắng giọng]</button>
+            <button type="button" class="cue-chip" data-cuetag="[nghỉ 0.5]"><svg class="ic" aria-hidden="true">
+                <use href="#i-pause-circle" />
+              </svg> [nghỉ 0.5s]</button>
+            <button type="button" class="cue-chip" data-cuetag="[nghỉ 1]"><svg class="ic" aria-hidden="true">
+                <use href="#i-pause-circle" />
+              </svg> [nghỉ 1s]</button>
+            <button type="button" class="cue-chip" data-cuetag="[nghỉ 2]"><svg class="ic" aria-hidden="true">
+                <use href="#i-pause-circle" />
+              </svg> [nghỉ 2s]</button>
           </div>
           <div class="editor-subtext-hint">Dán lời cần đọc – dài bao nhiêu cũng được, Studio tự chia đoạn &amp; áp dụng
             từ điển phát âm.</div>
@@ -4872,8 +5274,12 @@
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
               </svg> Khóa chuẩn ngữ điệu Bắc/Nam</div>
-            <div class="preset-chip" data-preset="balanced"><svg class="ic" aria-hidden="true"><use href="#i-sliders"/></svg> Tự nhiên cân bằng</div>
-            <div class="preset-chip" data-preset="expressive"><svg class="ic" aria-hidden="true"><use href="#i-music"/></svg> Biểu cảm kể chuyện</div>
+            <div class="preset-chip" data-preset="balanced"><svg class="ic" aria-hidden="true">
+                <use href="#i-sliders" />
+              </svg> Tự nhiên cân bằng</div>
+            <div class="preset-chip" data-preset="expressive"><svg class="ic" aria-hidden="true">
+                <use href="#i-music" />
+              </svg> Biểu cảm kể chuyện</div>
           </div>
 
           <!-- Main Sliders -->
@@ -4917,25 +5323,34 @@
               <div class="fx-toggles-group">
                 <label class="fx-toggle-pill" title="Chuẩn hóa âm lượng đều -14 LUFS chuẩn YouTube/TikTok/Podcast">
                   <input type="checkbox" id="fxLufsCheckbox" />
-                  <span><svg class="ic" aria-hidden="true"><use href="#i-sliders"/></svg> Chuẩn âm -14 LUFS</span>
+                  <span><svg class="ic" aria-hidden="true">
+                      <use href="#i-sliders" />
+                    </svg> Chuẩn âm -14 LUFS</span>
                 </label>
                 <label class="fx-toggle-pill" title="Cắt ù tần thấp <80Hz và nén nhẹ làm ấm, dày giọng nói">
                   <input type="checkbox" id="fxEnhanceCheckbox" />
-                  <span><svg class="ic" aria-hidden="true"><use href="#i-sparkles"/></svg> Lọc ù &amp; Làm ấm giọng</span>
+                  <span><svg class="ic" aria-hidden="true">
+                      <use href="#i-sparkles" />
+                    </svg> Lọc ù &amp; Làm ấm giọng</span>
                 </label>
               </div>
             </div>
             <div class="bgm-inline-row">
-              <span style="font-weight:700;color:var(--plum-dark);"><svg class="ic" aria-hidden="true"><use href="#i-music"/></svg> Nhạc nền (Auto-Ducking):</span>
+              <span style="font-weight:700;color:var(--plum-dark);"><svg class="ic" aria-hidden="true">
+                  <use href="#i-music" />
+                </svg> Nhạc nền (Auto-Ducking):</span>
               <select class="bgm-select" id="bgmSelect">
                 <option value="">Không chèn nhạc nền</option>
               </select>
               <label class="tool-btn" style="cursor:pointer;" title="Tải thêm file nhạc nền MP3/WAV">
-                <svg class="ic" aria-hidden="true"><use href="#i-upload"/></svg> Tải nhạc nền
+                <svg class="ic" aria-hidden="true">
+                  <use href="#i-upload" />
+                </svg> Tải nhạc nền
                 <input type="file" id="bgmUploadInput" accept="audio/*" style="display:none;" />
               </label>
               <span style="color:var(--text-muted);font-weight:600;">Âm lượng nhạc: <b id="bgmVolLabel">14%</b></span>
-              <input type="range" class="luxury-range" id="bgmVolSlider" min="4" max="40" step="2" value="14" style="width:92px;" />
+              <input type="range" class="luxury-range" id="bgmVolSlider" min="4" max="40" step="2" value="14"
+                style="width:92px;" />
             </div>
           </div>
 
@@ -5015,7 +5430,10 @@
               giọng clone, nghe kiểm tra đạt chuẩn rồi mới lưu giọng kết quả vào Thư viện.
             </div>
           </div>
-          <button type="button" class="btn-pill-outline" id="btnBackToStudioFromClone"><svg class="ic" aria-hidden="true"><use href="#i-arrow-left"/></svg> Sang Tạo giọng đọc</button>
+          <button type="button" class="btn-pill-outline" id="btnBackToStudioFromClone"><svg class="ic"
+              aria-hidden="true">
+              <use href="#i-arrow-left" />
+            </svg> Sang Tạo giọng đọc</button>
         </div>
 
         <div class="upload-drawer-card" id="uploadDrawerSection"
@@ -5025,10 +5443,14 @@
           <form class="upload-form-wrap" id="uploadForm" style="gap: 12px; margin-top: 8px;">
             <div class="clone-source-tabs" id="cloneSourceTabs">
               <button type="button" class="clone-mode-pill active" id="btnModeUpload" data-clonemode="upload">
-                <svg class="ic" aria-hidden="true"><use href="#i-upload"/></svg> Tải tệp tham chiếu lên
+                <svg class="ic" aria-hidden="true">
+                  <use href="#i-upload" />
+                </svg> Tải tệp tham chiếu lên
               </button>
               <button type="button" class="clone-mode-pill" id="btnModeMic" data-clonemode="mic">
-                <svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg> Thu âm tham chiếu 8.0s (kèm câu mẫu)
+                <svg class="ic" aria-hidden="true">
+                  <use href="#i-mic" />
+                </svg> Thu âm tham chiếu 8.0s (kèm câu mẫu)
               </button>
             </div>
 
@@ -5051,12 +5473,16 @@
               <div class="mic-script-header">
                 <span class="mic-script-label">Đọc tự nhiên câu tiếng Việt mẫu bên dưới trong 8.0s (lời thoại sẽ khớp
                   100%):</span>
-                <button type="button" class="btn-next-script" id="btnNextMicScript"><svg class="ic" aria-hidden="true"><use href="#i-refresh"/></svg> Đổi câu mẫu</button>
+                <button type="button" class="btn-next-script" id="btnNextMicScript"><svg class="ic" aria-hidden="true">
+                    <use href="#i-refresh" />
+                  </svg> Đổi câu mẫu</button>
               </div>
               <textarea class="mic-script-input" id="micScriptInput" rows="2"></textarea>
               <div class="mic-controls-row">
                 <button type="button" class="btn-mic-record" id="btnMicRecord">
-                  <span id="micBtnIcon"><svg class="ic" aria-hidden="true"><use href="#i-mic"/></svg></span>
+                  <span id="micBtnIcon"><svg class="ic" aria-hidden="true">
+                      <use href="#i-mic" />
+                    </svg></span>
                   <span id="micBtnText">Bắt đầu thu 8.0s</span>
                 </button>
                 <div class="mic-meter-box">
@@ -5109,7 +5535,9 @@
                 <label for="uploadRefText">Lời thoại trong file tham chiếu (dùng để trích xuất sẵn thông số VieNeu
                   v2):</label>
                 <button type="button" class="btn-auto-stt" id="btnAutoSTT" title="AI tự động nhận diện lại từ âm thanh">
-                  <svg class="ic" aria-hidden="true"><use href="#i-sparkles"/></svg> Nhận diện chữ
+                  <svg class="ic" aria-hidden="true">
+                    <use href="#i-sparkles" />
+                  </svg> Nhận diện chữ
                 </button>
               </div>
               <textarea class="input-compact textarea-ref" id="uploadRefText"
@@ -5124,7 +5552,9 @@
 
             <div class="ref-text-field-wrap" style="border-color: rgba(235, 107, 99, 0.38); background: #FFFBF9;">
               <div class="ref-text-header">
-                <label for="clonePreviewTextInput" style="color: var(--aubergine);"><svg class="ic" aria-hidden="true"><use href="#i-pen"/></svg> Đoạn text ngắn đại diện cho giọng
+                <label for="clonePreviewTextInput" style="color: var(--aubergine);"><svg class="ic" aria-hidden="true">
+                    <use href="#i-pen" />
+                  </svg> Đoạn text ngắn đại diện cho giọng
                   clone mới (dùng để nghe thử &amp; làm giọng mẫu trong Thư viện):</label>
               </div>
               <textarea class="input-compact textarea-ref" id="clonePreviewTextInput" rows="2"
@@ -5171,18 +5601,24 @@
 
             <button type="button" class="btn-submit-clone" id="btnPreviewClone"
               style="padding: 12px; font-size: 13.5px;">
-              <svg class="ic" aria-hidden="true"><use href="#i-sparkles"/></svg> Tạo thử &amp; Nghe kiểm tra giọng clone
+              <svg class="ic" aria-hidden="true">
+                <use href="#i-sparkles" />
+              </svg> Tạo thử &amp; Nghe kiểm tra giọng clone
             </button>
 
             <!-- Giai đoạn 2: Nghe kiểm tra kết quả & Lưu vào thư viện -->
             <div class="clone-audition-card" id="cloneAuditionCard">
               <div class="clone-audition-header">
                 <div class="clone-audition-title">
-                  <span style="display:inline-flex;align-items:center;gap:8px;"><svg class="ic" aria-hidden="true"><use href="#i-headphones"/></svg> Giai đoạn 2 · Nghe kiểm tra kết quả giọng đã clone</span>
+                  <span style="display:inline-flex;align-items:center;gap:8px;"><svg class="ic" aria-hidden="true">
+                      <use href="#i-headphones" />
+                    </svg> Giai đoạn 2 · Nghe kiểm tra kết quả giọng đã clone</span>
                 </div>
                 <div class="clone-audition-badges">
                   <span class="badge-micro green" id="cloneDraftQualityBadge">Chất lượng tốt</span>
-                  <span class="badge-micro gold" id="cloneDraftParamsBadge"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg> Đã bóc tách thông số</span>
+                  <span class="badge-micro gold" id="cloneDraftParamsBadge"><svg class="ic" aria-hidden="true">
+                      <use href="#i-check" />
+                    </svg> Đã bóc tách thông số</span>
                 </div>
               </div>
 
@@ -5196,10 +5632,15 @@
 
               <div class="clone-audition-actions">
                 <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                  <button type="button" class="btn-pill-outline" id="btnRetryPreviewClone"><svg class="ic" aria-hidden="true"><use href="#i-rotate"/></svg> Chỉnh &amp; Tạo thử
+                  <button type="button" class="btn-pill-outline" id="btnRetryPreviewClone"><svg class="ic"
+                      aria-hidden="true">
+                      <use href="#i-rotate" />
+                    </svg> Chỉnh &amp; Tạo thử
                     lại</button>
                   <button type="button" class="btn-pill-outline" id="btnDiscardCloneDraft" data-variant="danger"
-                    style="color:#C62828;border-color:rgba(198,40,40,0.28);"><svg class="ic" aria-hidden="true"><use href="#i-trash"/></svg> Hủy bản nháp</button>
+                    style="color:#C62828;border-color:rgba(198,40,40,0.28);"><svg class="ic" aria-hidden="true">
+                      <use href="#i-trash" />
+                    </svg> Hủy bản nháp</button>
                 </div>
                 <span style="font-size:11.5px;color:var(--text-muted);">Chưa lưu vào Thư viện cho tới khi bạn bấm Lưu
                   bên dưới</span>
@@ -5221,7 +5662,9 @@
 
                 <button type="submit" class="btn-submit-clone" id="btnSubmitVoice"
                   style="padding: 12px; font-size: 13.5px; background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%);">
-                  <svg class="ic" aria-hidden="true"><use href="#i-save"/></svg> Đã chuẩn ý · Lưu giọng clone &amp; thông số vào Thư viện
+                  <svg class="ic" aria-hidden="true">
+                    <use href="#i-save" />
+                  </svg> Đã chuẩn ý · Lưu giọng clone &amp; thông số vào Thư viện
                 </button>
               </div>
             </div>
@@ -5316,7 +5759,9 @@
           <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
             <span style="font-size:11.5px;color:var(--text-muted);">Sẽ dùng giọng &amp; cài đặt hiện tại (<b
                 id="bookActiveVoiceLabel">Mặc định</b> · <span id="bookActiveFmtLabel">MP3</span>)</span>
-            <button type="button" class="btn-pill-primary" id="btnStartAudiobook"><svg class="ic" aria-hidden="true"><use href="#i-book"/></svg> Tạo hàng đợi Sách nói</button>
+            <button type="button" class="btn-pill-primary" id="btnStartAudiobook"><svg class="ic" aria-hidden="true">
+                <use href="#i-book" />
+              </svg> Tạo hàng đợi Sách nói</button>
           </div>
         </div>
 
@@ -5329,7 +5774,10 @@
           <div>
             <div class="view-hero-title">Lịch sử kết quả giọng nói đã tạo</div>
             <div class="view-hero-desc">
-              Toàn bộ các bản âm thanh được lưu thành file trong thư mục <code>history/</code>. Nhấn <b><svg class="ic sm" aria-hidden="true"><use href="#i-play"/></svg></b> để nghe
+              Toàn bộ các bản âm thanh được lưu thành file trong thư mục <code>history/</code>. Nhấn <b><svg
+                  class="ic sm" aria-hidden="true">
+                  <use href="#i-play" />
+                </svg></b> để nghe
               lại tức thì hoặc chọn <b>A / B</b> để so sánh trực tiếp 2 bản đọc.
             </div>
           </div>
@@ -5339,19 +5787,27 @@
 
         <div class="ab-compare-bar" id="abCompareBar">
           <div style="display:flex;align-items:center;justify-content:space-between;">
-            <span style="font-size:12.5px;font-weight:800;"><svg class="ic" aria-hidden="true"><use href="#i-compare"/></svg> Chế độ nghe so sánh A / B (chuyển đổi tức thì giữ nguyên
+            <span style="font-size:12.5px;font-weight:800;"><svg class="ic" aria-hidden="true">
+                <use href="#i-compare" />
+              </svg> Chế độ nghe so sánh A / B (chuyển đổi tức thì giữ nguyên
               vị trí)</span>
             <button type="button" class="btn-term-act" id="btnClearAB">Đóng A/B</button>
           </div>
           <div class="ab-slots-row">
             <div class="ab-slot-box" id="abSlotA">
               <span id="abLabelA">Bản A: chưa chọn</span>
-              <button type="button" class="btn-pill-primary" id="btnPlayAB_A" style="padding:3px 10px;font-size:11px;"><svg class="ic" aria-hidden="true"><use href="#i-play"/></svg>
+              <button type="button" class="btn-pill-primary" id="btnPlayAB_A"
+                style="padding:3px 10px;font-size:11px;"><svg class="ic" aria-hidden="true">
+                  <use href="#i-play" />
+                </svg>
                 Nghe A</button>
             </div>
             <div class="ab-slot-box" id="abSlotB">
               <span id="abLabelB">Bản B: chưa chọn</span>
-              <button type="button" class="btn-pill-primary" id="btnPlayAB_B" style="padding:3px 10px;font-size:11px;"><svg class="ic" aria-hidden="true"><use href="#i-play"/></svg>
+              <button type="button" class="btn-pill-primary" id="btnPlayAB_B"
+                style="padding:3px 10px;font-size:11px;"><svg class="ic" aria-hidden="true">
+                  <use href="#i-play" />
+                </svg>
                 Nghe B</button>
             </div>
           </div>
@@ -5525,11 +5981,15 @@
       <div class="right-panel-title-row">
         <div class="right-panel-title">Thư viện giọng</div>
         <button type="button" class="btn-quick-clone-jump" id="btnQuickCreateClone"
-          title="Tạo 1 giọng clone mới vào thư viện"><svg class="ic sm" aria-hidden="true"><use href="#i-plus"/></svg> Tạo clone</button>
+          title="Tạo 1 giọng clone mới vào thư viện"><svg class="ic sm" aria-hidden="true">
+            <use href="#i-plus" />
+          </svg> Tạo clone</button>
       </div>
       <div class="right-panel-subline">
         <span class="subline-label">Chọn giọng để đọc</span>
-        <span class="subline-hint">bấm <svg class="ic sm" aria-hidden="true"><use href="#i-play"/></svg> nghe mẫu</span>
+        <span class="subline-hint">bấm <svg class="ic sm" aria-hidden="true">
+            <use href="#i-play" />
+          </svg> nghe mẫu</span>
       </div>
     </div>
 
@@ -5685,7 +6145,9 @@
 
           <div class="wave-stage-footer">
             <div class="wave-stage-tip">
-              <span><svg class="ic" aria-hidden="true"><use href="#i-bulb"/></svg></span>
+              <span><svg class="ic" aria-hidden="true">
+                  <use href="#i-bulb" />
+                </svg></span>
               <span>Kéo thanh xanh để chọn đúng 8.0s cố định hoặc bấm bất kỳ vị trí nào trên sóng âm để nhảy tới đoạn
                 đó.</span>
             </div>
@@ -5802,7 +6264,7 @@
     (() => {
       /* ── Element Selectors ── */
       const $ = id => document.getElementById(id);
-  const ICON = (n, cls = '') => `<svg class="ic ${cls}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+      const ICON = (n, cls = '') => `<svg class="ic ${cls}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
 
       const textInput = $('textInput');
       const wordCount = $('wordCount');
@@ -6111,6 +6573,73 @@
         });
       }
 
+      let isRunningAutoProsody = false;
+      let textBeforeAutoProsody = null;
+
+      if ($('btnAutoProsody')) {
+        $('btnAutoProsody').addEventListener('click', async () => {
+          if (isRunningAutoProsody) return;
+          const rawText = textInput.value.trim();
+          if (!rawText) {
+            showToast('err', 'Vui lòng nhập hoặc dán nội dung văn bản tiếng Việt trước khi phân tích.');
+            textInput.focus();
+            return;
+          }
+          const btn = $('btnAutoProsody');
+          const origHtml = btn.innerHTML;
+          isRunningAutoProsody = true;
+          btn.disabled = true;
+          btn.classList.add('btn-is-loading');
+          btn.innerHTML = `<span class="spin-loader"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span> Đang phân tích...`;
+
+          try {
+            const activePresetEl = document.querySelector('.preset-chip.active');
+            const styleMode = (activePresetEl && activePresetEl.dataset.preset === 'expressive') ? 'story' : 'natural';
+            const res = await fetch('/v1/text/auto-prosody', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ input: rawText, style: styleMode }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.detail || 'Phân tích ngắt nghỉ thất bại.');
+
+            if (data.stats && data.stats.changed) {
+              textBeforeAutoProsody = textInput.value;
+              textInput.value = data.annotated_text;
+              updateTextCounter();
+              if ($('btnUndoProsody')) $('btnUndoProsody').style.display = 'inline-flex';
+              showToast('ok', data.summary);
+            } else {
+              showToast('info', data.summary || 'Văn bản đã có nhịp ngắt nghỉ cân đối sẵn.');
+            }
+            if ($('prosodyStatusBanner')) {
+              $('prosodyStatusBanner').innerHTML = `<span style="display:inline-flex;align-items:center;gap:6px;">${ICON('sparkles')} ${escapeHtmlSafe(data.summary)}</span><span style="font-size:10.5px;color:var(--text-muted);">Chế độ: ${styleMode === 'story' ? 'Kể chuyện sâu lắng' : 'Tự nhiên'}</span>`;
+              $('prosodyStatusBanner').classList.add('active');
+            }
+          } catch (err) {
+            showToast('err', err.message || 'Lỗi phân tích ngắt nghỉ tự động.');
+          } finally {
+            isRunningAutoProsody = false;
+            btn.disabled = false;
+            btn.classList.remove('btn-is-loading');
+            btn.innerHTML = origHtml;
+          }
+        });
+      }
+
+      if ($('btnUndoProsody')) {
+        $('btnUndoProsody').addEventListener('click', () => {
+          if (textBeforeAutoProsody !== null) {
+            textInput.value = textBeforeAutoProsody;
+            textBeforeAutoProsody = null;
+            updateTextCounter();
+            $('btnUndoProsody').style.display = 'none';
+            if ($('prosodyStatusBanner')) $('prosodyStatusBanner').classList.remove('active');
+            showToast('info', 'Đã hoàn tác về nguyên văn trước khi AI chèn ngắt nghỉ.');
+          }
+        });
+      }
+
       let isPreviewingChunks = false;
       $('btnChunks').addEventListener('click', async () => {
         if (isPreviewingChunks) return;
@@ -6133,9 +6662,22 @@
           });
           const data = await res.json();
           if (Array.isArray(data.chunks)) {
+            const gaps = Array.isArray(data.gaps) ? data.gaps : [];
+            const fmtGap = g => {
+              if (!g) return '';
+              if (g.startsWith('pause:')) return `${ICON('pause-circle', 'sm')} Nghỉ ${g.split(':')[1]}s`;
+              if (g === 'para') return 'Ngắt đoạn · 0.70s';
+              if (g === 'minor') return 'Lấy hơi · 0.30s';
+              return 'Ngắt câu · 0.50s';
+            };
             chunksInspector.style.display = 'block';
             chunksInspector.innerHTML = `<b style="color:var(--coral-primary);">Chia thành ${data.chunks.length} đoạn chuẩn:</b><ol style="margin-left:18px;margin-top:6px;">` +
-              data.chunks.map(c => `<li style="margin:4px 0;">${c}</li>`).join('') + `</ol>`;
+              data.chunks.map((c, idx) => {
+                const gapBadge = idx < gaps.length
+                  ? ` <span class="badge-micro gold" style="margin-left:4px;">${fmtGap(gaps[idx])}</span>`
+                  : '';
+                return `<li style="margin:4px 0;">${escapeHtmlSafe(c)}${gapBadge}</li>`;
+              }).join('') + `</ol>`;
           }
         } catch {
           showToast('err', 'Lỗi kiểm tra tách đoạn.');

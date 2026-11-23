@@ -19,7 +19,7 @@ from vieneu import Vieneu
 from .audio_postprocess import FORMAT_META, apply_studio_fx, encode_audio_bytes
 from .config import settings
 from .log_stream import push_log
-from .normalizer import preprocess_text, split_and_normalize
+from .normalizer import gaps_to_silence_durations, preprocess_text, split_and_normalize, strip_emotion_cues
 from .progress_store import ProgressCallback
 
 
@@ -330,13 +330,15 @@ class TTSEngine:
                     "mime": FORMAT_META[fmt_key][0],
                 }
 
-            from vieneu_utils.core_utils import gaps_to_silence, join_audio_chunks
+            from vieneu_utils.core_utils import join_audio_chunks
 
             max_c = min(settings.max_chars_per_chunk, 150) if engine_key == "vieneu-v2" else settings.max_chars_per_chunk
             chunks, gaps = split_and_normalize(cleaned, max_chars=max_c)
             if not chunks:
                 chunks = [cleaned]
                 gaps = []
+            if engine_key == "vieneu-v2":
+                chunks = [strip_emotion_cues(c) or c for c in chunks]
             chunk_count = len(chunks)
             if engine_key == "vieneu":
                 est_sec = max(2.2, len(cleaned) * 0.055)
@@ -385,7 +387,7 @@ class TTSEngine:
                 if cancel_event and cancel_event.is_set():
                     raise RuntimeError("Đã hủy tác vụ theo yêu cầu.")
                 final_wav = join_audio_chunks(
-                    chunk_wavs, sr, silence_ps=gaps_to_silence(gaps)
+                    chunk_wavs, sr, silence_ps=gaps_to_silence_durations(gaps)
                 )
                 audio = (
                     self.tts._apply_watermark(final_wav)
@@ -458,7 +460,7 @@ class TTSEngine:
 
                 if cancel_event and cancel_event.is_set():
                     raise RuntimeError("Đã hủy tác vụ theo yêu cầu.")
-                audio = join_audio_chunks(chunk_wavs, sr, silence_ps=gaps_to_silence(gaps))
+                audio = join_audio_chunks(chunk_wavs, sr, silence_ps=gaps_to_silence_durations(gaps))
 
             if abs(speed - 1.0) > 0.02 and len(audio) > 0:
                 if progress_cb:
@@ -538,9 +540,11 @@ class TTSEngine:
             sr = self.sample_rate
 
             def _gen_v3() -> Generator[bytes, None, None]:
+                import re as _re
+                v3_text = _re.sub(r"\[\s*ngh[ỉi]\s*[0-9.,]+\s*s?\s*\]", "...", cleaned, flags=_re.IGNORECASE)
                 with self._lock:
                     for chunk in self.tts.infer_stream(
-                        cleaned,
+                        v3_text,
                         voice=resolved_voice,
                         max_chars=settings.max_chars_per_chunk,
                         use_ref_codes=use_ref_codes,
@@ -561,6 +565,10 @@ class TTSEngine:
         )
 
         def _gen_v2() -> Generator[bytes, None, None]:
+            import re as _re
+            v2_text = strip_emotion_cues(
+                _re.sub(r"\[\s*ngh[ỉi]\s*[0-9.,]+\s*s?\s*\]", ",", cleaned, flags=_re.IGNORECASE)
+            ) or cleaned
             with self._lock:
                 tts2._repeat_penalty = v2_rep
                 tts2._top_p = v2_top_p
@@ -571,7 +579,7 @@ class TTSEngine:
                         ref_text_override=ref_text_override,
                     )
                     gen = tts2.infer_stream(
-                        cleaned,
+                        v2_text,
                         ref_codes=ref_codes,
                         ref_text=ref_text,
                         max_chars=v2_max_chars,
@@ -581,7 +589,7 @@ class TTSEngine:
                 else:
                     v2_voice = tts2.get_preset_voice(resolved_voice)
                     gen = tts2.infer_stream(
-                        cleaned,
+                        v2_text,
                         voice=v2_voice,
                         max_chars=v2_max_chars,
                         temperature=v2_temp,

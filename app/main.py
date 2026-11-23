@@ -22,6 +22,7 @@ from .lexicon_manager import STARTER_TEMPLATES, lexicon_manager
 from .log_stream import attach_python_logging, log_store, push_log
 from .normalizer import preprocess_text, split_and_normalize
 from .progress_store import progress_store
+from .prosody_analyzer import analyze_and_annotate_prosody
 from .tts_engine import TTSEngine
 from .voice_manager import VoiceManager
 
@@ -84,6 +85,11 @@ class CommitCloneRequest(BaseModel):
 
 class PreviewTextRequest(BaseModel):
     input: str = Field(..., min_length=1)
+
+
+class AutoProsodyRequest(BaseModel):
+    input: str = Field(..., min_length=1)
+    style: str = Field(default="natural")
 
 
 class LexiconRuleRequest(BaseModel):
@@ -452,6 +458,17 @@ async def delete_voice(voice_id: str):
 async def preview_chunks(req: PreviewTextRequest):
     chunks, gaps = split_and_normalize(req.input, max_chars=settings.max_chars_per_chunk)
     return {"chunks": chunks, "gaps": gaps, "count": len(chunks), "normalized_text": preprocess_text(req.input)}
+
+
+@app.post("/v1/text/auto-prosody")
+async def auto_prosody(req: AutoProsodyRequest):
+    """Phân tích văn bản tiếng Việt 1-click để tự chèn ngắt hơi, dấu phẩy và thẻ biểu cảm tự nhiên."""
+    try:
+        res = analyze_and_annotate_prosody(req.input, style=req.style)
+        push_log("OK", "PROSODY", f"AI tự động ngắt nghỉ: {res['summary']}")
+        return res
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 # ── Từ điển phát âm tùy chỉnh (Lexicon) ──────────────────────────────────────
