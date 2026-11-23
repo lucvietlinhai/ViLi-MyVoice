@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import shutil
 import tempfile
 from contextlib import asynccontextmanager
@@ -70,6 +71,15 @@ class SpeechRequest(BaseModel):
 
 class UpdateRefTextRequest(BaseModel):
     ref_text: str = Field(..., min_length=1, description="Lời thoại chính xác của file audio mẫu.")
+
+
+class CommitCloneRequest(BaseModel):
+    draft_id: str = Field(..., min_length=4)
+    name: str = Field(..., min_length=1)
+    description: str = Field(default="")
+    ref_text: str = Field(default="")
+    consent_confirmed: bool = Field(default=False)
+    job_id: str = Field(default="")
 
 
 class PreviewTextRequest(BaseModel):
@@ -225,13 +235,13 @@ async def get_voice_audio(voice_id: str):
 
 
 @app.get("/v1/voices/{voice_id}/sample")
-async def get_voice_sample(voice_id: str):
+def get_voice_sample(voice_id: str):
     engine, voice_mgr = _require_ready()
     voices = voice_mgr.list_voices(engine.tts_v2)
     preset_names = {v["name"] for v in voices["preset_voices"]}
     if voice_id not in preset_names:
         if voice_mgr.is_custom_voice(voice_id):
-            return await get_voice_audio(voice_id)
+            return get_voice_audio_sync(voice_mgr, voice_id)
         raise HTTPException(status_code=404, detail=f"Không tìm thấy giọng mẫu '{voice_id}'.")
 
     sample_text = "Xin chào, đây là giọng đọc mẫu được tích hợp sẵn trong Voice Studio."
@@ -243,6 +253,128 @@ async def get_voice_sample(voice_id: str):
         voice_manager=voice_mgr,
     )
     return Response(content=wav_bytes, media_type="audio/wav")
+
+
+def get_voice_audio_sync(voice_mgr: VoiceManager, voice_id: str):
+    safe_name = voice_mgr.resolve_audio_name(voice_id)
+    wav_path = voice_mgr.voices_dir / f"{safe_name}.wav"
+    if not wav_path.is_file():
+        raise HTTPException(status_code=404, detail=f"Không tìm thấy file audio cho giọng '{voice_id}'.")
+    return FileResponse(str(wav_path), media_type="audio/wav")
+
+
+@app.post("/v1/voices/preview-clone")
+async def preview_clone_voice(
+    preview_text: str = Form(...),
+    preview_model: str = Form(default="vieneu"),
+    ref_text: str = Form(default=""),
+    denoise: bool = Form(default=False),
+    draft_id: str = Form(default=""),
+    job_id: str = Form(default=""),
+    file: Optional[UploadFile] = File(default=None),
+):
+    """Học giọng từ âm thanh tham chiếu và tạo bản nghe thử với câu đại diện (chưa lưu vào Thư viện)."""
+    engine, voice_mgr = _require_ready()
+    tmp_path: Optional[Path] = None
+
+    if file is not None and file.filename:
+        suffix = Path(file.filename).suffix or ".wav"
+        progress_store.update(job_id, 6, "Đang tải tệp âm thanh tham chiếu lên server...", file.filename, estimated_sec=9.0)
+        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+            shutil.copyfileobj(file.file, tmp)
+            tmp_path = Path(tmp.name)
+    elif not draft_id:
+        raise HTTPException(status_code=400, detail="Vui lòng chọn file âm thanh hoặc thu âm tham chiếu 8.0s.")
+
+    def _synth_v2_preview(txt: str, ref_codes, r_txt: str):
+        tts2 = engine.ensure_v2()
+        v2_t, v2_k, v2_p, v2_rep, v2_max = engine._resolve_v2_params(0.45, 15, 0.85, 1.2)
+        tts2._repeat_penalty = v2_rep
+        tts2._top_p = v2_p
+        return tts2.infer(
+            preprocess_text(txt),
+            ref_codes=ref_codes,
+            ref_text=r_txt,
+            max_chars=v2_max,
+            temperature=v2_t,
+            top_k=v2_k,
+        )
+
+    try:
+        push_log("INFO", "CLONE", f"Tạo thử giọng clone [{preview_model}] với câu đại diện ({len(preview_text)} ký tự)...")
+        est = 22.0 if preview_model == "vieneu-v2" else 7.0
+        result = await asyncio.to_thread(
+            voice_mgr.create_clone_preview,
+            uploaded_file_path=tmp_path,
+            draft_id=draft_id or None,
+            preview_text=preprocess_text(preview_text),
+            preview_model=preview_model,
+            ref_text=ref_text,
+            denoise=denoise,
+            encode_v2_fn=engine._encode_v2_wav,
+            synth_v2_fn=_synth_v2_preview,
+            progress_cb=lambda pct, stage, detail="": progress_store.update(
+                job_id, pct, stage, detail, estimated_sec=est, done=(pct >= 100)
+            ),
+        )
+        push_log("OK", "CLONE", f"Đã tạo bản nghe thử '{result['draft_id']}' ({result['preview_duration_sec']}s) — chờ xác nhận lưu.")
+        return {"status": "preview_ready", "draft": result}
+    except ValueError as exc:
+        progress_store.update(job_id, 100, "Dữ liệu không hợp lệ", str(exc), done=True, error=str(exc))
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        progress_store.update(job_id, 100, "Lỗi tạo thử giọng clone", str(exc), done=True, error=str(exc))
+        push_log("ERROR", "CLONE", f"Lỗi tạo thử giọng clone: {exc}")
+        raise HTTPException(status_code=500, detail=f"Lỗi tạo thử giọng clone: {exc}") from exc
+    finally:
+        if tmp_path is not None:
+            tmp_path.unlink(missing_ok=True)
+
+
+@app.get("/v1/voices/drafts/{draft_id}/audio")
+async def get_draft_preview_audio(draft_id: str):
+    _engine_ref, voice_mgr = _require_ready()
+    p = voice_mgr.get_draft_preview_path(draft_id)
+    if p is None:
+        raise HTTPException(status_code=404, detail="Không tìm thấy bản nghe thử.")
+    return FileResponse(str(p), media_type="audio/wav", headers={"Cache-Control": "no-store"})
+
+
+@app.post("/v1/voices/commit")
+def commit_clone_voice(req: CommitCloneRequest):
+    """Xác nhận lưu bản giọng clone đã nghe thử ưng ý vào Thư viện (giữ âm thanh clone + thông số kỹ thuật)."""
+    engine, voice_mgr = _require_ready()
+    v2_encoder = engine._encode_v2_wav if engine.has_v2_local_cache() else None
+    if req.ref_text.strip() and v2_encoder is None:
+        push_log("WARN", "CLONE", "Model VieNeu v2 (w2v-bert-2.0) chưa tải đủ vào .hf_cache — lưu trước vector v3 để không làm treo trình duyệt.")
+    try:
+        meta = voice_mgr.commit_clone_draft(
+            req.draft_id,
+            name=req.name,
+            description=req.description,
+            ref_text=req.ref_text,
+            consent_confirmed=req.consent_confirmed,
+            encode_v2_fn=v2_encoder,
+            progress_cb=lambda pct, stage, detail="": progress_store.update(
+                req.job_id, pct, stage, detail, estimated_sec=6.0, done=(pct >= 100)
+            ),
+        )
+        engine.bump_voice_revision()
+        push_log("OK", "CLONE", f"Đã lưu giọng clone '{meta['name']}' vào Thư viện (v3+v2={'có' if meta.get('v2_cached') else 'v3'}).")
+        return {"status": "committed", "voice": meta}
+    except ValueError as exc:
+        progress_store.update(req.job_id, 100, "Từ chối lưu giọng", str(exc), done=True, error=str(exc))
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        progress_store.update(req.job_id, 100, "Lỗi lưu giọng vào thư viện", str(exc), done=True, error=str(exc))
+        raise HTTPException(status_code=500, detail=f"Lỗi lưu giọng: {exc}") from exc
+
+
+@app.delete("/v1/voices/drafts/{draft_id}")
+async def delete_draft_preview(draft_id: str):
+    _engine_ref, voice_mgr = _require_ready()
+    voice_mgr.discard_clone_draft(draft_id)
+    return {"status": "discarded", "draft_id": draft_id}
 
 
 @app.post("/v1/voices")
@@ -264,7 +396,8 @@ async def upload_voice(
 
     try:
         push_log("INFO", "CLONE", f"Bắt đầu đăng ký giọng clone '{name}' (file={file.filename}, denoise={denoise})...")
-        meta = voice_mgr.register_voice(
+        meta = await asyncio.to_thread(
+            voice_mgr.register_voice,
             name=name,
             uploaded_file_path=tmp_path,
             description=description,
@@ -411,7 +544,7 @@ async def delete_bgm(filename: str):
 # ── Tổng hợp giọng nói (Tương thích OpenAI + FX + Đa định dạng) ─────────────
 
 @app.post("/v1/audio/speech")
-async def create_speech(req: SpeechRequest):
+def create_speech(req: SpeechRequest):
     engine, voice_mgr = _require_ready()
     eff_model, eff_voice = _resolve_openai_compat(req.model, req.voice, voice_mgr)
     push_log(
@@ -726,7 +859,7 @@ async def transcribe_audio(file: UploadFile = File(...)):
     try:
         push_log("INFO", "STT", f"Whisper STT bắt đầu nhận diện file '{file.filename}'...")
         stt = STTEngine.get_instance()
-        text = stt.transcribe(tmp_path)
+        text = await asyncio.to_thread(stt.transcribe, tmp_path)
         push_log("OK", "STT", f"Whisper STT nhận diện xong ({len(text)} ký tự): \"{text[:60]}{'...' if len(text) > 60 else ''}\"")
         return {"status": "ok", "text": text}
     except Exception as exc:

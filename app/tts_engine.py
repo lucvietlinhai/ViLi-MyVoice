@@ -193,6 +193,23 @@ class TTSEngine:
                 self.v2_sample_rate = int(getattr(self.tts_v2, "sample_rate", settings.v2_sample_rate))
         return self.tts_v2
 
+    def has_v2_local_cache(self) -> bool:
+        """Kiểm tra nhanh model VieNeu v2 (~2.3GB w2v-bert-2.0 + GGUF + codec) đã nằm sẵn trong .hf_cache chưa."""
+        if self.tts_v2 is not None:
+            return True
+        try:
+            from huggingface_hub import hf_hub_download
+
+            hf_hub_download(settings.v2_backbone_repo, settings.v2_gguf_filename, local_files_only=True)
+            hf_hub_download(settings.v2_codec_repo, "pytorch_model.bin", local_files_only=True)
+            try:
+                hf_hub_download("facebook/w2v-bert-2.0", "model.safetensors", local_files_only=True)
+            except Exception:
+                hf_hub_download("facebook/w2v-bert-2.0", "pytorch_model.bin", local_files_only=True)
+            return True
+        except Exception:
+            return False
+
     def bump_voice_revision(self) -> None:
         self.voice_revision += 1
 
