@@ -2091,131 +2091,6 @@
       color: var(--coral-primary);
     }
 
-    /* ── Mini Waveform Player Bar (Directly from screenshot!) ── */
-    .mini-waveform-card {
-      background: rgba(255, 255, 255, 0.55);
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      border-radius: var(--radius-lg);
-      padding: 11px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-      flex-shrink: 0;
-    }
-
-    .mini-wave-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .mini-wave-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--plum-dark);
-    }
-
-    .mini-wave-actions {
-      display: flex;
-      gap: 6px;
-    }
-
-    .btn-mini-tool {
-      background: #FFFFFF;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      border-radius: 6px;
-      width: 26px;
-      height: 26px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: var(--plum-dark);
-      transition: all 0.15s;
-    }
-
-    .btn-mini-tool:hover {
-      background: #F8F0E0;
-    }
-
-    /* Wave bars canvas */
-    .wave-canvas-wrap {
-      width: 100%;
-      height: 48px;
-      display: flex;
-      align-items: center;
-      position: relative;
-    }
-
-    #miniWaveCanvas {
-      width: 100%;
-      height: 48px;
-      display: block;
-    }
-
-    .mini-wave-timestamps {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 11px;
-      font-weight: 700;
-      font-family: var(--font-mono);
-      color: #6C5528;
-    }
-
-    .mini-player-controls-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      padding-top: 2px;
-    }
-
-    .btn-mini-ctrl {
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      color: var(--plum-dark);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.15s;
-    }
-
-    .btn-mini-ctrl:hover {
-      transform: scale(1.15);
-    }
-
-    .btn-mini-play {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: var(--plum-dark);
-      color: #FFFFFF;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 10px rgba(42, 29, 43, 0.25);
-      transition: all 0.15s;
-    }
-
-    .btn-mini-play:hover {
-      background: var(--coral-primary);
-      transform: scale(1.08);
-    }
-
-    .speed-pill-btn {
-      font-size: 11px;
-      font-weight: 800;
-      background: rgba(255, 255, 255, 0.65);
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      border-radius: var(--radius-pill);
-      padding: 3px 8px;
-      cursor: pointer;
-      color: var(--plum-dark);
-    }
 
     /* ── Section "Gần đây" (Recent History from image!) ── */
     .recent-section {
@@ -6069,53 +5944,7 @@
       <!-- Populated by JavaScript with radio dots -->
     </div>
 
-    <!-- Mini Waveform Preview Card -->
-    <div class="mini-waveform-card">
-      <div class="mini-wave-header">
-        <div class="mini-wave-title" id="miniWaveVoiceTitle">Âm thanh xem trước</div>
-        <div class="mini-wave-actions">
-          <button type="button" class="btn-mini-tool" id="miniWaveDownloadBtn" title="Tải file mẫu"><svg
-              xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg></button>
-        </div>
-      </div>
-      <div class="wave-canvas-wrap">
-        <canvas id="miniWaveCanvas" width="370" height="48"></canvas>
-      </div>
-      <div class="mini-wave-timestamps">
-        <span id="miniWaveTimeCur">0:00</span>
-        <span id="miniWaveTimeTotal">0:10</span>
-      </div>
-      <div class="mini-player-controls-row">
-        <button type="button" class="btn-mini-ctrl" id="miniWaveVolBtn" title="Âm lượng"><svg
-            xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-            <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-          </svg></button>
-        <button type="button" class="speed-pill-btn" id="miniWaveSpeedBtn">1x</button>
-        <button type="button" class="btn-mini-ctrl" id="miniWaveRewindBtn" title="Lùi 5s"><svg
-            xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="11 19 2 12 11 5 11 19" />
-            <polygon points="22 19 13 12 22 5 22 19" />
-          </svg></button>
-        <button type="button" class="btn-mini-play" id="miniWavePlayBtn" title="Phát / Tạm dừng"><svg
-            xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-            <polygon points="5 3 19 12 5 21 5 3" />
-          </svg></button>
-        <button type="button" class="btn-mini-ctrl" id="miniWaveForwardBtn" title="Tiến 5s"><svg
-            xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="13 19 22 12 13 5 13 19" />
-            <polygon points="2 19 11 12 2 5 2 19" />
-          </svg></button>
-      </div>
-    </div>
+
   </aside>
 
   <!-- ════════════════════════════════════════════════════════════
@@ -6319,7 +6148,6 @@
       const playerEmptyHintText = $('playerEmptyHintText');
       const benchmarkStrip = $('benchmarkStrip');
       const previewAudio = new Audio();
-      let activeMiniAudio = audioPlayer;
       const chunksInspector = $('chunksInspector');
       const historyList = $('historyList');
       const voiceRosterContainer = $('voiceRosterContainer');
@@ -6395,17 +6223,6 @@
       const btnModalCancelTrim = $('btnModalCancelTrim');
       const btnModalApplyTrim = $('btnModalApplyTrim');
 
-      // Mini Waveform Player in Right Panel
-      const miniWaveCanvas = $('miniWaveCanvas');
-      const miniWaveVoiceTitle = $('miniWaveVoiceTitle');
-      const miniWaveDownloadBtn = $('miniWaveDownloadBtn');
-      const miniWaveTimeCur = $('miniWaveTimeCur');
-      const miniWaveTimeTotal = $('miniWaveTimeTotal');
-      const miniWavePlayBtn = $('miniWavePlayBtn');
-      const miniWaveRewindBtn = $('miniWaveRewindBtn');
-      const miniWaveForwardBtn = $('miniWaveForwardBtn');
-      const miniWaveSpeedBtn = $('miniWaveSpeedBtn');
-      const miniWaveVolBtn = $('miniWaveVolBtn');
 
       /* ── State ── */
       let currentEngine = 'vieneu'; // 'vieneu' (v3 turbo) or 'vieneu-v2' (v2 gguf)
@@ -6793,104 +6610,11 @@
         $('advParamsDrawer').classList.toggle('open');
       });
 
-      /* ── Draw Mini Waveform in Right Panel ── */
-      function drawMiniWaveform(bars = null) {
-        if (!miniWaveCanvas) return;
-        const ctx = miniWaveCanvas.getContext('2d');
-        const width = miniWaveCanvas.width = miniWaveCanvas.clientWidth || 370;
-        const height = miniWaveCanvas.height = miniWaveCanvas.clientHeight || 48;
-        ctx.clearRect(0, 0, width, height);
-
-        const barCount = 48;
-        const barW = (width / barCount) - 2;
-
-        for (let i = 0; i < barCount; i++) {
-          let h;
-          if (bars && bars[i] !== undefined) {
-            h = bars[i] * (height - 8);
-          } else {
-            // Natural waveform simulation
-            const phase = (i / barCount) * Math.PI * 4;
-            const norm = (Math.sin(phase) * 0.4 + Math.sin(phase * 2.3) * 0.3 + 0.6) * (0.3 + 0.7 * Math.sin((i / barCount) * Math.PI));
-            h = Math.max(4, norm * (height - 10));
-          }
-
-          const x = i * (barW + 2) + 1;
-          const y = (height - h) / 2;
-
-          // Warm orange bar
-          ctx.fillStyle = '#E58E1A';
-          if (ctx.roundRect) {
-            ctx.beginPath();
-            ctx.roundRect(x, y, barW, h, 2);
-            ctx.fill();
-          } else {
-            ctx.fillRect(x, y, barW, h);
-          }
-        }
-      }
-
-      // Mini player controls bindings (supports both voice sample preview and generated result without overwriting #audioPlayer)
-      let miniSpeedIdx = 0;
-      const MINI_SPEEDS = [1.0, 1.25, 1.5, 0.75];
-      miniWaveSpeedBtn.addEventListener('click', () => {
-        miniSpeedIdx = (miniSpeedIdx + 1) % MINI_SPEEDS.length;
-        const spd = MINI_SPEEDS[miniSpeedIdx];
-        miniWaveSpeedBtn.textContent = spd + 'x';
-        audioPlayer.playbackRate = spd;
-        previewAudio.playbackRate = spd;
-      });
-
-      miniWaveRewindBtn.addEventListener('click', () => {
-        activeMiniAudio.currentTime = Math.max(0, activeMiniAudio.currentTime - 5);
-      });
-      miniWaveForwardBtn.addEventListener('click', () => {
-        activeMiniAudio.currentTime = Math.min(activeMiniAudio.duration || 0, activeMiniAudio.currentTime + 5);
-      });
-      miniWaveVolBtn.addEventListener('click', () => {
-        const nextMuted = !activeMiniAudio.muted;
-        audioPlayer.muted = nextMuted;
-        previewAudio.muted = nextMuted;
-        miniWaveVolBtn.style.opacity = nextMuted ? '0.4' : '1';
-      });
-
-      miniWavePlayBtn.addEventListener('click', () => {
-        if (!activeMiniAudio.src) {
-          showToast('info', 'Chưa có âm thanh nào. Hãy bấm nghe mẫu hoặc tạo giọng nói trước.');
-          return;
-        }
-        if (activeMiniAudio.paused) {
-          activeMiniAudio.play().catch(() => { });
-        } else {
-          activeMiniAudio.pause();
-        }
-      });
-
-      const syncMiniPlayIcon = (isPlaying) => {
-        miniWavePlayBtn.innerHTML = isPlaying
-          ? '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="4" width="4" height="16"/><rect x="15" y="4" width="4" height="16"/></svg>'
-          : '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
-      };
-
+      // Mutual pause between main audio player and voice preview audio
       [audioPlayer, previewAudio].forEach(el => {
         el.addEventListener('play', () => {
           const other = (el === audioPlayer) ? previewAudio : audioPlayer;
           if (!other.paused) other.pause();
-          activeMiniAudio = el;
-          syncMiniPlayIcon(true);
-        });
-        el.addEventListener('pause', () => {
-          if (activeMiniAudio === el) syncMiniPlayIcon(false);
-        });
-        el.addEventListener('ended', () => {
-          if (activeMiniAudio === el) syncMiniPlayIcon(false);
-        });
-        el.addEventListener('timeupdate', () => {
-          if (activeMiniAudio !== el) return;
-          const cur = el.currentTime || 0;
-          const dur = el.duration || 0;
-          miniWaveTimeCur.textContent = formatTimeShort(cur);
-          if (dur > 0) miniWaveTimeTotal.textContent = formatTimeShort(dur);
         });
       });
 
@@ -7128,7 +6852,6 @@
         document.querySelectorAll('.voice-entry').forEach(el => {
           el.classList.toggle('active-selected', el.dataset.voice === name);
         });
-        if (miniWaveVoiceTitle) miniWaveVoiceTitle.textContent = name;
         updateEngineCardsState();
         setEngine(currentEngine);
         renderLibraryGrid();
@@ -7160,17 +6883,13 @@
           b.innerHTML = '<span class="spin-loader"><svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span>';
         });
         try {
-          if (miniWaveVoiceTitle) miniWaveVoiceTitle.textContent = `${voiceName} (đang tải mẫu...)`;
           if (!audioPlayer.paused) audioPlayer.pause();
-          activeMiniAudio = previewAudio;
           if (!isCustom) showToast('info', `Đang tải mẫu giọng mặc định "${voiceName}"...`);
           previewAudio.src = url;
           previewAudio.volume = parseInt(volSlider.value, 10) / 100;
           await previewAudio.play();
-          if (miniWaveVoiceTitle) miniWaveVoiceTitle.textContent = voiceName;
           showToast('ok', `Đang phát âm thanh mẫu của "${voiceName}".`);
         } catch {
-          if (miniWaveVoiceTitle) miniWaveVoiceTitle.textContent = voiceName;
           showToast('err', 'Không tải được file âm thanh mẫu.');
         } finally {
           activePreviewVoice = null;
@@ -8441,7 +8160,6 @@
           const playbackUrl = historyAudioUrl || activeAudioBlobUrl;
 
           if (!previewAudio.paused) previewAudio.pause();
-          activeMiniAudio = audioPlayer;
           activePlayingHistoryId = historyId || null;
           audioPlayer.src = playbackUrl;
           audioPlayer.volume = parseInt(volSlider.value, 10) / 100;
@@ -8452,13 +8170,6 @@
           if (playerVoiceTag) {
             playerVoiceTag.textContent = `${selectedVoiceName || 'Mặc định'} · ${currentEngine} · ${audioFormat.toUpperCase()}`;
           }
-
-          miniWaveDownloadBtn.onclick = () => {
-            const a = document.createElement('a');
-            a.href = playbackUrl;
-            a.download = historyFilename;
-            a.click();
-          };
 
           playerShowcase.classList.remove('generating');
           playerShowcase.classList.add('active');
@@ -8598,20 +8309,12 @@
         }
 
         if (!previewAudio.paused) previewAudio.pause();
-        activeMiniAudio = audioPlayer;
         activePlayingHistoryId = item.id || null;
         audioPlayer.src = audioUrl;
         audioPlayer.volume = parseInt(volSlider.value, 10) / 100;
         btnDownloadWav.href = audioUrl;
         btnDownloadWav.download = item.filename || `luatu_${item.voice || 'voice'}.wav`;
         if (playerVoiceTag) playerVoiceTag.textContent = `${item.voice || 'Mặc định'} · ${item.engine || 'vieneu'}`;
-
-        miniWaveDownloadBtn.onclick = () => {
-          const a = document.createElement('a');
-          a.href = audioUrl;
-          a.download = item.filename || `luatu_${item.voice || 'voice'}.wav`;
-          a.click();
-        };
 
         playerShowcase.classList.remove('generating');
         playerShowcase.classList.add('active');
@@ -9172,7 +8875,6 @@
           btn.addEventListener('click', () => {
             const url = `/v1/audiobooks/${encodeURIComponent(btn.dataset.bookplay)}/chapters/${btn.dataset.ch}/audio`;
             if (!previewAudio.paused) previewAudio.pause();
-            activeMiniAudio = audioPlayer;
             audioPlayer.src = url;
             audioPlayer.volume = parseInt(volSlider.value, 10) / 100;
             btnDownloadWav.href = url;
@@ -9506,7 +9208,6 @@
       loadBgmTracks();
       loadLexicon();
       updateTextCounter();
-      drawMiniWaveform();
       pollBackendLogs();
       setInterval(pollBackendLogs, 2000);
       setInterval(checkHealth, 30000);
