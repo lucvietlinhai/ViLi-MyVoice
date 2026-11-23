@@ -6957,17 +6957,10 @@
 
           let chips = '';
           if (voice.isCustom) {
-            chips += `<span class="badge-micro red">Giọng Clone · ${voice.duration_sec}s</span>`;
             if (voice.created_model === 'v2' || voice.v2_cached) {
               chips += `<span class="badge-micro green" title="Tạo từ mô hình VieNeu v2 · Có thể dùng tạo giọng với cả VieNeu v2 và v3 Turbo">${ICON('check')} Tạo từ v2 (dùng v2+v3)</span>`;
             } else {
               chips += `<span class="badge-micro purple" title="Tạo từ mô hình VieNeu v3 Turbo · Chỉ dùng được với VieNeu v3 Turbo, không dùng với v2">${ICON('zap')} Tạo từ v3 (chỉ dùng v3)</span>`;
-            }
-            if (voice.quality && voice.quality.label) {
-              const qCls = voice.quality.status === 'good' ? 'green' : (voice.quality.status === 'warn' ? 'gold' : 'red');
-              const qTip = `SNR: ${voice.quality.snr_db} dB · RMS: ${voice.quality.speech_rms_db} dBFS · Rè đỉnh: ${voice.quality.clipping_pct}%` +
-                (voice.quality.warnings && voice.quality.warnings.length ? ` | ${voice.quality.warnings.join('; ')}` : '');
-              chips += `<span class="badge-micro ${qCls}" title="${qTip}">${voice.quality.label}</span>`;
             }
           } else {
             chips += `<span class="badge-micro gray">Mặc định VieNeu</span>`;
@@ -7058,24 +7051,18 @@
 
         const makeCardHtml = (v, isCustom) => {
           const sel = v.name === selectedVoiceName ? ' selected' : '';
-          const badge = isCustom
-            ? `<span class="badge-micro red">Clone · ${v.duration_sec}s</span>`
-            : `<span class="badge-micro gold">Mặc định VieNeu</span>`;
           const isV2 = isCustom && (v.created_model === 'v2' || v.v2_cached);
-          const paramBadge = isCustom
+          const badge = isCustom
             ? (isV2
-                ? ` <span class="badge-micro green" title="Tạo từ VieNeu v2 · Có thể dùng với cả VieNeu v2 và v3 Turbo">${ICON('check')} Tạo từ v2 (dùng v2+v3)</span>`
-                : ` <span class="badge-micro purple" title="Tạo từ VieNeu v3 Turbo · Chỉ dùng được với VieNeu v3 Turbo, không thể tạo âm thanh với v2">${ICON('zap')} Tạo từ v3 (chỉ dùng v3)</span>`)
-            : '';
-          const qBadge = isCustom && v.quality && v.quality.label
-            ? ` <span class="badge-micro ${v.quality.status === 'good' ? 'green' : (v.quality.status === 'warn' ? 'gold' : 'red')}">${v.quality.label}</span>`
-            : '';
+                ? `<span class="badge-micro green" title="Tạo từ VieNeu v2 · Có thể dùng với cả VieNeu v2 và v3 Turbo">${ICON('check')} Tạo từ v2 (dùng v2+v3)</span>`
+                : `<span class="badge-micro purple" title="Tạo từ VieNeu v3 Turbo · Chỉ dùng được với VieNeu v3 Turbo, không thể tạo âm thanh với v2">${ICON('zap')} Tạo từ v3 (chỉ dùng v3)</span>`)
+            : `<span class="badge-micro gold">Mặc định VieNeu</span>`;
           const desc = v.description || (v.preview_text ? `Mẫu: "${v.preview_text.slice(0, 68)}${v.preview_text.length > 68 ? '...' : ''}"` : (isCustom ? 'Giọng clone do bạn tạo' : 'Giọng đọc tích hợp sẵn'));
           return `
         <div class="lib-voice-card${sel}" data-libcard="${v.name}">
           <div class="lib-card-top">
             <div class="lib-card-name">${v.name}</div>
-            <div>${badge}${paramBadge}${qBadge}</div>
+            <div>${badge}</div>
           </div>
           <div class="lib-card-desc">${desc}</div>
           <div class="lib-card-footer">
@@ -8184,20 +8171,20 @@
           if ($('cloneDraftSpokenText')) $('cloneDraftSpokenText').textContent = `"${d.preview_text}"`;
           if ($('cloneDraftQualityBadge')) {
             const q = d.quality;
-            if (q && q.label) {
-              const qCls = q.status === 'good' ? 'green' : (q.status === 'warn' ? 'gold' : 'red');
+            if (q && q.warnings && q.warnings.length) {
+              const qCls = q.status === 'warn' ? 'gold' : 'red';
               $('cloneDraftQualityBadge').className = `badge-micro ${qCls}`;
-              $('cloneDraftQualityBadge').textContent = `${q.label} (SNR ${q.snr_db}dB)`;
+              $('cloneDraftQualityBadge').textContent = q.warnings[0];
+              $('cloneDraftQualityBadge').style.display = 'inline-block';
             } else {
-              $('cloneDraftQualityBadge').className = 'badge-micro green';
-              $('cloneDraftQualityBadge').textContent = `Mẫu tham chiếu ${d.ref_duration_sec}s`;
+              $('cloneDraftQualityBadge').style.display = 'none';
             }
           }
           if ($('cloneDraftParamsBadge')) {
             const isV2Draft = d.created_model === 'v2' || d.preview_model === 'vieneu-v2' || d.has_v2_codes;
             $('cloneDraftParamsBadge').innerHTML = isV2Draft
-              ? `<span class="badge-micro green">${ICON('check')} Tạo từ v2 (dùng v2+v3)</span> · ${d.preview_duration_sec}s`
-              : `<span class="badge-micro purple">${ICON('zap')} Tạo từ v3 (chỉ dùng v3)</span> · ${d.preview_duration_sec}s`;
+              ? `<span class="badge-micro green">${ICON('check')} Tạo từ v2 (dùng v2+v3)</span>`
+              : `<span class="badge-micro purple">${ICON('zap')} Tạo từ v3 (chỉ dùng v3)</span>`;
           }
           if ($('cloneDraftAudioPlayer')) {
             const player = $('cloneDraftAudioPlayer');
