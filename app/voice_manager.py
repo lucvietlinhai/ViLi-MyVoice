@@ -172,13 +172,18 @@ class VoiceManager:
     @staticmethod
     def _build_meta(name: str, entry: dict) -> dict:
         ref_text = str(entry.get("ref_text") or "").strip()
+        created_model = entry.get("created_model")
+        if not created_model:
+            created_model = "v2" if (entry.get("v2_codes") and "v3" not in name.lower()) else "v3"
+        v2_cached = bool(entry.get("v2_codes") is not None and created_model == "v2")
         return {
             "name": name,
             "description": entry.get("description", ""),
             "ref_text": ref_text,
             "preview_text": str(entry.get("preview_text") or "").strip(),
             "has_ref_text": bool(ref_text),
-            "v2_cached": bool(entry.get("v2_codes")),
+            "created_model": created_model,
+            "v2_cached": v2_cached,
             "duration_sec": entry.get("duration_sec", 0.0),
             "denoise": entry.get("denoise", False),
             "consent_confirmed": entry.get("consent_confirmed", False),
@@ -191,11 +196,23 @@ class VoiceManager:
         """Nạp lại các giọng clone đã lưu từ ổ đĩa vào bộ nhớ VieNeu v3."""
         data = self._read_registry()
         loaded = 0
+        migrated = False
         for name, entry in data.items():
             emb = entry.get("speaker_emb")
             codes = entry.get("codes")
             if emb is None:
                 continue
+            if "created_model" not in entry:
+                if "v2" in name.lower() or "v2" in str(entry.get("description", "")).lower():
+                    entry["created_model"] = "v2"
+                else:
+                    entry["created_model"] = "v3"
+                    entry["v2_codes"] = None
+                migrated = True
+            elif entry["created_model"] == "v3" and entry.get("v2_codes") is not None:
+                entry["v2_codes"] = None
+                migrated = True
+
             self.tts._preset_voices[name] = {
                 "description": entry.get("description", ""),
                 "gender": entry.get("gender", ""),
@@ -205,6 +222,8 @@ class VoiceManager:
             }
             self._custom_meta[name] = self._build_meta(name, entry)
             loaded += 1
+        if migrated:
+            self._write_registry(data)
         return loaded
 
     def list_voices(self, tts_v2: Any = None) -> Dict[str, List[dict]]:
@@ -295,6 +314,7 @@ class VoiceManager:
             "speaker_emb": [round(float(x), 6) for x in np.asarray(emb).reshape(-1)],
             "codes": None if codes is None else np.asarray(codes, dtype=int).tolist(),
             "v2_codes": None,
+            "created_model": "v3",
         }
         registry[safe_name] = entry
         self._write_registry(registry)
@@ -419,6 +439,7 @@ class VoiceManager:
         preview_dur = round(float(len(arr_f32)) / float(out_sr), 2) if len(arr_f32) else 0.0
 
         draft["preview_model"] = model_key
+        draft["created_model"] = "v2" if model_key == "vieneu-v2" else "v3"
         draft["preview_duration_sec"] = preview_dur
         (draft_dir / "draft.json").write_bytes(orjson.dumps(draft))
         _report(100, "Đã tạo xong bản nghe thử giọng clone!", f"{preview_dur}s")
@@ -430,6 +451,7 @@ class VoiceManager:
             "ref_duration_sec": draft["ref_duration_sec"],
             "preview_text": clean_preview_txt,
             "preview_model": model_key,
+            "created_model": "v2" if model_key == "vieneu-v2" else "v3",
             "ref_text": clean_ref_txt,
             "has_ref_text": bool(clean_ref_txt),
             "has_v2_codes": bool(draft.get("v2_codes")),
@@ -484,12 +506,17 @@ class VoiceManager:
         _report(20, "Đang đọc thông số kỹ thuật giọng đã clone...", safe_name)
         draft = orjson.loads(draft_json.read_bytes())
         final_ref_text = (ref_text or draft.get("ref_text") or "").strip()
+        preview_model = (draft.get("preview_model") or "vieneu").lower().strip()
+        created_model = "v2" if preview_model == "vieneu-v2" else "v3"
 
-        # Trích xuất sẵn v2_codes ngay lúc lưu (nếu có ref_text) để sau này đọc không cần bóc tách lại
-        if not draft.get("v2_codes") and final_ref_text and encode_v2_fn is not None and ref_wav.is_file():
-            _report(55, "Đang đóng gói sẵn thông số kỹ thuật v2 GGUF...", safe_name)
-            v2_arr = np.asarray(encode_v2_fn(ref_wav), dtype=np.int64).reshape(-1)
-            draft["v2_codes"] = v2_arr.tolist()
+        # Chỉ trích xuất & đóng gói v2_codes nếu giọng này được tạo từ mô hình VieNeu v2
+        v2_codes = None
+        if created_model == "v2":
+            if not draft.get("v2_codes") and final_ref_text and encode_v2_fn is not None and ref_wav.is_file():
+                _report(55, "Đang đóng gói sẵn thông số kỹ thuật v2 GGUF...", safe_name)
+                v2_arr = np.asarray(encode_v2_fn(ref_wav), dtype=np.int64).reshape(-1)
+                draft["v2_codes"] = v2_arr.tolist()
+            v2_codes = draft.get("v2_codes")
 
         _report(85, "Đang lưu âm thanh đại diện & hồ sơ giọng vào thư viện...", safe_name)
         target_wav = self.voices_dir / f"{safe_name}.wav"
@@ -520,7 +547,8 @@ class VoiceManager:
             "quality": draft.get("quality"),
             "speaker_emb": draft["speaker_emb"],
             "codes": draft.get("codes"),
-            "v2_codes": draft.get("v2_codes"),
+            "v2_codes": v2_codes,
+            "created_model": created_model,
         }
         registry[safe_name] = entry
         self._write_registry(registry)
@@ -562,6 +590,12 @@ class VoiceManager:
         if name not in registry:
             raise ValueError(f"Không tìm thấy giọng clone '{name}'.")
         entry = registry[name]
+        created_model = entry.get("created_model")
+        if created_model == "v3" or (not entry.get("v2_codes") and created_model != "v2"):
+            raise ValueError(
+                f"Giọng '{name}' được tạo từ mô hình VieNeu v3 nên không thể tạo âm thanh với VieNeu v2. "
+                "Vui lòng chọn mô hình VieNeu v3 Turbo hoặc chọn giọng clone được tạo từ VieNeu v2."
+            )
         ref_text = (ref_text_override or entry.get("ref_text") or "").strip()
         if not ref_text:
             raise ValueError(

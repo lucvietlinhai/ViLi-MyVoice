@@ -2024,9 +2024,31 @@
       color: #2E7D32;
     }
 
+    .badge-micro.purple {
+      background: #F3E8FF;
+      color: #7E22CE;
+    }
+
+    .badge-micro.amber {
+      background: #FEF3C7;
+      color: #B45309;
+    }
+
     .badge-micro.gray {
       background: #F2EEF2;
       color: #6E5F70;
+    }
+
+    .engine-card.engine-locked {
+      opacity: 0.52;
+      cursor: not-allowed !important;
+      border-style: dashed;
+    }
+
+    .engine-card.engine-locked:hover {
+      border-color: var(--border-soft);
+      transform: none;
+      box-shadow: none;
     }
 
     .voice-card-actions {
@@ -4143,12 +4165,14 @@
       color: var(--coral-dark);
       font-weight: 700;
     }
+
     .tool-btn.ai-prosody:hover:not(:disabled) {
       background: linear-gradient(180deg, #F07A72 0%, #E5594F 100%);
       border-color: transparent;
       color: #FFFFFF;
       box-shadow: var(--btn-shadow-primary);
     }
+
     .tool-btn.ai-prosody:hover:not(:disabled) .ic {
       color: #FFFFFF;
       transform: scale(1.14) rotate(-8deg);
@@ -4167,6 +4191,7 @@
       font-weight: 600;
       color: var(--plum-dark);
     }
+
     .prosody-status-banner.active {
       display: flex;
     }
@@ -5210,12 +5235,16 @@
                 </button>
                 <button type="button" class="tool-btn ai-prosody" id="btnAutoProsody"
                   title="AI tự động phân tích văn bản, chèn ngắt hơi, dấu phẩy và thẻ biểu cảm giống người thật trong 1 click">
-                  <svg class="ic" aria-hidden="true"><use href="#i-sparkles"/></svg>
+                  <svg class="ic" aria-hidden="true">
+                    <use href="#i-sparkles" />
+                  </svg>
                   AI Ngắt hơi &amp; Biểu cảm
                 </button>
                 <button type="button" class="tool-btn" id="btnUndoProsody" style="display:none;"
                   title="Khôi phục lại nguyên văn trước khi AI chèn ngắt nghỉ">
-                  <svg class="ic" aria-hidden="true"><use href="#i-rotate"/></svg>
+                  <svg class="ic" aria-hidden="true">
+                    <use href="#i-rotate" />
+                  </svg>
                   Hoàn tác AI
                 </button>
               </div>
@@ -5564,11 +5593,11 @@
             <div style="display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;">
               <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                 <label for="clonePreviewModelSelect"
-                  style="font-size: 12px; font-weight: 700; color: var(--text-muted);">Mô hình tạo thử:</label>
+                  style="font-size: 12px; font-weight: 700; color: var(--text-muted);">Mô hình clone:</label>
                 <select id="clonePreviewModelSelect" class="input-compact"
-                  style="max-width: 280px; padding: 6px 10px; font-size: 12px;">
-                  <option value="vieneu">VieNeu v3 Turbo (Nhanh · chuẩn vector giọng)</option>
-                  <option value="vieneu-v2">VieNeu v2 GGUF Q8 (Bám sát ngữ điệu theo lời thoại)</option>
+                  style="max-width: 320px; padding: 6px 10px; font-size: 12px;">
+                  <option value="vieneu">VieNeu v3 Turbo (Đầu ra: chỉ dùng v3)</option>
+                  <option value="vieneu-v2">VieNeu v2 GGUF Q8 (Đầu ra: dùng được cả v2 &amp; v3)</option>
                 </select>
               </div>
 
@@ -6434,11 +6463,36 @@
         }
       }
 
-      /* ── Engine Switching ── */
+      /* ── Engine Switching & Strict Voice Origin Guard ── */
+      function updateEngineCardsState() {
+        const customVoices = (voicesRegistry && voicesRegistry.custom_voices) || [];
+        const curVoiceObj = customVoices.find(v => v.name === selectedVoiceName);
+        const isV3Only = curVoiceObj && (curVoiceObj.created_model === 'v3' || (!curVoiceObj.v2_cached && curVoiceObj.created_model !== 'v2'));
+        const engineV2 = $('engineV2Card');
+        if (engineV2) {
+          if (isV3Only) {
+            engineV2.classList.add('engine-locked');
+            engineV2.title = `Giọng "${curVoiceObj.name}" được tạo từ mô hình v3 nên không thể dùng với VieNeu v2. Chỉ tạo giọng đầu ra với VieNeu v3 Turbo.`;
+          } else {
+            engineV2.classList.remove('engine-locked');
+            engineV2.title = 'Mô hình v2 GGUF Q8 24kHz bám sát ngữ điệu thông qua ref_text';
+          }
+        }
+      }
+
       function setEngine(engine) {
+        if (engine === 'vieneu-v2') {
+          const customVoices = (voicesRegistry && voicesRegistry.custom_voices) || [];
+          const curVoiceObj = customVoices.find(v => v.name === selectedVoiceName);
+          if (curVoiceObj && (curVoiceObj.created_model === 'v3' || (!curVoiceObj.v2_cached && curVoiceObj.created_model !== 'v2'))) {
+            showToast('warn', `Giọng "${curVoiceObj.name}" được tạo từ mô hình v3 nên không thể tạo giọng đầu ra với VieNeu v2. Vui lòng chọn giọng clone tạo từ v2 hoặc giữ VieNeu v3 Turbo.`);
+            return;
+          }
+        }
         currentEngine = engine;
         $('engineV3Card').classList.toggle('active', engine === 'vieneu');
         $('engineV2Card').classList.toggle('active', engine === 'vieneu-v2');
+        updateEngineCardsState();
         const hint = $('engineStatusHint');
         const vName = selectedVoiceName && selectedVoiceName !== 'default' ? selectedVoiceName : 'Mặc định VieNeu';
         if (engine === 'vieneu-v2') {
@@ -6904,12 +6958,10 @@
           let chips = '';
           if (voice.isCustom) {
             chips += `<span class="badge-micro red">Giọng Clone · ${voice.duration_sec}s</span>`;
-            if (voice.v2_cached) {
-              chips += `<span class="badge-micro green" title="Đã lưu sẵn thông số kỹ thuật v3 &amp; v2, không cần bóc tách lại">${ICON('check')} Sẵn mã v3+v2</span>`;
-            } else if (voice.has_ref_text) {
-              chips += `<span class="badge-micro green">${ICON('check')} v2 chuẩn</span>`;
+            if (voice.created_model === 'v2' || voice.v2_cached) {
+              chips += `<span class="badge-micro green" title="Tạo từ mô hình VieNeu v2 · Có thể dùng tạo giọng với cả VieNeu v2 và v3 Turbo">${ICON('check')} Tạo từ v2 (dùng v2+v3)</span>`;
             } else {
-              chips += `<span class="badge-micro gray" title="Đã lưu sẵn thông số v3 (chưa có ref_text cho v2)">${ICON('check')} Sẵn mã v3</span>`;
+              chips += `<span class="badge-micro purple" title="Tạo từ mô hình VieNeu v3 Turbo · Chỉ dùng được với VieNeu v3 Turbo, không dùng với v2">${ICON('zap')} Tạo từ v3 (chỉ dùng v3)</span>`;
             }
             if (voice.quality && voice.quality.label) {
               const qCls = voice.quality.status === 'good' ? 'green' : (voice.quality.status === 'warn' ? 'gold' : 'red');
@@ -7009,9 +7061,12 @@
           const badge = isCustom
             ? `<span class="badge-micro red">Clone · ${v.duration_sec}s</span>`
             : `<span class="badge-micro gold">Mặc định VieNeu</span>`;
-          const paramBadge = isCustom && v.v2_cached
-            ? ` <span class="badge-micro green" title="Đã lưu sẵn thông số v3 &amp; v2">${ICON('check')} v3+v2</span>`
-            : (isCustom ? ` <span class="badge-micro gray" title="Đã lưu sẵn thông số v3">${ICON('check')} v3</span>` : '');
+          const isV2 = isCustom && (v.created_model === 'v2' || v.v2_cached);
+          const paramBadge = isCustom
+            ? (isV2
+                ? ` <span class="badge-micro green" title="Tạo từ VieNeu v2 · Có thể dùng với cả VieNeu v2 và v3 Turbo">${ICON('check')} Tạo từ v2 (dùng v2+v3)</span>`
+                : ` <span class="badge-micro purple" title="Tạo từ VieNeu v3 Turbo · Chỉ dùng được với VieNeu v3 Turbo, không thể tạo âm thanh với v2">${ICON('zap')} Tạo từ v3 (chỉ dùng v3)</span>`)
+            : '';
           const qBadge = isCustom && v.quality && v.quality.label
             ? ` <span class="badge-micro ${v.quality.status === 'good' ? 'green' : (v.quality.status === 'warn' ? 'gold' : 'red')}">${v.quality.label}</span>`
             : '';
@@ -7063,10 +7118,21 @@
 
       function selectVoice(name) {
         selectedVoiceName = name;
+        const customVoices = (voicesRegistry && voicesRegistry.custom_voices) || [];
+        const curVoiceObj = customVoices.find(v => v.name === name);
+        if (curVoiceObj && (curVoiceObj.created_model === 'v3' || (!curVoiceObj.v2_cached && curVoiceObj.created_model !== 'v2'))) {
+          if (currentEngine === 'vieneu-v2') {
+            currentEngine = 'vieneu';
+            $('engineV3Card').classList.add('active');
+            $('engineV2Card').classList.remove('active');
+            showToast('info', `Đã tự động chuyển sang mô hình VieNeu v3 Turbo vì giọng "${name}" được tạo từ v3 (không dùng với v2).`);
+          }
+        }
         document.querySelectorAll('.voice-entry').forEach(el => {
           el.classList.toggle('active-selected', el.dataset.voice === name);
         });
         if (miniWaveVoiceTitle) miniWaveVoiceTitle.textContent = name;
+        updateEngineCardsState();
         setEngine(currentEngine);
         renderLibraryGrid();
         showToast('info', `Đã chọn giọng: "${name}"`);
@@ -7159,6 +7225,7 @@
           voicesRegistry.preset_voices = data.preset_voices || [];
           renderVoiceRoster();
           updateStats();
+          updateEngineCardsState();
         } catch {
           showToast('err', 'Không tải được danh mục giọng từ server.');
         }
@@ -8127,9 +8194,10 @@
             }
           }
           if ($('cloneDraftParamsBadge')) {
-            $('cloneDraftParamsBadge').textContent = d.has_v2_codes
-              ? `${ICON('check')} Đã sẵn mã v3 + v2 · ${d.preview_duration_sec}s`
-              : `${ICON('check')} Đã sẵn vector v3 · ${d.preview_duration_sec}s`;
+            const isV2Draft = d.created_model === 'v2' || d.preview_model === 'vieneu-v2' || d.has_v2_codes;
+            $('cloneDraftParamsBadge').innerHTML = isV2Draft
+              ? `<span class="badge-micro green">${ICON('check')} Tạo từ v2 (dùng v2+v3)</span> · ${d.preview_duration_sec}s`
+              : `<span class="badge-micro purple">${ICON('zap')} Tạo từ v3 (chỉ dùng v3)</span> · ${d.preview_duration_sec}s`;
           }
           if ($('cloneDraftAudioPlayer')) {
             const player = $('cloneDraftAudioPlayer');
@@ -8225,7 +8293,7 @@
 
           tracker.finish('Đã lưu giọng clone & toàn bộ thông số vào Thư viện!');
           const v = data.voice;
-          const paramNote = v.v2_cached ? 'đã lưu sẵn thông số v3+v2' : 'đã lưu sẵn vector v3';
+          const paramNote = (v.created_model === 'v2' || v.v2_cached) ? 'tạo từ v2 (dùng v2+v3)' : 'tạo từ v3 (chỉ dùng v3)';
           showToast('ok', `Đã lưu giọng "${v.name}" (${v.duration_sec}s · ${paramNote}) vào Thư viện!`);
 
           clearActiveCloneDraft(false);

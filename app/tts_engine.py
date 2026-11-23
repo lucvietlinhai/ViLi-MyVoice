@@ -283,10 +283,14 @@ class TTSEngine:
             and resolved_voice
             and voice_manager is not None
             and voice_manager.is_custom_voice(resolved_voice)
-            and not (ref_text_override and ref_text_override.strip())
         ):
             meta = voice_manager._custom_meta.get(resolved_voice, {})
-            if not meta.get("has_ref_text"):
+            if meta.get("created_model") == "v3" or not meta.get("v2_cached"):
+                raise ValueError(
+                    f"Giọng '{resolved_voice}' được tạo từ mô hình VieNeu v3 nên không thể tạo âm thanh với VieNeu v2. "
+                    "Vui lòng chuyển sang mô hình VieNeu v3 Turbo hoặc chọn giọng clone được tạo từ VieNeu v2."
+                )
+            if not (ref_text_override and ref_text_override.strip()) and not meta.get("has_ref_text"):
                 raise ValueError(
                     f"Giọng '{resolved_voice}' chưa có lời thoại mẫu (ref_text). "
                     "Chế độ VieNeu v2 yêu cầu nhập đúng câu nói trong file audio mẫu."
@@ -527,10 +531,14 @@ class TTSEngine:
             and resolved_voice
             and voice_manager is not None
             and voice_manager.is_custom_voice(resolved_voice)
-            and not (ref_text_override and ref_text_override.strip())
         ):
             meta = voice_manager._custom_meta.get(resolved_voice, {})
-            if not meta.get("has_ref_text"):
+            if meta.get("created_model") == "v3" or not meta.get("v2_cached"):
+                raise ValueError(
+                    f"Giọng '{resolved_voice}' được tạo từ mô hình VieNeu v3 nên không thể tạo âm thanh với VieNeu v2. "
+                    "Vui lòng chuyển sang mô hình VieNeu v3 Turbo hoặc chọn giọng clone được tạo từ VieNeu v2."
+                )
+            if not (ref_text_override and ref_text_override.strip()) and not meta.get("has_ref_text"):
                 raise ValueError(
                     f"Giọng '{resolved_voice}' chưa có lời thoại mẫu (ref_text). "
                     "Chế độ VieNeu v2 yêu cầu nhập đúng câu nói trong file audio mẫu."
