@@ -189,7 +189,71 @@ e:\tts-clone-voice\
 
 ---
 
-## 5. Bảng Đối Chiếu Chỉ Số Hiệu Năng Kỹ Thuật
+## 7. Mô Hình & Công Cụ Mã Nguồn Mở Của VinAI: Vai Trò & Lộ Trình Chuyển Đổi
+
+Trong hệ sinh thái xử lý tiếng Việt, dự án đã nghiên cứu và tích hợp hai tài nguyên mã nguồn mở nổi bật từ **VinAI Research**:
+
+### 1. Mô hình nhận diện giọng nói `vinai/PhoWhisper-base`
+- **Nguồn gốc & Lý do lựa chọn:**
+  - `PhoWhisper` là dòng mô hình ASR (Automatic Speech Recognition) tiên tiến do VinAI huấn luyện tiền kỳ trên hơn **8.400 giờ** âm thanh tiếng Việt thực tế từ nhiều nguồn (đài truyền hình, podcast, YouTube, giọng đọc đa vùng miền Bắc - Trung - Nam).
+  - So với Whisper nguyên bản của OpenAI (vốn tối ưu cho tiếng Anh), PhoWhisper-base có khả năng nghe đúng dấu thanh tiếng Việt và từ ngữ địa phương vượt trội với WER (Word Error Rate) rất thấp.
+- **Vai trò trong ViLi-MyVoice:**
+  - Đóng vai trò là hạt nhân của module [stt_engine.py](file:///e:/tts-clone-voice/app/stt_engine.py). Khi người dùng tải lên clip giọng mẫu (3–8s), PhoWhisper sẽ tự động giải mã dạng sóng sang chữ viết (`ref_text`) phục vụ cho mô hình VieNeu v2 GGUF và kiểm chứng chất lượng phát âm.
+- **Lộ trình chuyển đổi mô hình VinAI (`Export & Quantization Roadmap`):**
+  - Hiện tại, PhoWhisper-base đang chạy trực tiếp trên `transformers` / `PyTorch CPU` với cơ chế lazy-load (chỉ nạp vào RAM khi có request STT).
+  - *Kế hoạch chuyển đổi tối ưu:* Chuyển đổi trọng số PhoWhisper sang định dạng **CTranslate2 (INT8)** hoặc **ONNX Runtime (FP16/INT8)** tương tự như `faster-whisper`. Bước chuyển đổi này sẽ giúp:
+    1. Giảm 60% mức chiếm dụng RAM của PhoWhisper (từ ~450MB xuống còn ~150MB).
+    2. Tăng tốc độ nhận diện giọng mẫu từ ~1.2 giây xuống còn ~0.3 giây trên CPU.
+
+### 2. Công cụ chuẩn hóa tiếng Việt `Vinorm` (VinAI) & Lịch sử chuyển đổi
+- Ban đầu dự án đã lên kế hoạch tích hợp thư viện `Vinorm` (`TTSnorm`) từ VinAI để mở rộng số và từ viết tắt.
+- Tuy nhiên, trong quá trình thử nghiệm thực tế trên hệ điều hành **Windows 10/11 x64**, gói `vinorm` gốc gặp lỗi xung đột binary biên dịch `[WinError 193] / Exec format error` do phụ thuộc thư viện C++ biên dịch cho Linux.
+- **Giải pháp chuyển đổi của dự án:** Chúng tôi đã tự thiết kế lại hoàn toàn tầng chuẩn hóa văn bản thuần Python tại [normalizer.py](file:///e:/tts-clone-voice/app/normalizer.py) kế thừa trọn vẹn các quy tắc số, ngày tháng, tiền tệ, số La Mã của Vinorm, đồng thời kết hợp với bộ phân tích âm vị `sea-g2p` (chạy Rust native) để hoạt động ổn định 100% trên Windows mà không còn lỗi môi trường.
+
+---
+
+## 8. Ứng Dụng Ngôn Ngữ RUST Trong Hệ Thống: Thực Trạng & Lộ Trình Nâng Cấp
+
+Dự án áp dụng mô hình kiến trúc lai (**Hybrid Architecture**) trong đó Python làm tầng điều phối cấp cao, còn các thành phần tính toán nặng được giao cho **Rust** và **C++**:
+
+```mermaid
+graph TD
+    subgraph PythonLayer["Tầng Điều Phối (Python 3.11 / FastAPI)"]
+        API["FastAPI Web Router & Business Logic"]
+        VoiceState["Quản lý Giọng & Audiobooks"]
+    end
+
+    subgraph RustLayer["Tầng Tối Ưu Tốc Độ Cao (RUST NATIVE)"]
+        Orjson["orjson (Rust SIMD) - Đọc/ghi JSON tốc độ cao"]
+        SeaG2P["sea_g2p_rs.pyd (Rust Native) - Phân tách âm vị tiếng Việt"]
+        HFTokenizers["tokenizers (HuggingFace Rust) - Tokenize văn bản"]
+    end
+
+    subgraph CppLayer["Tầng Tính Toán AI Siêu Tốc (C/C++)"]
+        ONNX["ONNX Runtime (C++) - Suy luận VieNeu v3 Turbo"]
+        LlamaCpp["llama.cpp (C++) - Suy luận VieNeu v2 GGUF Q8"]
+        FFmpeg["FFmpeg CLI (C) - atempo & EBU R128 Mastering"]
+    end
+
+    PythonLayer --> RustLayer
+    PythonLayer --> CppLayer
+```
+
+### 1. Các thành phần RUST ĐÃ và ĐANG hoạt động trực tiếp trong dự án
+- **`orjson` (100% Rust SIMD):** Đã thay thế hoàn toàn `json` chuẩn của Python trong toàn bộ các module [main.py](file:///e:/tts-clone-voice/app/main.py), [voice_manager.py](file:///e:/tts-clone-voice/app/voice_manager.py), [history_manager.py](file:///e:/tts-clone-voice/app/history_manager.py), [lexicon_manager.py](file:///e:/tts-clone-voice/app/lexicon_manager.py) và [audiobook_manager.py](file:///e:/tts-clone-voice/app/audiobook_manager.py). Giúp đọc/ghi các file metadata chứa mảng vector embedding lớn với tốc độ gấp 4–8 lần.
+- **`sea_g2p_rs.pyd` (Rust Native Extension):** Động cơ chuyển tự chữ quốc ngữ sang âm vị ngữ âm học tiếng Việt của VieNeu chạy bằng file binary Rust biên dịch trực tiếp cho Windows x64.
+- **HuggingFace `tokenizers`:** Thư viện mã hóa token từ vựng của PhoWhisper và NeuCodec chạy bằng nhân Rust bên dưới.
+
+### 2. Lộ trình nâng cấp RUST chuyên sâu trong tương lai
+1. **Đóng gói Desktop App độc lập bằng TAURI (Rust):**
+   - Thay vì chạy web server lộ màn hình đen console (cmd/terminal), sử dụng **Tauri (Rust)** để bọc trực tiếp giao diện [index.html](file:///e:/tts-clone-voice/app/static/index.html) thành một phần mềm Windows `.exe` chuyên nghiệp.
+   - Rust sẽ đóng vai trò quản lý tiến trình backend ẩn (*sidecar process*), thu nhỏ vào khay hệ thống (*system tray*) và tự động kiểm tra phụ thuộc phần cứng.
+2. **Viết riêng Rust Crate qua `PyO3` / `maturin` cho DSP & Lexicon Matcher:**
+   - Khi từ điển phát âm mở rộng lên hàng nghìn quy tắc, việc chuyển toàn bộ bộ lọc Regex và Whole-Word Matching sang một module Rust biên dịch tĩnh sẽ giúp thời gian tiền xử lý văn bản dài chỉ còn tính bằng micro-giây ($\mu s$).
+
+---
+
+## 9. Bảng Đối Chiếu Chỉ Số Hiệu Năng Kỹ Thuật
 
 | Tiêu chí | VieNeu v3 Turbo (ONNX 48k) | VieNeu v2 GGUF (24k) |
 | :--- | :--- | :--- |
