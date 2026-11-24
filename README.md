@@ -1,6 +1,6 @@
-# tts-clone-voice-by-linhlv
+# ViLi-MyVoice — Clone Giọng Nói Tiếng Việt (Tác giả: linhlv)
 
-> **Hệ thống Clone Giọng Nói Tiếng Việt (Vietnamese TTS Voice Cloning) — 100% Miễn Phí, Chạy Hoàn Toàn Local Offline trên Windows.**
+> **ViLi-MyVoice (Tác giả: linhlv) — Hệ thống Clone Giọng Nói Tiếng Việt (Vietnamese TTS Voice Cloning) — 100% Miễn Phí, Chạy Hoàn Toàn Local Offline trên Windows.**
 
 Dự án sử dụng công nghệ mô hình tiếng Việt chuyên sâu **VieNeu-TTS**, hỗ trợ chạy song song 2 engine tối ưu:
 1. **VieNeu v3 Turbo (ONNX fp32 — 48.000 Hz):** Tốc độ suy luận siêu tốc (RTF ~0.7x trên CPU, nhanh hơn thời gian thực), âm thanh trong trẻo, không phụ thuộc PyTorch khi sinh giọng.

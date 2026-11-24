@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Voice Studio — Giọng đọc AI trên máy</title>
+  <meta name="author" content="linhlv" />
+  <title>ViLi-MyVoice — Giọng đọc AI trên máy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -299,15 +300,18 @@
 
     /* Sidebar Footer */
     .sidebar-footer-simple {
-      padding: 16px;
+      padding: 14px 16px;
       border-top: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
     }
 
     .health-pill {
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      font-size: 11px;
+      font-size: 11.5px;
       padding: 6px 12px;
       border-radius: var(--radius-pill);
       background: rgba(0, 0, 0, 0.28);
@@ -315,12 +319,20 @@
       color: #C0B0C1;
       width: 100%;
       justify-content: center;
+      font-weight: 600;
+      transition: all 0.2s ease;
     }
 
     .health-pill.online {
       color: #81C784;
       border-color: rgba(129, 199, 132, 0.35);
       background: rgba(46, 125, 50, 0.18);
+    }
+
+    .health-pill.offline {
+      color: #EF5350;
+      border-color: rgba(239, 83, 80, 0.35);
+      background: rgba(198, 40, 40, 0.18);
     }
 
     .pulse-dot {
@@ -335,6 +347,28 @@
       background: #81C784;
       box-shadow: 0 0 8px #81C784;
       animation: pulse 2s infinite;
+    }
+
+    .health-pill.offline .pulse-dot {
+      background: #EF5350;
+      box-shadow: 0 0 6px #EF5350;
+      animation: none;
+    }
+
+    .author-credits {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #B5A6B6;
+      letter-spacing: 0.01em;
+      padding-top: 1px;
+    }
+
+    .author-credits .author-name {
+      color: var(--yellow-sun);
+      font-weight: 700;
     }
 
     @keyframes pulse {
@@ -4874,8 +4908,8 @@
         </svg>
       </div>
       <div>
-        <div class="brand-title">Voice Studio</div>
-        <div class="brand-tag">Giọng đọc AI trên máy</div>
+        <div class="brand-title">ViLi-MyVoice</div>
+        <div class="brand-tag">Tác giả: linhlv</div>
       </div>
     </div>
 
@@ -4960,9 +4994,18 @@
     </nav>
 
     <div class="sidebar-footer-simple">
-      <div class="health-pill" id="healthPill">
+      <div class="health-pill" id="healthPill" title="Trạng thái dịch vụ">
         <span class="pulse-dot"></span>
         <span id="healthLabel">Đang kết nối...</span>
+      </div>
+      <div class="author-credits" title="Tác giả phát triển">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          style="opacity:0.75;">
+          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+        <span>Tác giả: <b class="author-name">linhlv</b></span>
       </div>
     </div>
   </aside>
@@ -5462,7 +5505,7 @@
                   clone mới (dùng để nghe thử &amp; làm giọng mẫu trong Thư viện):</label>
               </div>
               <textarea class="input-compact textarea-ref" id="clonePreviewTextInput" rows="2"
-                placeholder="Nhập câu ngắn đại diện để giọng clone mới đọc thử...">Xin chào, đây là giọng nói tương tự vừa được nhân bản thành công trong Voice Studio.</textarea>
+                placeholder="Nhập câu ngắn đại diện để giọng clone mới đọc thử...">Xin chào, đây là giọng nói tương tự vừa được nhân bản thành công trong ViLi-MyVoice.</textarea>
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;">
@@ -5792,7 +5835,7 @@
           <div class="terminal-topbar">
             <div class="terminal-title-group">
               <div class="term-dots" aria-hidden="true"><span></span><span></span><span></span></div>
-              <span class="term-heading">voice-studio@local — Terminal Log</span>
+              <span class="term-heading">vili-myvoice@local — Terminal Log</span>
               <span class="term-live-pill"><span class="term-live-dot"></span> LIVE</span>
             </div>
             <span style="font-family:var(--font-mono);font-size:11px;color:#64748B;" id="terminalCountInfo">0 dòng
@@ -7821,7 +7864,7 @@
       }
 
       /* ── Form Submission & Audition Workflow (Preview Clone -> Listen -> Commit to Library) ── */
-      const DEFAULT_CLONE_PREVIEW_TEXT = 'Xin chào, đây là giọng nói tương tự vừa được nhân bản thành công trong Voice Studio.';
+      const DEFAULT_CLONE_PREVIEW_TEXT = 'Xin chào, đây là giọng nói tương tự vừa được nhân bản thành công trong ViLi-MyVoice.';
       let activeDraftId = null;
       let isPreviewingClone = false;
       let isSubmittingVoice = false;
@@ -9188,19 +9231,19 @@
           const data = await res.json();
           if (res.ok && data.status === 'ok') {
             $('healthPill').className = 'health-pill online';
-            $('healthLabel').textContent = `VieNeu Online (${data.backend || 'CPU'})`;
+            $('healthLabel').textContent = 'Hoạt động';
           } else {
-            $('healthPill').className = 'health-pill';
-            $('healthLabel').textContent = 'Server bảo trì';
+            $('healthPill').className = 'health-pill offline';
+            $('healthLabel').textContent = 'Không hoạt động';
           }
         } catch {
-          $('healthPill').className = 'health-pill';
-          $('healthLabel').textContent = 'Mất kết nối server';
+          $('healthPill').className = 'health-pill offline';
+          $('healthLabel').textContent = 'Không hoạt động';
         }
       }
 
       /* ── Initialization ── */
-      logFE('INFO', 'UI', 'Voice Studio UI đã khởi tạo. Bắt đầu đồng bộ luồng log từ server...');
+      logFE('INFO', 'UI', 'ViLi-MyVoice UI đã khởi tạo. Bắt đầu đồng bộ luồng log từ server...');
       updateGreetingAndDate();
       checkHealth();
       loadVoicesRegistry();

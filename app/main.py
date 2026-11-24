@@ -141,7 +141,7 @@ async def lifespan(_app: FastAPI):
 
 
 app = FastAPI(
-    title="Vietnamese TTS Voice Clone (Local v3 + v2)",
+    title="ViLi-MyVoice (Vietnamese TTS Voice Clone)",
     version="1.2.0",
     default_response_class=ORJSONResponse,
     lifespan=lifespan,
@@ -250,7 +250,7 @@ def get_voice_sample(voice_id: str):
             return get_voice_audio_sync(voice_mgr, voice_id)
         raise HTTPException(status_code=404, detail=f"Không tìm thấy giọng mẫu '{voice_id}'.")
 
-    sample_text = "Xin chào, đây là giọng đọc mẫu được tích hợp sẵn trong Voice Studio."
+    sample_text = "Xin chào, đây là giọng đọc mẫu được tích hợp sẵn trong ViLi-MyVoice."
     wav_bytes, _stats = engine.synthesize_wav(
         sample_text,
         model="vieneu",
