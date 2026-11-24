@@ -76,7 +76,7 @@ Hệ thống cung cấp RESTful API tương thích OpenAI Audio TTS format:
 ## 📁 Cấu trúc thư mục dự án
 
 ```text
-tts-clone-voice-by-linhlv/
+ViLi-MyVoice/
 ├── app/
 │   ├── config.py           # Quản lý cấu hình, tham số v3/v2 và thư mục voices
 │   ├── main.py             # FastAPI Server & REST API endpoints
